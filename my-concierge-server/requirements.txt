@@ -3,3 +3,6 @@ flask==3.0.0
 
 # other required dependencies
 setuptools >= 67.6.0
+
+sqlalchemy
+pymysql
