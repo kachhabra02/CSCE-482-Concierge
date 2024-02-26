@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Concierge Application</title>
+  </head>
+  <body>
+    <p>
+      {% for job in jobs %}
+        <div>{{job['name']}}: {{job['email']}}</div>
+      {% endfor %}
+    </p>
+  </body>
+</html>
