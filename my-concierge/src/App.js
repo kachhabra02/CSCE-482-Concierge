@@ -1,19 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Chatbot from './pages/Chatbot';
+import CardScreen from './pages/CardScreen';
+import MapScreen from './pages/MapScreen';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          MyConcierge
-        </p>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <ul>
+          <li><Link to="/Chatbot">Chatbot</Link></li>
+          <li><Link to="/MapScreen">Map</Link></li>
+          <li><Link to="/CardScreen">Card</Link></li>
+        </ul>
+
+        <hr />
+
+        <Routes>
+          <Route path="/Chatbot" element={<Chatbot />} />
+          <Route path="/MapScreen" element={<MapScreen />} />
+          <Route path="/CardScreen" element={<CardScreen />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
