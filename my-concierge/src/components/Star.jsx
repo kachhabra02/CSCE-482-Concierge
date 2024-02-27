@@ -1,6 +1,7 @@
 import React from 'react'
 import {FaStar, FaStarHalfAlt} from "react-icons/fa";
 import {AiOutlineStar} from "react-icons/ai";
+import '../css/RestCardCss.css';
 
 
 const Star = ({stars,reviews}) => {
@@ -18,7 +19,7 @@ const Star = ({stars,reviews}) => {
   return (
       <div className='icon-style'>
         {ratingStar}
-        <p>({reviews} customer reviews)</p>
+        <p style={{ fontSize: '10px', marginLeft: '2px', color:'grey' }}>({reviews} reviews)</p>
       </div>
   )
 }
