@@ -6,6 +6,44 @@ import 'react-multi-carousel/lib/styles.css';
 
 function CardScreen() {
 
+  const businessData = {
+    "business_id": "tnhfDv5Il8EaGSXZGiuQGg",
+    "name": "Garaje",
+    "address": "475 3rd St",
+    "city": "San Francisco",
+    "state": "CA",
+    "postal_code": "94107",
+    "latitude": 37.7817529521,
+    "longitude": -122.39612197,
+    "stars": 4.5,
+    "review_count": 1198,
+    "is_open": 1,
+    "attributes": {
+      "RestaurantsTakeOut": true,
+      "BusinessParking": {
+        "garage": false,
+        "street": true,
+        "validated": false,
+        "lot": false,
+        "valet": false
+      }
+    },
+    "categories": [
+      "Mexican",
+      "Burgers",
+      "Gastropubs"
+    ],
+    "hours": {
+      "Monday": "10:00-21:00",
+      "Tuesday": "10:00-21:00",
+      "Friday": "10:00-21:00",
+      "Wednesday": "10:00-21:00",
+      "Thursday": "10:00-21:00",
+      "Sunday": "11:00-18:00",
+      "Saturday": "10:00-21:00"
+    }
+  };
+
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -26,13 +64,15 @@ function CardScreen() {
     }
   };
 
+  const address = businessData.address + ", " + businessData.city + ", " + businessData.state + ", " + businessData.postal_code ;
+
   return (
     <div>
       <h1>Items:</h1>
       <Carousel responsive={responsive}>
         {/*Change the stars and reviews to json data*/}
-        <div><RestCard stars={3} reviews={10}/></div>
-        <div><RestCard stars={3} reviews={10}/></div>
+        <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
+        <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
         <div>Item 3</div>
         <div>Item 4</div>
       </Carousel>;
