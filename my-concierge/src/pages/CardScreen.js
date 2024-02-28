@@ -2,7 +2,7 @@ import React from 'react'
 import Carousel from 'react-multi-carousel';
 import RestCard from '../components/RestCard';
 import 'react-multi-carousel/lib/styles.css';
-
+import '../css/CardScreenCss.css';
 
 function CardScreen() {
 
@@ -66,16 +66,26 @@ function CardScreen() {
 
   const address = businessData.address + ", " + businessData.city + ", " + businessData.state + ", " + businessData.postal_code ;
 
+  const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
+    <ul className="custom-dots">
+      {Array.from({ length: totalItems }).map((_, index) => (
+        <li key={index}>
+          <button className={index === currentSlide ? "active" : ""} {...props}></button>
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <div>
       <h1>Items:</h1>
-      <Carousel responsive={responsive}>
-        {/*Change the stars and reviews to json data*/}
-        <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
-        <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
-        <div>Item 3</div>
-        <div>Item 4</div>
-      </Carousel>;
+        <Carousel responsive={responsive} showDots={true} renderDotsOutside={renderButtonGroupOutside} removeArrowOnDeviceType={["tablet", "mobile"]}>
+          {/*Change the stars and reviews to json data*/}
+          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
+          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
+          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
+          <div>Item 4</div>
+        </Carousel>
     </div>
   )
 }
