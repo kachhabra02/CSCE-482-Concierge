@@ -2,6 +2,7 @@
 Sources:
 https://realpython.com/nltk-nlp-python/
 https://realpython.com/python-nltk-sentiment-analysis/
+https://www.youtube.com/watch?v=M7SWr5xObkA&t=12s
 
 '''
 
