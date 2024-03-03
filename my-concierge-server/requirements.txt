@@ -6,3 +6,5 @@ setuptools >= 67.6.0
 
 sqlalchemy
 pymysql
+
+boto3
