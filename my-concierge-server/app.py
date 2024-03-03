@@ -5,9 +5,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    # return "Welcome to the MyConcierge Backend (Arpan Here!)", 200
-    JOBS = database.load_jobs_from_db()
-    return render_template('home.html', jobs=JOBS)
+    restaurants = database.get_restaurants()
+    return render_template('home.html', restaurants=restaurants)
 
 @app.errorhandler(404)
 def page_not_found(e):
