@@ -6,14 +6,19 @@ https://www.youtube.com/watch?v=M7SWr5xObkA&t=12s
 
 '''
 
+'''
 import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
+'''
 import spacy
-import torch
+from sklearn.svm import LinearSVC
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 nlp = spacy.load("en_core_web_trf")
-doc = nlp("Here is some text to encode.")
+#nlp = spacy.load("en_core_web_md")
+#doc = nlp("Here is some text to encode.")
 
 class Category:
   BOOKS = "BOOKS"
@@ -22,15 +27,22 @@ class Category:
 train_x = ["good characters and plot progression", "check out the book", "good story. would recommend", "novel recommendation", "need to make a deposit to the bank", "balance inquiry savings", "save money"]
 train_y = [Category.BOOKS, Category.BOOKS, Category.BOOKS, Category.BOOKS, Category.BANK, Category.BANK, Category.BANK]
 
-from sklearn import svm
+clf = make_pipeline(StandardScaler(), LinearSVC(dual='auto'))
 
 docs = [nlp(text) for text in train_x]
 train_x_vectors = [doc.vector for doc in docs]
-clf_svm = svm.SVC(kernel='linear')
 
-print(docs)
-print(train_x_vectors)
+clf.fit(train_x_vectors, train_y)
 
+test_x = ["check this story out"]
+docs = [nlp(text) for text in test_x]
+test_x_vectors = [doc.vector for doc in docs]
+
+print(clf.predict(test_x_vectors))
+#print(docs)
+#print(train_x_vectors)
+
+'''
 clf_svm.fit(train_x_vectors, train_y)
 
 test_x = ["check this story out"]
@@ -38,6 +50,7 @@ docs = [nlp(text) for text in test_x]
 test_x_vectors = [doc.vector for doc in docs]
 
 clf_svm.predict(test_x_vectors)
+'''
 
 '''
 # Download everything that nltk will need
