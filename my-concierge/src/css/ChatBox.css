@@ -1,0 +1,49 @@
+.chatbox-container {
+  display: flex;
+  flex-direction: column; 
+  height: 100vh; /* Set the height of the container to fill the viewport */
+  margin: 0 auto;
+}
+
+.input-container {
+  align-self: flex-end; /* Align the input container to the bottom */
+  margin-top: 10px; /* Add some spacing between the messages and the input */
+  width: 100%;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-top: 1px solid white;
+  z-index: 1000;
+}
+  
+  .message-container {
+    text-align: right;
+    margin-bottom: 10px;
+    background-color: #81adc8;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    max-width: fit-content;
+    align-self: flex-end;
+  }
+
+  .messages-container {
+    flex: 0.5;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column; /* Reverse the column direction to start from the top */
+    margin: 0px auto; /*Center the messages container horizontally */
+    text-align: right;
+    align-items: end;
+  
+  }
+  
+  .form-group {
+    margin-bottom: 2; /* Remove default margin for better alignment */
+  }
+
+  #formMessage {
+    background-color: #81adc8;
+    color: white;
+
+  }
+  
