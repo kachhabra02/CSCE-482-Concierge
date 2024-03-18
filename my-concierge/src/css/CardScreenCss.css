@@ -2,6 +2,15 @@
   margin-left: 5%;
 }
 
+.icon-style {
+  display: flex;
+  align-items: center;
+}
+
+.icon {    
+  color: gold;
+}
+
 .custom-dots {
     list-style: none;
     padding: 0;
@@ -31,3 +40,25 @@
       }
     }
 }
+
+.react-multi-carousel-dot-list {
+  position: relative;
+}
+
+.shopping-cart-body {
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
+.shopping-element-card {
+  padding: 2%;
+  margin: 3% 0;
+}
+
+.shopping-element-img {
+  width: 5vw;
+  height: 12vh;
+  padding: 3%;
+}
+
+  
