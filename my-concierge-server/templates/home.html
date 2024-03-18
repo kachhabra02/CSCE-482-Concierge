@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Concierge Application</title>
+  </head>
+  <body>
+    <p>
+      {% for restaurant in restaurants %}
+        <div>Name: {{restaurant.get_name()}}, City: {{restaurant.get_city()}}, Cuisine: {{restaurant.get_cuisine()}}, Dietary Restrictions: {{restaurant.get_dietary_restrictions()}}, Price: {{restaurant.get_price()}}, Ratings: {{restaurant.get_ratings()}}</div>
+        <img src="{{ restaurant.get_link() }}"/>
+      {% endfor %}
+    </p>
+  </body>
+</html>

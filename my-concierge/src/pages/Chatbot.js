@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import ChatBox from '../components/ChatBox';
 
-function chatbot() {
+function Chatbot() {
   return (
-    <div>chatbot</div>
-  )
+    <div>
+      <ChatBox />
+    </div>
+  );
 }
 
-export default chatbot
+export default Chatbot;
