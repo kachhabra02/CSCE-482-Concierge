@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import Carousel from 'react-multi-carousel';
 import RestCard from '../components/RestCard';
+import ShoppingCart from "../components/ShoppingCart";
 import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
 function CardScreen() {
+
+  const [favItems, setFavItems] = useState([]);
+  const [showShoppingCart, setShowShoppingCart] = useState(false);
 
   const businessData = {
     "business_id": "tnhfDv5Il8EaGSXZGiuQGg",
@@ -64,6 +68,7 @@ function CardScreen() {
     }
   };
 
+  useEffect(() => console.log(favItems), [favItems])
   const address = businessData.address + ", " + businessData.city + ", " + businessData.state + ", " + businessData.postal_code ;
 
   const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
@@ -78,14 +83,37 @@ function CardScreen() {
 
   return (
     <div>
+      <div>
+        {favItems.length > 0 && (
+          <div className="button-container">
+            <div className="position-fixed" style={{zIndex: 99}}>
+              <button
+                className="button-effect"
+                onClick={() => setShowShoppingCart(true)}
+              >
+                <span>Shopping Cart - {favItems.length}</span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       <h1>Items:</h1>
         <Carousel responsive={responsive} showDots={true} renderDotsOutside={renderButtonGroupOutside} removeArrowOnDeviceType={["tablet", "mobile"]}>
           {/*Change the stars and reviews to json data*/}
-          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
-          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
-          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address}/></div>
+          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
+          <div><RestCard name="exa" stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
+          <div><RestCard name="ex3" stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
           <div>Item 4</div>
         </Carousel>
+
+        {showShoppingCart && (
+        <ShoppingCart
+          favItems={favItems}
+          setFavItems={setFavItems}
+          setShowModal={setShowShoppingCart}
+        />
+      )}
     </div>
   )
 }
