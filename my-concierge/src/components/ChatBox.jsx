@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import '../css/ChatBox.css'; // Import the CSS file
+import robotImage from '../img/robot.png';
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
@@ -27,14 +28,13 @@ const ChatBox = () => {
 
   return (
     <Container className = "chatbox-container">
-      <row>
-        <Col className="col-4">
+      <Row>
+        <Col className="col-4" style={"display: flex;"}>
           {/* Image div */}
           <div className="image-container">
-            <img src="../img/robot.jpeg" alt="Robot" />
+            <img src={robotImage} alt="Robot" />
           </div>
         </Col>
-        <Row>
           <Col className='messages-container col-8' >
             {/* Display messages .reverse()*/}
             {messages.slice().map((message) => (
@@ -43,9 +43,7 @@ const ChatBox = () => {
               </div>
             ))}
           </Col>
-        </Row>
-        <Row className = "input-container col-8">
-          <Col>
+          <Col className = "input-container col-8">
             {/* Input form */}
             <Form.Group controlId="formMessage">
               <Form.Control
@@ -57,8 +55,7 @@ const ChatBox = () => {
               />
             </Form.Group>
           </Col>
-        </Row>
-      </row>
+      </Row>
     </Container>
   );
 };
