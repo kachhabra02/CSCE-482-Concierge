@@ -29,7 +29,7 @@ const ChatBox = () => {
   return (
     <Container className = "chatbox-container">
       <Row>
-        <Col className="col-4" style={"display: flex;"}>
+        <Col className="col-4" >
           {/* Image div */}
           <div className="image-container">
             <img src={robotImage} alt="Robot" />

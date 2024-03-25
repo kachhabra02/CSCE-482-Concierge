@@ -8,7 +8,11 @@ import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 function RestCard({ name, stars, reviews, cusines, address, favItems, setFavItems}) {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showAllCuisines, setShowAllCuisines] = useState(false);
   
+  const toggleCuisines = () => {
+    setShowAllCuisines(!showAllCuisines);
+  }
 
   const onFavoriteClick = () => {
     // Toggle the favorite status
@@ -23,18 +27,27 @@ function RestCard({ name, stars, reviews, cusines, address, favItems, setFavItem
       setFavItems((favItems || []).filter(item => item.name !== name));
     }
   };
-  
 
   return (
     <Card style={{ width: "18rem" }}>
       <Card.Img variant="top" src="holder.js/100px180" />
-      <Card.Body>
+      <Card.Body style={{ paddingBottom: '0' }}>
         <div className="d-flex flex-row justify-content-between w-100">
           <Card.Title className="col-7">{name}</Card.Title>
           <Star stars={stars} reviews={reviews} />
         </div>
         <div className="d-flex flex-row justify-content-between w-100">
-          <Card.Text className="col-8">{cusines}</Card.Text>
+          <Card.Text className="col-8">
+            {cusines.slice(0, showAllCuisines ? cusines.length : 2).map((cuisine, index) => (
+              <button key={index} type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }}>{cuisine}</button>
+            ))}
+            {cusines.length > 2 && !showAllCuisines && (
+              <button type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }} onClick={toggleCuisines}>...</button>
+            )}
+            {cusines.length > 2 && showAllCuisines && (
+              <button type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }} onClick={toggleCuisines}>Close</button>
+            )}
+          </Card.Text>
           <button type="button" className="favorite-btn btn" onClick={onFavoriteClick}>
             {isFavorite ? <FaHeart style={{ color: "#fb2323" }} /> : <FaRegHeart style={{ color: "#fb2323" }} />}
           </button>
