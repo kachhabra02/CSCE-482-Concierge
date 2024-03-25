@@ -101,7 +101,7 @@ function CardScreen() {
       <h1>Items:</h1>
         <Carousel responsive={responsive} showDots={true} renderDotsOutside={renderButtonGroupOutside} removeArrowOnDeviceType={["tablet", "mobile"]}>
           {/*Change the stars and reviews to json data*/}
-          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"Americanddddddddddddddddddddddddddd"} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
+          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
           <div><RestCard name="exa" stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
           <div><RestCard name="ex3" stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={"American"} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
           <div>Item 4</div>
