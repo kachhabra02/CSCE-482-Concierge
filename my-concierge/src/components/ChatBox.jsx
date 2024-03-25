@@ -27,30 +27,38 @@ const ChatBox = () => {
 
   return (
     <Container className = "chatbox-container">
-      <Row className = "messages-container">
-        <Col>
-          {/* Display messages .reverse()*/}
-          {messages.slice().map((message) => (
-            <div key={message.id} className="message-container">
-              {message.text}
-            </div>
-          ))}
+      <row>
+        <Col className="col-4">
+          {/* Image div */}
+          <div className="image-container">
+            <img src="../img/robot.jpeg" alt="Robot" />
+          </div>
         </Col>
-      </Row>
-      <Row className = "input-container">
-        <Col>
-          {/* Input form */}
-          <Form.Group controlId="formMessage">
-            <Form.Control
-              type="text"
-              placeholder="Type your message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
+        <Row>
+          <Col className='messages-container col-8' >
+            {/* Display messages .reverse()*/}
+            {messages.slice().map((message) => (
+              <div key={message.id} className="message-container">
+                {message.text}
+              </div>
+            ))}
+          </Col>
+        </Row>
+        <Row className = "input-container col-8">
+          <Col>
+            {/* Input form */}
+            <Form.Group controlId="formMessage">
+              <Form.Control
+                type="text"
+                placeholder="Type your message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+      </row>
     </Container>
   );
 };

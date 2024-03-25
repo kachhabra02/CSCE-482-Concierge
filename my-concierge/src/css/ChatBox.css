@@ -1,6 +1,6 @@
 .chatbox-container {
-  display: flex;
-  flex-direction: column; 
+  /* display: flex;
+  flex-direction: end;  */
   height: 100vh; /* Set the height of the container to fill the viewport */
   margin: 0 auto;
 }
@@ -24,6 +24,7 @@
     color: white;
     max-width: fit-content;
     align-self: flex-end;
+    align-content: end;
   }
 
   .messages-container {
@@ -34,7 +35,13 @@
     margin: 0px auto; /*Center the messages container horizontally */
     text-align: right;
     align-items: end;
-  
+    align-content: end;
+  }
+
+  .image-container {
+    text-align: left;
+    max-width: 34%;
+
   }
   
   .form-group {
