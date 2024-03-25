@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import '../css/ChatBox.css'; // Import the CSS file
+import robotImage from '../img/robot.png';
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
@@ -27,29 +28,33 @@ const ChatBox = () => {
 
   return (
     <Container className = "chatbox-container">
-      <Row className = "messages-container">
-        <Col>
-          {/* Display messages .reverse()*/}
-          {messages.slice().map((message) => (
-            <div key={message.id} className="message-container">
-              {message.text}
-            </div>
-          ))}
+      <Row>
+        <Col className="col-4" >
+          {/* Image div */}
+          <div className="image-container">
+            <img src={robotImage} alt="Robot" />
+          </div>
         </Col>
-      </Row>
-      <Row className = "input-container">
-        <Col>
-          {/* Input form */}
-          <Form.Group controlId="formMessage">
-            <Form.Control
-              type="text"
-              placeholder="Type your message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-          </Form.Group>
-        </Col>
+          <Col className='messages-container col-8' >
+            {/* Display messages .reverse()*/}
+            {messages.slice().map((message) => (
+              <div key={message.id} className="message-container">
+                {message.text}
+              </div>
+            ))}
+          </Col>
+          <Col className = "input-container col-8">
+            {/* Input form */}
+            <Form.Group controlId="formMessage">
+              <Form.Control
+                type="text"
+                placeholder="Type your message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+              />
+            </Form.Group>
+          </Col>
       </Row>
     </Container>
   );
