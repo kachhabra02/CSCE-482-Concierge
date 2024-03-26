@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import Star from "./Star";
 import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
@@ -10,9 +11,6 @@ function RestCard({ name, stars, reviews, cusines, address, favItems, setFavItem
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAllCuisines, setShowAllCuisines] = useState(false);
   
-  const toggleCuisines = () => {
-    setShowAllCuisines(!showAllCuisines);
-  }
 
   const onFavoriteClick = () => {
     // Toggle the favorite status
@@ -41,11 +39,22 @@ function RestCard({ name, stars, reviews, cusines, address, favItems, setFavItem
             {cusines.slice(0, showAllCuisines ? cusines.length : 2).map((cuisine, index) => (
               <button key={index} type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }}>{cuisine}</button>
             ))}
-            {cusines.length > 2 && !showAllCuisines && (
-              <button type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }} onClick={toggleCuisines}>...</button>
-            )}
-            {cusines.length > 2 && showAllCuisines && (
-              <button type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }} onClick={toggleCuisines}>Close</button>
+            {cusines.length > 2 && (
+              <Accordion alwaysOpen>
+              <Accordion.Item style={{ margin: '3% 0 0 2%' }} eventKey="0">
+                <Accordion.Header className="custom-cus">More ...</Accordion.Header>
+                <Accordion.Body style={{padding: '2%', backgroundColor: 'lightgray' }}>
+                  {cusines.slice(2).map((cuisine, index) => 
+                   <React.Fragment key={index}>
+                    {cuisine}
+                    <br />
+                    {index !== cusines.length - 3 && <hr style={{margin:'0'}}/>}
+                  </React.Fragment>
+                 )}
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+
             )}
           </Card.Text>
           <button type="button" className="favorite-btn btn" onClick={onFavoriteClick}>
@@ -69,5 +78,10 @@ function RestCard({ name, stars, reviews, cusines, address, favItems, setFavItem
     </Card>
   );
 }
+
+<DropdownButton title="More" variant="outline-primary" size="sm" style={{ margin: '3px' }}>
+
+</DropdownButton>
+
 
 export default RestCard;

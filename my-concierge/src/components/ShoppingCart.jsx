@@ -21,7 +21,7 @@ function ShoppingCart({ favItems, setFavItems, setShowModal }) {
   };
 
   const generateTextContent = () => {
-    return favItems.map((item) => `${item.name}, ${item.cusines}, ${item.address}`).join('\n');
+    return favItems.map((item) => `${item.name}, ${item.cusines.join(', ')}, ${item.address}`).join('\n');
   };
 
   const handleSendEmail = async () => {

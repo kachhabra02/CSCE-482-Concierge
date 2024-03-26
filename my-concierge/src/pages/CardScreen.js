@@ -35,7 +35,9 @@ function CardScreen() {
     "categories": [
       "Mexican",
       "Burgers",
-      "Gastropubs"
+      "Gastropubs",
+      "Vegan",
+      "Other"
     ],
     "hours": {
       "Monday": "10:00-21:00",

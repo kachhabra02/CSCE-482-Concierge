@@ -131,4 +131,8 @@
   justify-content: flex-end;
   margin: 0 2% 5% 0;
 }
+
+.custom-cus .accordion-button{
+  padding: 3px;
+}
   
