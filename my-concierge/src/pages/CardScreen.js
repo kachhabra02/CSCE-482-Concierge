@@ -5,7 +5,8 @@ import ShoppingCart from "../components/ShoppingCart";
 import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
-function CardScreen() {
+function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of Scroll from MapScreen
+
 
   const [favItems, setFavItems] = useState([]);
   const [showShoppingCart, setShowShoppingCart] = useState(false);
@@ -130,6 +131,7 @@ function CardScreen() {
         "Saturday": "10:00-21:00"
       }
     }
+
 ];
 
   const responsive = {
@@ -165,17 +167,17 @@ function CardScreen() {
   );
 
   // Function to handle scrolling to a specific slide
-  const scrollToSlide = (index) => {
+  const scrollToSlide = (index) => { // In CardScreen, get Index from MapScreen and Scroll here 
     carouselRef.current.goToSlide(index);
   };
 
   // Function to find the index of an item by its name
-  const findItemIndexByName = (name) => {
+  const findItemIndexByName = (name) => { // Define in MapScreen Later
     return businessData.findIndex(business => business.name === name);
   };
 
   // Click event handler for buttons
-  const handleButtonClick = (name) => {
+  const handleButtonClick = (name) => { // Define in MapScreen Later
     const index = findItemIndexByName(name);
     if (index !== -1) {
       scrollToSlide(index);
