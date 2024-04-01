@@ -7,7 +7,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
-function RestCard({ name, stars, reviews, cusines, address, favItems, setFavItems}) {
+function RestCard({ name, stars, reviews, cusines, address,hours, favItems, setFavItems}) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAllCuisines, setShowAllCuisines] = useState(false);
   
@@ -24,6 +24,17 @@ function RestCard({ name, stars, reviews, cusines, address, favItems, setFavItem
       // Remove item from favorites
       setFavItems((favItems || []).filter(item => item.name !== name));
     }
+  };
+
+  const getCurrentDay = () => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const date = new Date();
+    return days[date.getDay()];
+  };
+
+  const boldCurrentDay = (day) => {
+    const currentDay = getCurrentDay();
+    return day === currentDay ? <strong>{day}</strong> : day;
   };
 
   return (
@@ -67,7 +78,19 @@ function RestCard({ name, stars, reviews, cusines, address, favItems, setFavItem
         <Accordion alwaysOpen>
           <Accordion.Item eventKey="0">
             <Accordion.Header>Opening Hours:</Accordion.Header>
-            <Accordion.Body>Info</Accordion.Body>
+            <Accordion.Body>              
+              {Object.keys(hours).length === 0 ? (
+                <div>No information available</div>
+              ) : (
+                <ul className="hours-list">
+                  {Object.entries(hours).map(([day, hours], index) => (
+                    <li key={day} className={index % 2 === 0 ? "gray-bg" : "white-bg"}>
+                      {boldCurrentDay(day)}: {hours || "No information available"}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
             <Accordion.Header>Extra:</Accordion.Header>

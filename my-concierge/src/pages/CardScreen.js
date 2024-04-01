@@ -82,15 +82,6 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
         "Vegan",
         "Other"
       ],
-      "hours": {
-        "Monday": "10:00-21:00",
-        "Tuesday": "10:00-21:00",
-        "Friday": "10:00-21:00",
-        "Wednesday": "10:00-21:00",
-        "Thursday": "10:00-21:00",
-        "Sunday": "11:00-18:00",
-        "Saturday": "10:00-21:00"
-      }
     },
     {
       "business_id": "tnhfDv5Il8EaGSXZGiuQGg",
@@ -215,7 +206,18 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
         removeArrowOnDeviceType={["tablet", "mobile"]}
       >
         {businessData.map((business, index) => (
-          <div key={index}><RestCard name={business.name} stars={business.stars} reviews={business.review_count >= 1000 ? "1k+" : business.review_count} cusines={business.categories} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
+          <div key={index}>
+          <RestCard
+            name={business.name || "No Name"}
+            stars={business.stars || 0}
+            reviews={business.review_count >= 1000 ? "1k+" : (business.review_count || 0)}
+            cusines={business.categories || []}
+            address={address || "No Address"}
+            hours={business.hours || {}}
+            favItems={favItems || []}
+            setFavItems={setFavItems || (() => {})}
+          />
+        </div>
         ))}
         <div>Item 4</div>
       </Carousel>

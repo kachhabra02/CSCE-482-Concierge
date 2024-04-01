@@ -136,3 +136,23 @@
   padding: 3px;
 }
   
+.hours-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.hours-list li {
+  border: 1px solid black;
+}
+
+.gray-bg {
+  background-color: lightgray;
+  padding-left: 2%;
+}
+
+.white-bg {
+  background-color: white;
+  padding-left: 2%;
+}
+
+
