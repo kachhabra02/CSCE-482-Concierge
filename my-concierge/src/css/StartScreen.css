@@ -1,9 +1,5 @@
-/* .start-screen {
-    background-color: #0F5B7C;
-  }
-   */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Play:wght@400;700&display=swap');
 
-/* Assuming the CSS file is named StartScreen.css */
 
 .start-screen {
     display: flex; /* Make the container a flexbox for better layout control */
@@ -16,6 +12,32 @@
   
   .header {
     margin-bottom: 50px; /* Add some space below the header */
+  }
+
+  .header-text{
+    font-family:Play;
+    font-size: 8em; 
+    font-weight: bold;
+    color: #f1eee8;
+
+  }
+
+  .cursor {
+    display: inline-block;
+    vertical-align: middle;
+    width: 0.2em;
+    height: 1em;
+    background-color: #f1eee8;
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
   }
   
   .content {
@@ -53,9 +75,3 @@
     
   }
 
-  
-  .lobster-regular {
-    font-family: "Lobster", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
