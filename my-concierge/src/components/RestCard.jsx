@@ -3,11 +3,11 @@ import Card from "react-bootstrap/Card";
 import Star from "./Star";
 import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart, FaTaxi, FaBox ,FaWheelchair} from "react-icons/fa";
 
-function RestCard({ name, stars, reviews, cusines, address,hours, favItems, setFavItems}) {
+
+function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems}) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAllCuisines, setShowAllCuisines] = useState(false);
   
@@ -35,6 +35,19 @@ function RestCard({ name, stars, reviews, cusines, address,hours, favItems, setF
   const boldCurrentDay = (day) => {
     const currentDay = getCurrentDay();
     return day === currentDay ? <strong>{day}</strong> : day;
+  };
+
+  const renderIcon = (attribute) => {
+    switch (attribute) {
+      case 'RestaurantsTakeOut':
+        return <FaBox />;
+      case 'RestaurantsDelivery':
+        return <FaTaxi />;
+      case 'WheelchairAccessible':
+        return <FaWheelchair />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -94,7 +107,22 @@ function RestCard({ name, stars, reviews, cusines, address,hours, favItems, setF
           </Accordion.Item>
           <Accordion.Item eventKey="1">
             <Accordion.Header>Extra:</Accordion.Header>
-            <Accordion.Body>Info</Accordion.Body>
+            <Accordion.Body>
+            {Object.entries(attributes).length === 0 ? (
+              <div>No information available</div>
+            ) : (
+              <ul className="attributes-list">
+                {Object.entries(attributes).map(([attribute, value]) => (
+                  value && (
+                    <li key={attribute} className="attribute-item">
+                      {renderIcon(attribute)}
+                      <span className="attribute-text">{attribute.replace(/([A-Z])/g, ' $1').trim()}</span>
+                    </li>
+                  )
+                ))}
+              </ul>
+            )}
+          </Accordion.Body>
           </Accordion.Item>
         </Accordion>
       </ListGroup>
@@ -102,9 +130,6 @@ function RestCard({ name, stars, reviews, cusines, address,hours, favItems, setF
   );
 }
 
-<DropdownButton title="More" variant="outline-primary" size="sm" style={{ margin: '3px' }}>
-
-</DropdownButton>
 
 
 export default RestCard;

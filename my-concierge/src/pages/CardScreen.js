@@ -26,16 +26,6 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
       "stars": 4.5,
       "review_count": 1198,
       "is_open": 1,
-      "attributes": {
-        "RestaurantsTakeOut": true,
-        "BusinessParking": {
-          "garage": false,
-          "street": true,
-          "validated": false,
-          "lot": false,
-          "valet": false
-        }
-      },
       "categories": [
         "Mexican",
         "Burgers",
@@ -67,13 +57,8 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
       "is_open": 1,
       "attributes": {
         "RestaurantsTakeOut": true,
-        "BusinessParking": {
-          "garage": false,
-          "street": true,
-          "validated": false,
-          "lot": false,
-          "valet": false
-        }
+        "RestaurantsDelivery":true,
+        "WheelchairAccessible":true
       },
       "categories": [
         "Mexican",
@@ -145,7 +130,23 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
   };
 
   useEffect(() => console.log(favItems), [favItems])
-  const address = businessData[0].address + ", " + businessData[0].city + ", " + businessData[0].state + ", " + businessData[0].postal_code ;
+  
+  let address = "";
+  if (businessData[0].address) {
+    address += businessData[0].address;
+  }
+  if (businessData[0].city) {
+    address += (address ? ", " : "") + businessData[0].city;
+  }
+  if (businessData[0].state) {
+    address += (address ? ", " : "") + businessData[0].state;
+  }
+  if (businessData[0].postal_code) {
+    address += (address ? ", " : "") + businessData[0].postal_code;
+  }
+  if (!address) {
+    address = "No information available";
+  }
 
   const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
     <ul className="custom-dots">
@@ -214,6 +215,7 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
             cusines={business.categories || []}
             address={address || "No Address"}
             hours={business.hours || {}}
+            attributes={business.attributes || {}}
             favItems={favItems || []}
             setFavItems={setFavItems || (() => {})}
           />
