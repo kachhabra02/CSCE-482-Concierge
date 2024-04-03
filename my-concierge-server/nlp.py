@@ -2,53 +2,52 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 import time
+import json
 
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-#Genre-Vector: <Provide a rating for each item in the genres list using the scheme described in the ratings list. Do not provide the genre name, and prioritize pleasing the most people>
+vector_items = 'American, Fast Food, Italian, Breakfast and Brunch, Mexican, Dessert, Cafe, Seafood, Chinese, Asian, Healthy Eating, Japanese, Mediterranean, Vegetarian and Vegan, Thai, Latin American, Vietnamese, Gluten-Free, South Asian, Middle Eastern, Korean, Local Flavor, French, Halal, Irish, African, German, European, Kosher, Price Level, Good for Groups, Good for Kids' 
 
-template = """
-Anything between <> should be a comma separated list in the format genre-count where count is number of appearances in the text
-If for you can't find anything, put N/A
-bonus list: take-out, kid-friendly, romantic, light-atmosphere
-food genre list: American, Chinese, Cuban, Greek, Indian, Italian, Japanese, Korean, Mexican, Thai, Vietnamese
-ratings: won't eat: -3, hate: -2, dislike: -1, default: 0, like: 1, love: 2, must eat: 3 
-Likes: <liked genres selected from the genres list only>
-Dislikes: <disliked genres selected from the genres list only>
-Genre-Vector: (provide an integer rating for how well each of the food genres in the food genre list fit the group ranging from -5 to 5 with -5 being the group would hate that food and 5 being the group would love that food) 
-Price: (pick one from: cheap, pricey, expensive)
-Restrictions: <dietary restrictions>
-Speed: (pick one from: fast, sit-down)
-Other: (comma separated list of items from the provided bonus list)
-"""
+example_json = '{"American": "<score>", "Fast Food": "<score>", "Italian": "<score>", "Breakfast and Brunch": "<score>", "Mexican": "<score>", "Dessert": "<score>", "Cafe": "<score>", "Seafood": "<score>", "Chinese": "<score>", "Asian": "<score>", "Healthy Eating": "<score>", "Japanese": "<score>", "Mediterranean": "<score>", "Vegetarian and Vegan": "<score>", "Thai": "<score>", "Latin American": "<score>", "Vietnamese": "<score>", "Gluten-Free": "<score>", "South Asian": "<score>", "Middle Eastern": "<score>", "Korean": "<score>", "Local Flavor": "<score>", "French": "<score>", "Halal": "<score>", "Irish": "<score>", "African": "<score>", "German": "<score>", "European": "<score>", "Kosher": "<score>", "Price Level": "<score>", "Good for Groups": "<score>", "Good for Kids": "<score>"}'
 
-template_2 = """
-Here are the possible cuisines that you should look for American, Chinese, Cuban, Greek, Indian, Italian, Japanese, Korean, Mexican, Thai, Vietnamese.
-If you cannot find anything put N/A.
+def getUserPreferenceVector(user_prompt, prev_vector):
+    time_before_call = time.perf_counter()
+    completion = client.chat.completions.create(
+      model="gpt-3.5-turbo",
+      messages=[
+            {"role": "system", "content": "You analyze text provided by a group of people to populate a json object which will indicate how much the group wants the different items in the json object. Each entry in the json object will have a score for that particular item; the integers will only range from 0 to 5 (0 is the default). When assigning these scores take into account how many people like something; the more people that like it, the higher the score should be. Also use the wording to adjust the score; for example, 'I love Korean food' should get a higher score than 'I like Korean food'. You should also update similar cuisines/items. For example, if the group likes Japanese and Korean you should also increase the Asian score since it is related. However, you should only update things that are very similar. The json object shows how much the group likes each cuisine/item. Here is the json object that should populate by replacing the <score> tags with your score: " + example_json + ". Keep in mind that South Asian includes Indian food. For the Price Level, 0 is if you did not find price info, 1 is really cheap, 2 is cheap, 3 is moderate, and 4-5 is expensive. The 'Good for Groups' should be a 0 or a 1; 0 means that you think the number of people is less than 4, and a 1 if you think there are more than 4. The 'Good for Kids' should also be a 0 or a 1. You shouldn't always associate fast food with American cuisine, rather you should score fast food based on desired speed; for example, if they mention 'sit-down', 'sit down', 'slow', etc. the fast food score should be 0. I want you to return the json object after modifying the values. You should strictly follow the json format provided and populate every field with at least a 0."},
+        {"role": "user", "content": user_prompt}
+      ]
+    )
+    time_after_call = time.perf_counter()
 
-For each sentence in the text, provide the following and nothing else:
-Likes: (A comma seperated list of cuisines that people liked alongside the sentiment for each cuisine in the form <cuisine-sentiment>, <cuisine-sentiment>, ...)
-Dislikes: (A comma seperated list of cuisines that people did not like alongside the sentiment for each cuisine in the form <cuisine-sentiment>, <cuisine-sentiment>, ...)
-"""
+    total_time = time_after_call - time_before_call
 
-user_text = "I want something on the cheaper side that still fits everyone's needs. I love Korean food, but John likes Japanese food. My mom likes mexican food and Korean food. However, my dad hates Korean food, but he likes everything else. It doesn't have to be fast. It would be great if my kids like it too. We all hate Mediterranean food. I don't like Thai food."
+    vector_items_list = vector_items.split(", ")
+    vector_int_scores = [0 for i in range(len(vector_items_list))]
 
-print('Input:\n' + user_text)
-print()
+    print('GPT API took {}\n\n'.format(total_time))
+    print(completion.choices[0].message.content)
 
-time_before_call = time.perf_counter()
-completion = client.chat.completions.create(
-  model="gpt-3.5-turbo",
-  messages=[
-    {"role": "system", "content": "You analyze text to populate the given template. You never provide anything outside the provided template. Here is the template: " + template_2},
-    {"role": "user", "content": user_text}
-  ]
-)
-time_after_call = time.perf_counter()
+    json_obj = json.loads(completion.choices[0].message.content)
+    for idx, item in enumerate(vector_items_list):
+        score = int(json_obj[item])
+        vector_int_scores[idx] = score
 
-total_time = time_after_call - time_before_call
+    for idx, val in enumerate(prev_vector):
+        vector_int_scores[idx] = max(vector_int_scores[idx], val)
 
-print('GPT API took {}\n\n'.format(total_time))
-print(completion.choices[0].message.content)
+    return vector_int_scores
+
+user_vector = [0 for i in range(32)]
+while(True):
+    user_text = input('Enter prompt: ')
+
+    user_vector = getUserPreferenceVector(user_text, user_vector) 
+    print(user_vector)
+
+    
+
+
