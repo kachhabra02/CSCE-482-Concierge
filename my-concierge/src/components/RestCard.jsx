@@ -87,7 +87,16 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
         </div>
       </Card.Body>
       <ListGroup className="list-group-flush">
-        <ListGroup.Item>Address: {address}</ListGroup.Item>
+      <ListGroup.Item>
+        <a  className="map-link"
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            title="click her to see it on map"
+          >
+            {"Address:" + " "+address}
+          </a>
+      </ListGroup.Item>
         <Accordion alwaysOpen>
           <Accordion.Item eventKey="0">
             <Accordion.Header>Opening Hours:</Accordion.Header>

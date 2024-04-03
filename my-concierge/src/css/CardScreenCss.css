@@ -137,6 +137,17 @@
   padding: 3px;
 }
   
+.map-link {
+  color: inherit; 
+  text-decoration: none; 
+}
+
+.map-link:hover {
+  text-decoration: underline; 
+  cursor: pointer; 
+}
+
+
 .hours-list {
   list-style-type: none;
   padding: 0;
@@ -144,6 +155,12 @@
 
 .hours-list li {
   border: 1px solid black;
+  transition: transform 0.3s ease;
+}
+
+.hours-list li:hover {
+  transform: scale(1.05); 
+  cursor: default;
 }
 
 .gray-bg {

@@ -13,6 +13,7 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
 
   const carouselRef = useRef(null); // Reference for the carousel component
 
+  //0;St Honore Pastries;935 Race St;Philadelphia;PA;19107;Philadelphia;39.9555052;-75.1555641;4.0;80;536871488;1;{"Monday": "7:0-20:0", "Tuesday": "7:0-20:0", "Wednesday": "7:0-20:0", "Thursday": "7:0-20:0", "Friday": "7:0-21:0", "Saturday": "7:0-21:0", "Sunday": "7:0-21:0"};https://my-concierge-bucket.s3.amazonaws.com/MTSW4McQd7CbVtyjqoe9mw;7
   const businessData = [
     {
       "business_id": "tnhfDv5Il8EaGSXZGiuQGg",
