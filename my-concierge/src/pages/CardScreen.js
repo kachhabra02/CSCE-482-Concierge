@@ -16,17 +16,22 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
   //0;St Honore Pastries;935 Race St;Philadelphia;PA;19107;Philadelphia;39.9555052;-75.1555641;4.0;80;536871488;1;{"Monday": "7:0-20:0", "Tuesday": "7:0-20:0", "Wednesday": "7:0-20:0", "Thursday": "7:0-20:0", "Friday": "7:0-21:0", "Saturday": "7:0-21:0", "Sunday": "7:0-21:0"};https://my-concierge-bucket.s3.amazonaws.com/MTSW4McQd7CbVtyjqoe9mw;7
   const businessData = [
     {
-      "business_id": "tnhfDv5Il8EaGSXZGiuQGg",
+      "rank": 1,
       "name": "Garaje",
       "address": "475 3rd St",
       "city": "San Francisco",
       "state": "CA",
-      "postal_code": "94107",
+      "zip_code": "94107",
+      "metro_area": "San Francisco",
       "latitude": 37.7817529521,
       "longitude": -122.39612197,
       "stars": 4.5,
-      "review_count": 1198,
-      "is_open": 1,
+      "num_reviews": 1198,
+      "attributes": {
+        "take_out": true,
+        "delivery":true,
+        "wheelchair_accessible":true
+      },
       "categories": [
         "Mexican",
         "Burgers",
@@ -37,29 +42,32 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
       "hours": {
         "Monday": "10:00-21:00",
         "Tuesday": "10:00-21:00",
-        "Friday": "10:00-21:00",
         "Wednesday": "10:00-21:00",
         "Thursday": "10:00-21:00",
+        "Friday": "10:00-21:00",
         "Sunday": "11:00-18:00",
         "Saturday": "10:00-21:00"
-      }
+      },
+      "base_image_url": "http...",
+      "num_images": 12,
+      "yelp_url": null,
+      "phone": null
     },
     {
-      "business_id": "tnhfDv5Il8EaGSXZGiuQGg",
       "name": "Garaje2",
       "address": "475 3rd St",
       "city": "San Francisco",
       "state": "CA",
-      "postal_code": "94107",
+      "zip_code": "94107",
+      "metro_area": "San Francisco",
       "latitude": 37.7817529521,
       "longitude": -122.39612197,
       "stars": 4.5,
-      "review_count": 1198,
-      "is_open": 1,
+      "num_reviews": 1198,
       "attributes": {
-        "RestaurantsTakeOut": true,
-        "RestaurantsDelivery":true,
-        "WheelchairAccessible":true
+        "take_out": true,
+        "delivery":true,
+        "wheelchair_accessible":true
       },
       "categories": [
         "Mexican",
@@ -68,28 +76,35 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
         "Vegan",
         "Other"
       ],
+      "hours": {
+        "Monday": "10:00-21:0",
+        "Tuesday": "10:00-21:00",
+        "Wednesday": "10:00-21:0",
+        "Thursday": "10:00-21:00",
+        "Friday": "10:00-21:00",
+        "Sunday": "11:00-18:0",
+        "Saturday": "10:00-21:00"
+      },
+      "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/WnT9NIzQgLlILjPT0kEcsQ",
+      "num_images": 5,
+      "yelp_url": "https://my-concierge-bucket.s3.amazonaws.com/WnT9NIzQgLlILjPT0kEcsQ",
+      "phone": 123456789
     },
     {
-      "business_id": "tnhfDv5Il8EaGSXZGiuQGg",
-      "name": "Garaje3",
+      "name": "Garaje1",
       "address": "475 3rd St",
       "city": "San Francisco",
       "state": "CA",
-      "postal_code": "94107",
+      "zip_code": "94107",
+      "metro_area": "San Francisco",
       "latitude": 37.7817529521,
       "longitude": -122.39612197,
       "stars": 4.5,
-      "review_count": 1198,
-      "is_open": 1,
+      "num_reviews": 1198,
       "attributes": {
-        "RestaurantsTakeOut": true,
-        "BusinessParking": {
-          "garage": false,
-          "street": true,
-          "validated": false,
-          "lot": false,
-          "valet": false
-        }
+        "take_out": true,
+        "delivery":true,
+        "wheelchair_accessible":true
       },
       "categories": [
         "Mexican",
@@ -106,7 +121,11 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
         "Thursday": "10:00-21:00",
         "Sunday": "11:00-18:00",
         "Saturday": "10:00-21:00"
-      }
+      },
+      "base_image_url": "http...",
+      "num_images": 12,
+      "yelp_url": null,
+      "phone": null
     }
 
 ];
@@ -142,8 +161,8 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
   if (businessData[0].state) {
     address += (address ? ", " : "") + businessData[0].state;
   }
-  if (businessData[0].postal_code) {
-    address += (address ? ", " : "") + businessData[0].postal_code;
+  if (businessData[0].zip_code) {
+    address += (address ? ", " : "") + businessData[0].zip_code;
   }
   if (!address) {
     address = "No information available";
@@ -212,13 +231,17 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
           <RestCard
             name={business.name || "No Name"}
             stars={business.stars || 0}
-            reviews={business.review_count >= 1000 ? "1k+" : (business.review_count || 0)}
+            reviews={business.num_reviews >= 1000 ? "1k+" : (business.num_reviews || 0)}
             cusines={business.categories || []}
             address={address || "No Address"}
             hours={business.hours || {}}
             attributes={business.attributes || {}}
             favItems={favItems || []}
             setFavItems={setFavItems || (() => {})}
+            image = {business.base_image_url}
+            total_images = {business.num_images}
+            phone = {business.phone}
+            yelp = {business.yelp_url}
           />
         </div>
         ))}

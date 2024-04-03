@@ -4,10 +4,14 @@ import Star from "./Star";
 import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaRegHeart, FaHeart, FaTaxi, FaBox ,FaWheelchair} from "react-icons/fa";
+import { FaRegHeart, FaHeart, FaTaxi, FaBox ,FaWheelchair,FaPhone, FaYelp} from "react-icons/fa";
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
+import Default from '../img/default.png'; 
 
 
-function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems}) {
+
+function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems, image, total_images, phone, yelp}) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAllCuisines, setShowAllCuisines] = useState(false);
   
@@ -39,20 +43,59 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
 
   const renderIcon = (attribute) => {
     switch (attribute) {
-      case 'RestaurantsTakeOut':
+      case 'take_out':
         return <FaBox />;
-      case 'RestaurantsDelivery':
+      case 'delivery':
         return <FaTaxi />;
-      case 'WheelchairAccessible':
+      case 'wheelchair_accessible':
         return <FaWheelchair />;
       default:
         return null;
     }
   };
 
+  const formatHours = (hour) => {
+    if (!hour.endsWith('00')) {
+      return hour + '0';
+    }
+    return hour;
+  };
+
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 1
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 1
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 1
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1
+    }
+  };
+  const images = Array.from({ length: total_images > 5 ? 5 : total_images }, (_, i) => `${image}${i > 0 ? `_${i}.jpg` : '.jpg'}`);
+  const carouselImages = images.length > 0 ? images : [Default];
+
+
+
   return (
-    <Card style={{ width: "18rem" }}>
-      <Card.Img variant="top" src="holder.js/100px180" />
+    <Card style={{ width: "20rem" }}>
+      <Carousel 
+        showDots={true}
+        removeArrowOnDeviceType={["tablet", "mobile"]}
+        responsive={responsive}
+
+      >
+      {carouselImages.map((image, index) => (
+          <img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
+        ))}
+      </Carousel>
       <Card.Body style={{ paddingBottom: '0' }}>
         <div className="d-flex flex-row justify-content-between w-100">
           <Card.Title className="col-7">{name}</Card.Title>
@@ -107,7 +150,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
                 <ul className="hours-list">
                   {Object.entries(hours).map(([day, hours], index) => (
                     <li key={day} className={index % 2 === 0 ? "gray-bg" : "white-bg"}>
-                      {boldCurrentDay(day)}: {hours || "No information available"}
+                      {boldCurrentDay(day)}: {formatHours(hours) || "No information available"}
                     </li>
                   ))}
                 </ul>
@@ -115,8 +158,8 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
-            <Accordion.Header>Extra:</Accordion.Header>
-            <Accordion.Body>
+          <Accordion.Header>Extra:</Accordion.Header>
+          <Accordion.Body>
             {Object.entries(attributes).length === 0 ? (
               <div>No information available</div>
             ) : (
@@ -131,8 +174,29 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
                 ))}
               </ul>
             )}
+            {phone && (
+              <>
+                <hr /> 
+                <li className="attribute-item">
+                  <FaPhone />
+                  <span className="attribute-text">Phone: {phone}</span>
+                </li>
+              </>
+            )}
+            {yelp && (
+              <>
+                <hr /> 
+                <li className="attribute-item">
+                  <FaYelp />
+                  <span className="attribute-text">
+                    Yelp: <a href={yelp} target="_blank" rel="noopener noreferrer">Visit Yelp</a>
+                  </span>
+                </li>
+              </>
+            )}
           </Accordion.Body>
-          </Accordion.Item>
+        </Accordion.Item>
+
         </Accordion>
       </ListGroup>
     </Card>
