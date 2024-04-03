@@ -41,12 +41,13 @@ def getUserPreferenceVector(user_prompt, prev_vector):
 
     return vector_int_scores
 
-user_vector = [0 for i in range(32)]
-while(True):
-    user_text = input('Enter prompt: ')
+if __name__ == "__main__":
+    user_vector = [0 for i in range(32)]
+    while(True):
+        user_text = input('Enter prompt: ')
 
-    user_vector = getUserPreferenceVector(user_text, user_vector) 
-    print(user_vector)
+        user_vector = getUserPreferenceVector(user_text, user_vector) 
+        print(user_vector)
 
     
 
