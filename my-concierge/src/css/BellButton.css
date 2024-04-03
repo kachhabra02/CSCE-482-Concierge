@@ -1,0 +1,13 @@
+
+.bellbutton{
+    background-color: transparent;
+    border-color: black;
+    height: 5%;
+    width: 5%;
+}
+.bellPic{
+    width: 150%;
+    height: 150%;
+
+    align-items: center;
+}
