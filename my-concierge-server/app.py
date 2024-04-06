@@ -14,7 +14,7 @@ def home():
 def prompt():
     prompt = request.args.get('prompt')
     original_user_preference_vector_str = request.args.get('user_preference_vector')
-    original_user_preference_vector = [int(x) for x in original_user_preference_vector_str.split(',')]
+    original_user_preference_vector = [int(x) for x in original_user_preference_vector_str.split('-')]
 
     updated_user_preference_vector, chat_response = nlp.getUserPreferenceVector(prompt, original_user_preference_vector)
 

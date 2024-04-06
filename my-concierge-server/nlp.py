@@ -36,6 +36,9 @@ def getUserPreferenceVector(user_prompt, prev_vector):
         score = int(json_obj[item])
         vector_int_scores[idx] = score
 
+    # TODO: Split Price Level into 4 different levels (Price Level $, Price Level $$, Price Level $$$, Price Level $$$$)
+    # <=0 -> (0, 0, 0, 0) ; 1 -> (1, 0, 0, 0) ; 2 -> (0, 1, 0, 0) ; 3 -> (0, 0, 1, 0) ; >=4 -> (0, 0, 0, 1)
+
     for idx, val in enumerate(prev_vector):
         vector_int_scores[idx] = max(vector_int_scores[idx], val)
 
