@@ -12,12 +12,12 @@ regex==2023.12.25
 tqdm==4.66.2
 werkzeug==3.0.1
 zipp==3.17.0
+sqlalchemy
+pymysql
+boto3
+requests
+openai
+python-dotenv
 
 # other required dependencies
 setuptools >= 67.6.0
-
-sqlalchemy
-pymysql
-
-boto3
-requests

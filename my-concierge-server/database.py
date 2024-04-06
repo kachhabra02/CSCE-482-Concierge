@@ -6,7 +6,7 @@ db_connection_string = "mysql+pymysql://admin:arpankumar@my-concierge-db.cpm2kgu
 
 engine = create_engine(db_connection_string, connect_args={})
 
-def get_categories():
+def getCategories():
   with engine.connect() as conn:
     sql_query = """
       SELECT *
@@ -19,7 +19,7 @@ def get_categories():
       output.append(row[1])
     return output
 
-def get_attributes():
+def getAttributes():
   with engine.connect() as conn:
     sql_query = """
       SELECT *
@@ -32,7 +32,7 @@ def get_attributes():
       output.append(row[1])
     return output
 
-def get_restaurants(metro_area):
+def getRestaurants(metro_area):
   with engine.connect() as conn:
     sql_query = """
       SELECT *

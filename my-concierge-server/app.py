@@ -1,42 +1,39 @@
 from flask import Flask, render_template, jsonify, request
 import database
-import random
+import nlp
+import recommender
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/api")
 def home():
-    restaurants = database.get_restaurants()
+    restaurants = database.getRestaurants('Philadelphia')
     return render_template('home.html', restaurants=restaurants)
 
-@app.route('/api/resource/prompt', methods=['GET'])
+@app.route('/api/prompt', methods=['GET'])
 def prompt():
     prompt = request.args.get('prompt')
-    original_user_preference_vector_str = request.args.get('original_user_preference_vector')
-    original_user_preference_vector = [int(x) for x in original_user_preference_vector_str.strip('[]').split(',')]
+    original_user_preference_vector_str = request.args.get('user_preference_vector')
+    original_user_preference_vector = [int(x) for x in original_user_preference_vector_str.split('-')]
 
-    # final_user_preference_vector = getUserPreferenceVector(prompt, original_user_preference_vector) // Incorporate Will's Code
-    
-    final_user_preference_vector = [random.randint(0, 5) for _ in range(32)]
+    updated_user_preference_vector, chat_response = nlp.getUserPreferenceVector(prompt, original_user_preference_vector)
+
     data = {
-        'prompt': prompt,
-        'original_user_preference_vector': original_user_preference_vector,
-        'final_user_preference_vector': final_user_preference_vector,
+        'response': chat_response,
+        'updated_user_preference_vector': updated_user_preference_vector
     }
     return jsonify(data)
 
-@app.route('/api/resource/reccomendation', methods=['GET'])
+@app.route('/api/recommendation', methods=['GET'])
 def reccomendation():
     location = request.args.get('location')
     user_preference_vector_str = request.args.get('user_preference_vector')
-    user_preference_vector = [int(x) for x in user_preference_vector_str.strip('[]').split(',')]    
-    # return getReccomendation(location, user_preference_vector) // Incorporate Krish's Code
-    
-    # delete code below, only for testing purposes
-    user_preference_vector = [random.randint(0, 5) for _ in range(32)]
+    user_preference_vector = [int(x) for x in user_preference_vector_str.split('-')]   
+
+    recommended_restaurants = recommender.getRecommendations(location, user_preference_vector)
+
     data = {
-        'location': location,
-        'user_preference_vector': user_preference_vector,
+        'recommended_restaurants': recommended_restaurants,
     }
     return jsonify(data)
 

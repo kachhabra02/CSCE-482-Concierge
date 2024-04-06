@@ -1,28 +1,9 @@
-# Imports For Support Functions
-# TODO
-
-# Imports For Important Function
-# TODO
-
-# Functions for temporary use only
-# Location -> List of Dictionaries
-def getRestaurants(location):
-    pass
-
-# Array of Categories Indexed by category_id
-def get_categories():
-    pass
-
-# Array of Attributes Indexed by category_id
-def get_attributes():
-    pass
-
-
+import database
 
 # Recommendations Function
-def getRecommendation(location, user_preference_vector):
+def getRecommendations(location, user_preference_vector):
     # Get Restaurants in City
-    restaurants = getRestaurants(location)
+    restaurants = database.getRestaurants(location)
 
     # Construct Restaurant Category Matrix
         # Convert Restaurant Category Sum Into Array of {0,1}
@@ -34,5 +15,4 @@ def getRecommendation(location, user_preference_vector):
 
     # Order Restaurants by Score (desc)
 
-
-    pass
+    return "Taco Bell"
