@@ -11,7 +11,7 @@ def getCategories():
     sql_query = """
       SELECT *
       FROM Categories
-      ORDER BY category_id ASC;
+      ORDER BY category_id DESC;
     """
     result = conn.execute(text(sql_query))
     output = []
@@ -24,7 +24,7 @@ def getAttributes():
     sql_query = """
       SELECT *
       FROM Attributes
-      ORDER BY attribute_id ASC;
+      ORDER BY attribute_id DESC;
     """
     result = conn.execute(text(sql_query))
     output = []
@@ -52,12 +52,12 @@ def getRestaurants(metro_area):
         "latitude": float(row[7]),
         "longitude": float(row[8]),
         "stars": float(row[9]),
-        "num_reviews": row[10],
-        "attribute_sum": row[12],
-        "category_sum": row[11],
+        "num_reviews": int(row[10]),
+        "attribute_sum": int(row[12]),
+        "category_sum": int(row[11]),
         "hours": row[13],
         "base_image_url": row[14],
-        "num_images": row[15],
+        "num_images": int(row[15]),
         "yelp_url": None if row[16] == '' else row[16],
         "phone": None if row[17] == '' else row[17]
       }

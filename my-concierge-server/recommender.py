@@ -1,18 +1,58 @@
 import database
+import numpy as np
+
+# Constants
+num_recommendations = 15
 
 # Recommendations Function
 def getRecommendations(location, user_preference_vector):
     # Get Restaurants in City
     restaurants = database.getRestaurants(location)
 
+    # Get Categories and Attributes
+    categories = database.getCategories()
+    num_cat = len(categories)
+    attributes = database.getAttributes()
+    num_att = len(attributes)
+
     # Construct Restaurant Category Matrix
-        # Convert Restaurant Category Sum Into Array of {0,1}
-        # Merge Arrays Into Matrix in Order of Restaurant List
+    cat_arrs = [[1 if digit == '1' else 0 for digit in bin(restaurant['category_sum'])[2:].zfill(num_cat)] for restaurant in restaurants]
+    cat_mat = np.array(cat_arrs)
     
     # Optional: Update UPV based on category relationships
 
     # Perform Product to Get Restaurant Scores
+    scores = np.dot(cat_mat, user_preference_vector)
 
-    # Order Restaurants by Score (desc)
+    # Order Restaurants by Score (Descending)
+    randomizer = np.random.random(scores.size)
+    order = np.lexsort((randomizer, scores))[::-1]
+    order = order[:num_recommendations]
+    # scores = scores[order]    # Don't need actual scores (for now, at least)
 
-    return "Taco Bell"
+    # Retrieve Recommendations
+    recommendations = []
+    for rank in range(order.size):
+        # Get Restaurant
+        recommendation = restaurants[order[rank]]
+        recommendation['rank'] = rank
+
+        # Extract Categories
+        print(recommendation['category_sum'])
+        recommendation['categories'] = [categories[i] for i, digit in enumerate(bin(recommendation['category_sum'])[2:].zfill(num_cat)) if digit == '1']
+        print(recommendation['categories'])
+        del recommendation['category_sum']
+
+        # Extract Categories
+        print(recommendation['attribute_sum'])
+        recommendation['attributes'] = [attributes[i] for i, digit in enumerate(bin(recommendation['attribute_sum'])[2:].zfill(num_att)) if digit == '1']
+        print(recommendation['attributes'])
+        del recommendation['attribute_sum']
+
+        recommendations.append(recommendation)
+
+    return recommendations
+
+if __name__ == '__main__':
+    recs = getRecommendations('Tampa', [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    print(recs)
