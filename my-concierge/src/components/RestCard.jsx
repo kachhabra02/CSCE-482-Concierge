@@ -55,7 +55,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
   };
 
   const formatHours = (hour) => {
-    if (!hour.endsWith('00')) {
+    if (hour.endsWith(':0')) {
       return hour + '0';
     }
     return hour;

@@ -7,8 +7,10 @@ import StartScreen from '../pages/StartScreen';
 
 import {AnimatePresence} from "framer-motion";
 
-function AnimatedRoutes() {
+function AnimatedRoutes({businessData,setBusinessData,city,setCity,UPV,setUPV}) {
 
+  //send all the props to chatbot,mapscreen
+  // remove CardScreen Route when map screen merged!!
   const location = useLocation();
 
   return (
