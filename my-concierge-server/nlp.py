@@ -39,7 +39,12 @@ def getUserPreferenceVector(user_prompt, prev_vector):
     for idx, val in enumerate(prev_vector):
         vector_int_scores[idx] = max(vector_int_scores[idx], val)
 
-    return vector_int_scores, "That sounds delicious. Anything else?"
+    vector_str = ''
+    for idx in range(len(vector_int_scores) - 1):
+        vector_str += str(vector_int_scores[idx]) + ','
+    vector_str += str(vector_int_scores[-1])
+
+    return vector_str, "That sounds delicious. Anything else?"
 
 if __name__ == "__main__":
     user_vector = [0 for i in range(32)]
