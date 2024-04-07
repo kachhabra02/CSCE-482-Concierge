@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Star from "./Star";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -14,6 +14,12 @@ import Default from '../img/default.png';
 function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems, image, total_images, phone, yelp}) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAllCuisines, setShowAllCuisines] = useState(false);
+
+
+  //useEffect 
+  useEffect(() => {
+    setIsFavorite(favItems.find((fav) =>fav.name === name) !== undefined)
+  }, [favItems])
   
 
   const onFavoriteClick = () => {
@@ -85,7 +91,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
 
 
   return (
-    <Card style={{ width: "20rem" }}>
+    <Card style={{ width: "23rem", marginBottom:"10px" }}>
       <Carousel 
         showDots={true}
         removeArrowOnDeviceType={["tablet", "mobile"]}

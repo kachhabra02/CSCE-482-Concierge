@@ -48,8 +48,8 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
         "Sunday": "11:00-18:00",
         "Saturday": "10:00-21:00"
       },
-      "base_image_url": "http...",
-      "num_images": 12,
+      "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/WnT9NIzQgLlILjPT0kEcsQ",
+      "num_images": 0,
       "yelp_url": null,
       "phone": null
     },
@@ -86,7 +86,7 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
         "Saturday": "10:00-21:00"
       },
       "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/WnT9NIzQgLlILjPT0kEcsQ",
-      "num_images": 5,
+      "num_images": 7,
       "yelp_url": "https://my-concierge-bucket.s3.amazonaws.com/WnT9NIzQgLlILjPT0kEcsQ",
       "phone": 123456789
     },
