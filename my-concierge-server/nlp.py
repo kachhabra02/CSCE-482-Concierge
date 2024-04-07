@@ -12,6 +12,15 @@ vector_items = 'American, Fast Food, Italian, Breakfast and Brunch, Mexican, Des
 
 example_json = '{"American": "<score>", "Fast Food": "<score>", "Italian": "<score>", "Breakfast and Brunch": "<score>", "Mexican": "<score>", "Dessert": "<score>", "Cafe": "<score>", "Seafood": "<score>", "Chinese": "<score>", "Asian": "<score>", "Healthy Eating": "<score>", "Japanese": "<score>", "Mediterranean": "<score>", "Vegetarian and Vegan": "<score>", "Thai": "<score>", "Latin American": "<score>", "Vietnamese": "<score>", "Gluten-Free": "<score>", "South Asian": "<score>", "Middle Eastern": "<score>", "Korean": "<score>", "Local Flavor": "<score>", "French": "<score>", "Halal": "<score>", "Irish": "<score>", "African": "<score>", "German": "<score>", "European": "<score>", "Kosher": "<score>", "Price Level": "<score>", "Good for Groups": "<score>", "Good for Kids": "<score>"}'
 
+price_level_map = {
+    0: [0, 0, 0, 0],
+    1: [1, 0, 0, 0],
+    2: [0, 1, 0, 0],
+    3: [0, 0, 1, 0],
+    4: [0, 0, 0, 1],
+    5: [0, 0, 0, 1]
+}
+
 def getUserPreferenceVector(user_prompt, prev_vector):
     time_before_call = time.perf_counter()
     completion = client.chat.completions.create(
@@ -36,18 +45,14 @@ def getUserPreferenceVector(user_prompt, prev_vector):
         score = int(json_obj[item])
         vector_int_scores[idx] = score
 
-    # TODO: Split Price Level into 4 different levels (Price Level $, Price Level $$, Price Level $$$, Price Level $$$$)
-    # <=0 -> (0, 0, 0, 0) ; 1 -> (1, 0, 0, 0) ; 2 -> (0, 1, 0, 0) ; 3 -> (0, 0, 1, 0) ; >=4 -> (0, 0, 0, 1)
+    # Split Price Level into 4 different levels (Price Level $, Price Level $$, Price Level $$$, Price Level $$$$)
+    price_level_ind = vector_items_list.index('Price Level')
+    vector_int_scores = vector_int_scores[:price_level_ind] + price_level_map.get(vector_int_scores[price_level_ind], [0, 0, 0, 0]) + vector_int_scores[(price_level_ind + 1):]
 
     for idx, val in enumerate(prev_vector):
         vector_int_scores[idx] = max(vector_int_scores[idx], val)
 
-    # vector_str = ''
-    # for idx in range(len(vector_int_scores) - 1):
-    #     vector_str += str(vector_int_scores[idx]) + ','
-    # vector_str += str(vector_int_scores[-1])
-
-    return vector_int_scores, "That sounds delicious. Anything else?"
+    return vector_int_scores, 'That sounds delicious. Anything else?'
 
 if __name__ == "__main__":
     user_vector = [0 for i in range(32)]

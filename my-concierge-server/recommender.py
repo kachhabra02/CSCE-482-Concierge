@@ -11,17 +11,23 @@ def getRecommendations(location, user_preference_vector):
 
     # Get Categories and Attributes
     categories = database.getCategories()
+    print(categories)
     num_cat = len(categories)
     attributes = database.getAttributes()
+    print(attributes)
     num_att = len(attributes)
 
     # Construct Restaurant Category Matrix
     cat_arrs = [[1 if digit == '1' else 0 for digit in bin(restaurant['category_sum'])[2:].zfill(num_cat)] for restaurant in restaurants]
     cat_mat = np.array(cat_arrs)
+    print(cat_mat.shape)
+
     
     # Optional: Update UPV based on category relationships
 
     # Perform Product to Get Restaurant Scores
+    user_preference_vector = np.array(user_preference_vector[::-1])
+    print(user_preference_vector.shape)
     scores = np.dot(cat_mat, user_preference_vector)
 
     # Order Restaurants by Score (Descending)

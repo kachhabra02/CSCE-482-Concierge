@@ -45,10 +45,10 @@ def getRestaurants(metro_area):
       restaurant = {
         "name": row[1],
         "address": row[2],
-        "city": row[6],
+        "city": row[3],
         "state": row[4],
         "zip_code": row[5],
-        "metro_area": row[3],
+        "metro_area": row[6],
         "latitude": float(row[7]),
         "longitude": float(row[8]),
         "stars": float(row[9]),
