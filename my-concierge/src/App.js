@@ -1,24 +1,21 @@
 import React, {useState} from 'react';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import AnimatedRoutes from './components/AnimatedRoutes';
 
 
 function App() {
-
-  const [businessData,setBusinessData] = useState({});
-  const [city, setCity] = useState("");
-  const [UPV, setUPV] = useState([]); //the array might need to have default values
+  // const [city, setCity] = useState("");
+  const [city, setCity] = useState("Philadelphia");
+  const [UPV, setUPV] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
   return (
     <Router>
         <AnimatedRoutes
-        businessData = {businessData}
-        setBusinessData = {setBusinessData}
-        city = {city}
-        setCity = {setCity}
-        UPV = {UPV}
-        setUPV = {setUPV}
+            city = {city}
+            setCity = {setCity}
+            UPV = {UPV}
+            setUPV = {setUPV}
         />
     </Router>
   );

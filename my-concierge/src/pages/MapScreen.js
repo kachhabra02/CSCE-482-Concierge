@@ -1,35 +1,75 @@
-import { React } from 'react';
+import { React, useState, useRef, useEffect } from 'react';
+import axios from 'axios';
 import {GoogleMap, LoadScript, MarkerF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
 // import ShoppingCart from "../components/ShoppingCart";
 
-const center = {lat: 30.6212316, lng: -96.3403778};
+const API = axios.create({
+  baseURL: `${process.env.REACT_APP_API_URL}/api`,
+  timeout: 15000 // 15 second timeout
+});
 
-function MapScreen() {
+const center = {lat: 39.8283, lng: -98.5795};
+
+function MapScreen({city, UPV}) {
 
   // const [favItems, setFavItems] = useState([]);
   // const [showShoppingCart, setShowShoppingCart] = useState(false);
-  // Get Business Data here and send to CardScreen
+  const [restaurants, setRestaurants] = useState([]);
 
-  //pass in list from backend
-  const renderList = [{ position: { lat: 30.6212316, lng: -96.3403778 }, rank: 1, name: "good food"},
-                      { position: { lat: 30.620000, lng: -96.35900 }, rank: 2 },
-                     ];
-  
+
+  // Fetch recommendations from back-end
+  useEffect(() => {
+    API.get(`/recommendation?location=${city}&user_preference_vector=${UPV.join('-')}`)
+        .then((res) => {
+          if (res.status < 300 && restaurants.length === 0) { // Only set if restaurants are not yet set
+            setRestaurants(res.data["recommended_restaurants"]);
+          }
+          else {
+            console.log(`Error: Status code ${res.status} when retrieving restaurant recommendations`);
+          }
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log("Error when retrieving restaurant recommendations:");
+          console.log(error);
+        })
+  }, [])
+
+
+  // Render markers based on restaurants
   const renderMarkers = () => {
     const markers = [];
 
-    for (let i = 0; i < renderList.length; ++i) {
-      const icon_obj = { url: (i === 0) ? "Images/goldPin.png" : "Images/orangePin.png", scaledSize: { width: 45, height: 50 }, }
-      markers.push(<MarkerF position={renderList[i].position} icon={icon_obj}></MarkerF>);
+    for (let i = 0; i < restaurants.length; ++i) {
+      const icon_obj = { url: (restaurants[i].rank === 0) ? "Images/goldPin.png" : "Images/orangePin.png", scaledSize: { width: 45, height: 50 }, }
+      markers.push(<MarkerF key={`restaurant-${restaurants[i].rank}`} position={ { lat: restaurants[i].latitude, lng: restaurants[i].longitude } } icon={icon_obj}></MarkerF>);
     }
 
     return markers;
   }
 
-  //Map styling - hella long
+
+  // Fit bounds function
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (restaurants.length === 0) {
+        return;
+    }
+
+    const bounds = new window.google.maps.LatLngBounds();
+    restaurants.map(restaurant => {
+      bounds.extend({ lat: restaurant.latitude, lng: restaurant.longitude });
+      return restaurant.rank
+    });
+    mapRef.current.state.map.fitBounds(bounds);
+  }, [restaurants]); // Fit bounds on load and change of restaurants
+
+  
+  // Map styling - hella long
   const MapStyling = [
     {
       "featureType": "all",
@@ -307,22 +347,21 @@ function MapScreen() {
         }
       ]
     },
-    {
-      "featureType": "border",
-      "elementType": "geometry.stroke",
-      "stylers": [
-        {
-          "color": "#8ca1a8"
-        }
-      ]
-    }
-    
+    // {
+    //   "featureType": "border",
+    //   "elementType": "geometry.stroke",
+    //   "stylers": [
+    //     {
+    //       "color": "#8ca1a8"
+    //     }
+    //   ]
+    // }
   ]
-  
-  return (     
-    <div>
 
-     
+  
+  return (
+      
+    <div>   
       {/* <div>
         {favItems.length > 0 && (
           <div className="button-container">
@@ -339,17 +378,18 @@ function MapScreen() {
         </div> */}
       <Bell/>
       <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
-        <GoogleMap 
+        <GoogleMap
+          ref={mapRef}
           center={center} 
-          zoom={12} 
-          mapContainerStyle={{width: '76%', height: '600px', marginLeft: "12%", borderRadius:'2%', borderWidth:'50px', borderColor:'#0F5B7C'}}
+          zoom={4} 
+          mapContainerStyle={{width: '76%', height: '600px', marginLeft: "12%", borderRadius:'2%'}}
           options={{styles:MapStyling}}
           >
           {renderMarkers()}
         </GoogleMap>
       </LoadScript>
 
-      <CardScreen/>
+      <CardScreen restaurants={restaurants}/>
 
     {/* <CardScreen favItems={favItems}
           setFavItems={setFavItems}/> */}

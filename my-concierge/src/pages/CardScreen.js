@@ -5,130 +5,13 @@ import ShoppingCart from "../components/ShoppingCart";
 import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
-function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of Scroll from MapScreen
+function CardScreen({restaurants}) {//Get Business Data and FavItems, SetfavItems, Index of Scroll from MapScreen
 
 
   const [favItems, setFavItems] = useState([]);
   const [showShoppingCart, setShowShoppingCart] = useState(false);
 
   const carouselRef = useRef(null); // Reference for the carousel component
-
-  //0;St Honore Pastries;935 Race St;Philadelphia;PA;19107;Philadelphia;39.9555052;-75.1555641;4.0;80;536871488;1;{"Monday": "7:0-20:0", "Tuesday": "7:0-20:0", "Wednesday": "7:0-20:0", "Thursday": "7:0-20:0", "Friday": "7:0-21:0", "Saturday": "7:0-21:0", "Sunday": "7:0-21:0"};https://my-concierge-bucket.s3.amazonaws.com/MTSW4McQd7CbVtyjqoe9mw;7
-  const businessData = [
-    {
-      "rank": 1,
-      "name": "Garaje",
-      "address": "475 3rd St",
-      "city": "San Francisco",
-      "state": "CA",
-      "zip_code": "94107",
-      "metro_area": "San Francisco",
-      "latitude": 37.7817529521,
-      "longitude": -122.39612197,
-      "stars": 4.5,
-      "num_reviews": 1198,
-      "attributes": {
-        "take_out": true,
-        "delivery":true,
-        "wheelchair_accessible":true
-      },
-      "categories": [
-        "Mexican",
-        "Burgers",
-        "Gastropubs",
-        "Vegan",
-        "Other"
-      ],
-      "hours": {
-        "Monday": "10:00-21:00",
-        "Tuesday": "10:00-21:00",
-        "Wednesday": "10:00-21:00",
-        "Thursday": "10:00-21:00",
-        "Friday": "10:00-21:00",
-        "Sunday": "11:00-18:00",
-        "Saturday": "10:00-21:00"
-      },
-      "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/WnT9NIzQgLlILjPT0kEcsQ",
-      "num_images": 0,
-      "yelp_url": null,
-      "phone": null
-    },
-    {
-      "name": "Garaje2",
-      "address": "475 3rd St",
-      "city": "San Francisco",
-      "state": "CA",
-      "zip_code": "94107",
-      "metro_area": "San Francisco",
-      "latitude": 37.7817529521,
-      "longitude": -122.39612197,
-      "stars": 4.5,
-      "num_reviews": 1198,
-      "attributes": {
-        "take_out": true,
-        "delivery":true,
-        "wheelchair_accessible":true
-      },
-      "categories": [
-        "Mexican",
-        "Burgers",
-        "Gastropubs",
-        "Vegan",
-        "Other"
-      ],
-      "hours": {
-        "Monday": "10:00-21:0",
-        "Tuesday": "10:00-21:00",
-        "Wednesday": "10:00-21:0",
-        "Thursday": "10:00-21:00",
-        "Friday": "10:00-21:00",
-        "Sunday": "11:00-18:0",
-        "Saturday": "10:00-21:00"
-      },
-      "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/WnT9NIzQgLlILjPT0kEcsQ",
-      "num_images": 7,
-      "yelp_url": "https://my-concierge-bucket.s3.amazonaws.com/WnT9NIzQgLlILjPT0kEcsQ",
-      "phone": 123456789
-    },
-    {
-      "name": "Garaje1",
-      "address": "475 3rd St",
-      "city": "San Francisco",
-      "state": "CA",
-      "zip_code": "94107",
-      "metro_area": "San Francisco",
-      "latitude": 37.7817529521,
-      "longitude": -122.39612197,
-      "stars": 4.5,
-      "num_reviews": 1198,
-      "attributes": {
-        "take_out": true,
-        "delivery":true,
-        "wheelchair_accessible":true
-      },
-      "categories": [
-        "Mexican",
-        "Burgers",
-        "Gastropubs",
-        "Vegan",
-        "Other"
-      ],
-      "hours": {
-        "Monday": "10:00-21:00",
-        "Tuesday": "10:00-21:00",
-        "Friday": "10:00-21:00",
-        "Wednesday": "10:00-21:00",
-        "Thursday": "10:00-21:00",
-        "Sunday": "11:00-18:00",
-        "Saturday": "10:00-21:00"
-      },
-      "base_image_url": "http...",
-      "num_images": 12,
-      "yelp_url": null,
-      "phone": null
-    }
-
-];
 
   const responsive = {
     superLargeDesktop: {
@@ -150,23 +33,6 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
   };
 
   useEffect(() => console.log(favItems), [favItems])
-  
-  let address = "";
-  if (businessData[0].address) {
-    address += businessData[0].address;
-  }
-  if (businessData[0].city) {
-    address += (address ? ", " : "") + businessData[0].city;
-  }
-  if (businessData[0].state) {
-    address += (address ? ", " : "") + businessData[0].state;
-  }
-  if (businessData[0].zip_code) {
-    address += (address ? ", " : "") + businessData[0].zip_code;
-  }
-  if (!address) {
-    address = "No information available";
-  }
 
   const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
     <ul className="custom-dots">
@@ -185,7 +51,7 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
 
   // Function to find the index of an item by its name
   const findItemIndexByName = (name) => { // Define in MapScreen Later
-    return businessData.findIndex(business => business.name === name);
+    return restaurants.findIndex(business => business.name === name);
   };
 
   // Click event handler for buttons
@@ -215,7 +81,7 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
 
       <h1>Items:</h1>
 
-      {businessData.map((business, index) => (
+      {restaurants.map((business, index) => (
         <button key={index} onClick={() => handleButtonClick(business.name)}>{business.name}</button>
       ))}
         
@@ -226,24 +92,24 @@ function CardScreen() {//Get Business Data and FavItems, SetfavItems, Index of S
         renderDotsOutside={renderButtonGroupOutside} 
         removeArrowOnDeviceType={["tablet", "mobile"]}
       >
-        {businessData.map((business, index) => (
+        {restaurants.map((business, index) => (
           <div key={index}>
-          <RestCard
-            name={business.name || "No Name"}
-            stars={business.stars || 0}
-            reviews={business.num_reviews >= 1000 ? "1k+" : (business.num_reviews || 0)}
-            cusines={business.categories || []}
-            address={address || "No Address"}
-            hours={business.hours || {}}
-            attributes={business.attributes || {}}
-            favItems={favItems || []}
-            setFavItems={setFavItems || (() => {})}
-            image = {business.base_image_url}
-            total_images = {business.num_images}
-            phone = {business.phone}
-            yelp = {business.yelp_url}
-          />
-        </div>
+            <RestCard
+              name={business.name || "No Name"}
+              stars={business.stars || 0}
+              reviews={business.num_reviews >= 1000 ? "1k+" : (business.num_reviews || 0)}
+              cusines={business.categories || []}
+              address={business.address ? `${business.address}, ${business.city}, ${business.state} ${business.zip_code}` : "No Address"}
+              hours={business.hours || {}}
+              attributes={business.attributes || {}}
+              favItems={favItems || []}
+              setFavItems={setFavItems || (() => {})}
+              image = {business.base_image_url}
+              total_images = {business.num_images}
+              phone = {business.phone}
+              yelp = {business.yelp_url}
+            />
+          </div>
         ))}
         <div>Item 4</div>
       </Carousel>
