@@ -1,28 +1,22 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Chatbot from './pages/Chatbot';
-import CardScreen from './pages/CardScreen';
-import MapScreen from './pages/MapScreen';
+import React, {useState} from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import AnimatedRoutes from './components/AnimatedRoutes';
+
 
 function App() {
+  // const [city, setCity] = useState("");
+  const [city, setCity] = useState("Philadelphia");
+  const [UPV, setUPV] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
   return (
     <Router>
-      <div>
-        <ul>
-          <li><Link to="/Chatbot">Chatbot</Link></li>
-          <li><Link to="/MapScreen">Map</Link></li>
-          <li><Link to="/CardScreen">Card</Link></li>
-        </ul>
-
-        <hr />
-
-        <Routes>
-          <Route path="/Chatbot" element={<Chatbot />} />
-          <Route path="/MapScreen" element={<MapScreen />} />
-          <Route path="/CardScreen" element={<CardScreen />} />
-        </Routes>
-      </div>
+        <AnimatedRoutes
+            city = {city}
+            setCity = {setCity}
+            UPV = {UPV}
+            setUPV = {setUPV}
+        />
     </Router>
   );
 }

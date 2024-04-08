@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Play:wght@400;700&display=swap');
+
+
+.start-screen {
+    display: flex; /* Make the container a flexbox for better layout control */
+    flex-direction: column; /* Arrange elements vertically by default */
+    align-items: center; /* Center elements horizontally within the container */
+    justify-content: center; /* Center elements vertically within the container */
+    min-height: 100vh; /* Set minimum height to fill the viewport */
+    background-color: #0F5B7C/* Add background color if desired */;
+  }
+  
+  .header {
+    margin-bottom: 50px; /* Add some space below the header */
+  }
+
+  .header-text{
+    font-family:Play;
+    font-size: 8em; 
+    font-weight: bold;
+    color: #f1eee8;
+
+  }
+
+  .cursor {
+    display: inline-block;
+    vertical-align: middle;
+    width: 0.2em;
+    height: 1em;
+    background-color: #f1eee8;
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  
+  .content {
+    display: flex; /* Make the content section a flexbox as well */
+    flex-direction: column; /* Arrange image and button vertically */
+    align-items: center; /* Center them horizontally */
+  }
+  
+  .robot-image {
+    width: 100%; 
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 40px; /* Add space below the image */
+    box-shadow: 0 0 20px #f1eee8;
+  }
+  
+  .start-button {
+    background-color: #E16632; /* Green color for the button */
+    color: white; /* White text color */
+    padding: 15px 32px; /* Add padding for better button size */
+    text-align: center; /* Center button text */
+    display: inline-block; /* Allow for inline styling */
+    font-size: 16px; /* Adjust button font size */
+    border: none; /* Remove default button border */
+    cursor: pointer; /* Indicate clickable behavior */
+    border-radius: 30px; 
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+    font-weight: bold;
+    margin-bottom: 30px;
+
+  }
+  
+  .start-button:hover { /* Button hover effect */
+    background-image: linear-gradient(to bottom right, #FFD700, #b87800);  /* Change background color on hover */
+    box-shadow: 0 0 20px #f1eee8;
+    transform: translateY(-5px);
+
+    
+  }
+
