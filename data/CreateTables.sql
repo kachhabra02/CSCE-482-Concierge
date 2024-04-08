@@ -51,3 +51,4 @@ LOAD DATA LOCAL INFILE 'C:\\Users\\alex0\\Documents\\Spring2024\\CSCE482\\YelpDa
 	FIELDS TERMINATED BY ';' 
 	ENCLOSED BY '"' LINES TERMINATED BY '\n'
 	IGNORE 1 ROWS;
+CREATE INDEX idx_city ON Restaurants (metro_area);
