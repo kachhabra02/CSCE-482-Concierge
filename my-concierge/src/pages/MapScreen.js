@@ -1,6 +1,6 @@
 import { React, useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import {GoogleMap, LoadScript, MarkerF } from '@react-google-maps/api';
+import {GoogleMap, LoadScript, MarkerF, InfoWindowF, InfoBoxF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
@@ -18,8 +18,7 @@ function MapScreen({city, UPV}) {
   const [favItems, setFavItems] = useState([]);
   const [showShoppingCart, setShowShoppingCart] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
-  const [tempIndex, setTempIndex] = useState(0);
-
+  const [highlighted, setHighlighted] = useState(-1);
 
   // Fetch recommendations from back-end
   useEffect(() => {
@@ -46,8 +45,19 @@ function MapScreen({city, UPV}) {
     const markers = [];
 
     for (let i = 0; i < restaurants.length; ++i) {
-      const icon_obj = { url: (restaurants[i].rank === 0) ? "Images/goldPin.png" : "Images/orangePin.png", scaledSize: { width: 45, height: 50 }, }
-      markers.push(<MarkerF key={`restaurant-${restaurants[i].rank}`} position={ { lat: restaurants[i].latitude, lng: restaurants[i].longitude } } icon={icon_obj} onClick={()=>setTempIndex(restaurants[i].rank)}></MarkerF>);
+      const icon_obj = { url: (restaurants[i].rank === 0) ? "Images/goldPin.png" : "Images/orangePin.png",
+        scaledSize: { width: (restaurants[i].rank === highlighted) ? 54 : 45, height: (restaurants[i].rank === highlighted) ? 60 : 50 }, }
+      markers.push(<MarkerF key={`restaurant-${restaurants[i].rank}`} position={ { lat: restaurants[i].latitude, lng: restaurants[i].longitude } } icon={icon_obj} onClick={() => {
+        if (highlighted !== restaurants[i].rank) {
+          setHighlighted(restaurants[i].rank);
+        }
+      }}>
+        {/*highlighted === restaurants[i].rank ? (
+          <InfoBoxF onCloseClick={() => setHighlighted(-1)}>
+            <div>{restaurants[i].name}</div>
+          </InfoBoxF>
+        ) : null*/}
+      </MarkerF>);
     }
 
     return markers;
@@ -386,6 +396,7 @@ function MapScreen({city, UPV}) {
           zoom={4} 
           mapContainerStyle={{width: '76%', height: '600px', marginLeft: "12%", borderRadius:'2%'}}
           options={{styles:MapStyling}}
+          onClick={() => { if (highlighted !== -1) { setHighlighted(-1); } }}
           >
           {renderMarkers()}
         </GoogleMap>
@@ -395,7 +406,7 @@ function MapScreen({city, UPV}) {
       restaurants={restaurants}
       favItems={favItems}
       setFavItems={setFavItems}
-      tempIndex = {tempIndex}/>
+      tempIndex = {highlighted}/>
 
 
     {showShoppingCart && (
