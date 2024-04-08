@@ -136,17 +136,6 @@
 .custom-cus .accordion-button{
   padding: 3px;
 }
-  
-.map-link {
-  color: inherit; 
-  text-decoration: none; 
-}
-
-.map-link:hover {
-  text-decoration: underline; 
-  cursor: pointer; 
-}
-
 
 .hours-list {
   list-style-type: none;
