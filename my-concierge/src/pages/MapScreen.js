@@ -4,7 +4,7 @@ import {GoogleMap, LoadScript, MarkerF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
-// import ShoppingCart from "../components/ShoppingCart";
+import ShoppingCart from "../components/ShoppingCart";
 
 const API = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/api`,
@@ -15,9 +15,10 @@ const center = {lat: 39.8283, lng: -98.5795};
 
 function MapScreen({city, UPV}) {
 
-  // const [favItems, setFavItems] = useState([]);
-  // const [showShoppingCart, setShowShoppingCart] = useState(false);
+  const [favItems, setFavItems] = useState([]);
+  const [showShoppingCart, setShowShoppingCart] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
+  const [tempIndex, setTempIndex] = useState(0);
 
 
   // Fetch recommendations from back-end
@@ -39,13 +40,14 @@ function MapScreen({city, UPV}) {
   }, [])
 
 
+
   // Render markers based on restaurants
   const renderMarkers = () => {
     const markers = [];
 
     for (let i = 0; i < restaurants.length; ++i) {
       const icon_obj = { url: (restaurants[i].rank === 0) ? "Images/goldPin.png" : "Images/orangePin.png", scaledSize: { width: 45, height: 50 }, }
-      markers.push(<MarkerF key={`restaurant-${restaurants[i].rank}`} position={ { lat: restaurants[i].latitude, lng: restaurants[i].longitude } } icon={icon_obj}></MarkerF>);
+      markers.push(<MarkerF key={`restaurant-${restaurants[i].rank}`} position={ { lat: restaurants[i].latitude, lng: restaurants[i].longitude } } icon={icon_obj} onClick={()=>setTempIndex(restaurants[i].rank)}></MarkerF>);
     }
 
     return markers;
@@ -362,20 +364,20 @@ function MapScreen({city, UPV}) {
   return (
       
     <div>   
-      {/* <div>
-        {favItems.length > 0 && (
-          <div className="button-container">
-            <div className="position-fixed" style={{zIndex: 99}}>
-              <button
-                className="button-effect"
-                onClick={() => setShowShoppingCart(true)}
-              >
-                <span>Shopping Cart - {favItems.length}</span>
-              </button>
-            </div>
+
+      {favItems.length > 0 && (
+        <div className="button-container">
+          <div className="position-fixed" style={{zIndex: 99}}>
+            <button
+              className="button-effect"
+              onClick={() => setShowShoppingCart(true)}
+            >
+              <span>Shopping Cart - {favItems.length}</span>
+            </button>
           </div>
-        )}
-        </div> */}
+        </div>
+      )}
+
       <Bell/>
       <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
         <GoogleMap
@@ -389,18 +391,20 @@ function MapScreen({city, UPV}) {
         </GoogleMap>
       </LoadScript>
 
-      <CardScreen restaurants={restaurants}/>
+      <CardScreen 
+      restaurants={restaurants}
+      favItems={favItems}
+      setFavItems={setFavItems}
+      tempIndex = {tempIndex}/>
 
-    {/* <CardScreen favItems={favItems}
-          setFavItems={setFavItems}/> */}
 
-    {/* {showShoppingCart && (
+    {showShoppingCart && (
         <ShoppingCart
           favItems={favItems}
           setFavItems={setFavItems}
           setShowModal={setShowShoppingCart}
         />
-      )} */}
+      )}
     </div>
   )
 }
