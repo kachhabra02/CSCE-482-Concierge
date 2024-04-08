@@ -4,7 +4,7 @@ import {GoogleMap, LoadScript, MarkerF, InfoWindowF, InfoBoxF } from '@react-goo
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
-// import ShoppingCart from "../components/ShoppingCart";
+import ShoppingCart from "../components/ShoppingCart";
 
 const API = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/api`,
@@ -15,8 +15,8 @@ const center = {lat: 39.8283, lng: -98.5795};
 
 function MapScreen({city, UPV}) {
 
-  // const [favItems, setFavItems] = useState([]);
-  // const [showShoppingCart, setShowShoppingCart] = useState(false);
+  const [favItems, setFavItems] = useState([]);
+  const [showShoppingCart, setShowShoppingCart] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
   const [highlighted, setHighlighted] = useState(-1);
 
@@ -37,6 +37,7 @@ function MapScreen({city, UPV}) {
           console.log(error);
         })
   }, [])
+
 
 
   // Render markers based on restaurants
@@ -373,20 +374,20 @@ function MapScreen({city, UPV}) {
   return (
       
     <div>   
-      {/* <div>
-        {favItems.length > 0 && (
-          <div className="button-container">
-            <div className="position-fixed" style={{zIndex: 99}}>
-              <button
-                className="button-effect"
-                onClick={() => setShowShoppingCart(true)}
-              >
-                <span>Shopping Cart - {favItems.length}</span>
-              </button>
-            </div>
+
+      {favItems.length > 0 && (
+        <div className="button-container">
+          <div className="position-fixed" style={{zIndex: 99}}>
+            <button
+              className="button-effect"
+              onClick={() => setShowShoppingCart(true)}
+            >
+              <span>Shopping Cart - {favItems.length}</span>
+            </button>
           </div>
-        )}
-        </div> */}
+        </div>
+      )}
+
       <Bell/>
       <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
         <GoogleMap
@@ -401,18 +402,20 @@ function MapScreen({city, UPV}) {
         </GoogleMap>
       </LoadScript>
 
-      <CardScreen restaurants={restaurants}/>
+      <CardScreen 
+      restaurants={restaurants}
+      favItems={favItems}
+      setFavItems={setFavItems}
+      tempIndex = {highlighted}/>
 
-    {/* <CardScreen favItems={favItems}
-          setFavItems={setFavItems}/> */}
 
-    {/* {showShoppingCart && (
+    {showShoppingCart && (
         <ShoppingCart
           favItems={favItems}
           setFavItems={setFavItems}
           setShowModal={setShowShoppingCart}
         />
-      )} */}
+      )}
     </div>
   )
 }
