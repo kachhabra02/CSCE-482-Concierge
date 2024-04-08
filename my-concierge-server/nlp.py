@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 import time
 import json
+import random
 
 load_dotenv()
 
@@ -20,6 +21,17 @@ price_level_map = {
     4: [0, 0, 0, 1],
     5: [0, 0, 0, 1]
 }
+
+chat_response_templates = json.load(open('response_templates.json'))
+
+def getChatResponse(vector_int_scores):
+    max_liking = max(vector_int_scores)
+    if (max_liking == 0):
+        return "Hmmm. I'm sorry, but I don't think I quite understood what you asked for. Could you try rephrasing it?"
+
+    max_liking_idx = random.choice([i for i in range(len(vector_int_scores)) if vector_int_scores[i] == max_liking])
+    possible_templates = chat_response_templates[str(max_liking_idx)]
+    return random.choice(possible_templates)
 
 def getUserPreferenceVector(user_prompt, prev_vector):
     time_before_call = time.perf_counter()
@@ -49,10 +61,13 @@ def getUserPreferenceVector(user_prompt, prev_vector):
     price_level_ind = vector_items_list.index('Price Level')
     vector_int_scores = vector_int_scores[:price_level_ind] + price_level_map.get(vector_int_scores[price_level_ind], [0, 0, 0, 0]) + vector_int_scores[(price_level_ind + 1):]
 
+    # Get chat response
+    chat_response = getChatResponse(vector_int_scores)
+
     for idx, val in enumerate(prev_vector):
         vector_int_scores[idx] = max(vector_int_scores[idx], val)
 
-    return vector_int_scores, 'That sounds delicious. Anything else?'
+    return vector_int_scores, chat_response
 
 if __name__ == "__main__":
     user_vector = [0 for i in range(32)]
