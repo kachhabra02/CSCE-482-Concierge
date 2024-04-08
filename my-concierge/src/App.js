@@ -1,28 +1,25 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Chatbot from './pages/Chatbot';
-import CardScreen from './pages/CardScreen';
-import MapScreen from './pages/MapScreen';
+import React, {useState} from 'react';
+import { BrowserRouter as Router, Link } from 'react-router-dom';
+
+import AnimatedRoutes from './components/AnimatedRoutes';
+
 
 function App() {
 
+  const [businessData,setBusinessData] = useState({});
+  const [city, setCity] = useState("");
+  const [UPV, setUPV] = useState([]); //the array might need to have default values
+
   return (
     <Router>
-      <div>
-        <ul>
-          <li><Link to="/Chatbot">Chatbot</Link></li>
-          <li><Link to="/MapScreen">Map</Link></li>
-          <li><Link to="/CardScreen">Card</Link></li>
-        </ul>
-
-        <hr />
-
-        <Routes>
-          <Route path="/Chatbot" element={<Chatbot />} />
-          <Route path="/MapScreen" element={<MapScreen />} />
-          <Route path="/CardScreen" element={<CardScreen />} />
-        </Routes>
-      </div>
+        <AnimatedRoutes
+        businessData = {businessData}
+        setBusinessData = {setBusinessData}
+        city = {city}
+        setCity = {setCity}
+        UPV = {UPV}
+        setUPV = {setUPV}
+        />
     </Router>
   );
 }

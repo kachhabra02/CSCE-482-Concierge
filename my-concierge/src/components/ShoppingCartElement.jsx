@@ -9,7 +9,7 @@ function ShoppingCartElement({favItem, index, removeItem}) {
       <div className="d-flex flex-row justify-content-between w-100">
         <div>
           <div>{favItem.name}</div>
-          <div>{favItem.cusines}</div>
+          <div>{favItem.cusines.join(', ')}</div>
           <div>{favItem.address}</div>
         </div>
         <div>

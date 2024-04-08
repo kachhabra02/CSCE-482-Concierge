@@ -3,13 +3,17 @@ import {GoogleMap, LoadScript, MarkerF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
-
+// import ShoppingCart from "../components/ShoppingCart";
 
 const center = {lat: 30.6212316, lng: -96.3403778};
 
 function MapScreen() {
 
-  // fake data - basically passing in list from backend
+  // const [favItems, setFavItems] = useState([]);
+  // const [showShoppingCart, setShowShoppingCart] = useState(false);
+  // Get Business Data here and send to CardScreen
+
+  //pass in list from backend
   const renderList = [{ position: { lat: 30.6212316, lng: -96.3403778 }, rank: 1, name: "good food"},
                       { position: { lat: 30.620000, lng: -96.35900 }, rank: 2 },
                      ];
@@ -317,7 +321,23 @@ function MapScreen() {
   
   return (     
     <div>
-    <Bell/>
+
+     
+      {/* <div>
+        {favItems.length > 0 && (
+          <div className="button-container">
+            <div className="position-fixed" style={{zIndex: 99}}>
+              <button
+                className="button-effect"
+                onClick={() => setShowShoppingCart(true)}
+              >
+                <span>Shopping Cart - {favItems.length}</span>
+              </button>
+            </div>
+          </div>
+        )}
+        </div> */}
+      <Bell/>
       <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
         <GoogleMap 
           center={center} 
@@ -328,7 +348,19 @@ function MapScreen() {
           {renderMarkers()}
         </GoogleMap>
       </LoadScript>
-    <CardScreen/>
+
+      <CardScreen/>
+
+    {/* <CardScreen favItems={favItems}
+          setFavItems={setFavItems}/> */}
+
+    {/* {showShoppingCart && (
+        <ShoppingCart
+          favItems={favItems}
+          setFavItems={setFavItems}
+          setShowModal={setShowShoppingCart}
+        />
+      )} */}
     </div>
   )
 }
