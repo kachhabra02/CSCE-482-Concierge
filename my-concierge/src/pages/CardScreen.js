@@ -111,7 +111,6 @@ function CardScreen({restaurants}) {//Get Business Data and FavItems, SetfavItem
             />
           </div>
         ))}
-        <div>Item 4</div>
       </Carousel>
 
       {showShoppingCart && (

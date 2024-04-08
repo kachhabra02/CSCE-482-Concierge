@@ -49,11 +49,11 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
 
   const renderIcon = (attribute) => {
     switch (attribute) {
-      case 'take_out':
+      case 'Take Out':
         return <FaBox />;
-      case 'delivery':
+      case 'Delivery':
         return <FaTaxi />;
-      case 'wheelchair_accessible':
+      case "Wheelchair Accessible":
         return <FaWheelchair />;
       default:
         return null;
@@ -66,6 +66,8 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
     }
     return hour;
   };
+
+  const parsedHours = hours ? JSON.parse(hours) : {};
 
   const responsive = {
     superLargeDesktop: {
@@ -150,16 +152,16 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
           <Accordion.Item eventKey="0">
             <Accordion.Header>Opening Hours:</Accordion.Header>
             <Accordion.Body>              
-              {Object.keys(hours).length === 0 ? (
+              {parsedHours == null ? (
                 <div>No information available</div>
               ) : (
                 <ul className="hours-list">
-                  {Object.entries(hours).map(([day, hours], index) => (
-                    <li key={day} className={index % 2 === 0 ? "gray-bg" : "white-bg"}>
-                      {boldCurrentDay(day)}: {formatHours(hours) || "No information available"}
-                    </li>
-                  ))}
-                </ul>
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => (
+                  <li key={day} className={index % 2 === 0 ? "gray-bg" : "white-bg"}>
+                    {boldCurrentDay(day)}: {parsedHours[day] ? formatHours(parsedHours[day]) : "No information available"}
+                  </li>
+                ))}
+              </ul>
               )}
             </Accordion.Body>
           </Accordion.Item>
@@ -170,15 +172,14 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
               <div>No information available</div>
             ) : (
               <ul className="attributes-list">
-                {Object.entries(attributes).map(([attribute, value]) => (
-                  value && (
-                    <li key={attribute} className="attribute-item">
-                      {renderIcon(attribute)}
-                      <span className="attribute-text">{attribute.replace(/([A-Z])/g, ' $1').trim()}</span>
-                    </li>
-                  )
-                ))}
-              </ul>
+              {attributes.map((attribute, index) => (
+                <li key={index} className="attribute-item">
+                  {/* Use attribute directly instead of [attribute] */}
+                  {renderIcon(attribute)}
+                  <span className="attribute-text">{attribute.replace(/([A-Z])/g, ' $1').trim()}</span>
+                </li>
+              ))}
+            </ul>
             )}
             {phone && (
               <>
