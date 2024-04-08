@@ -14,9 +14,9 @@ function AnimatedRoutes({city, setCity, UPV, setUPV}) {
   return (
     <AnimatePresence>
         <Routes location={location} key={location.pathname}>
-            <Route path="/StartScreen" element={<StartScreen />} />
             <Route path="/Chatbot" element={<Chatbot />} />
             <Route path="/MapScreen" element={<MapScreen city={city} UPV={UPV} />} />
+            <Route path="*" element={<StartScreen />} />
         </Routes>
     </AnimatePresence>
   )
