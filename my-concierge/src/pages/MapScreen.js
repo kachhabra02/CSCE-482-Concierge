@@ -1,22 +1,24 @@
-import React from 'react';
+import { React } from 'react';
 import {GoogleMap, LoadScript, MarkerF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
+import '../css/MapScreen.css';
+
 
 const center = {lat: 30.6212316, lng: -96.3403778};
 
 function MapScreen() {
-  //pass in list from backend
+
+  // fake data - basically passing in list from backend
   const renderList = [{ position: { lat: 30.6212316, lng: -96.3403778 }, rank: 1, name: "good food"},
                       { position: { lat: 30.620000, lng: -96.35900 }, rank: 2 },
                      ];
-  // Sort the list by rank
   
   const renderMarkers = () => {
     const markers = [];
 
     for (let i = 0; i < renderList.length; ++i) {
-      const icon_obj = { url: (i === 0) ? "Images/goldPin.png" : "Images/orangePin.png", scaledSize: { width: 50, height: 50 }, }
+      const icon_obj = { url: (i === 0) ? "Images/goldPin.png" : "Images/orangePin.png", scaledSize: { width: 45, height: 50 }, }
       markers.push(<MarkerF position={renderList[i].position} icon={icon_obj}></MarkerF>);
     }
 
@@ -30,7 +32,7 @@ function MapScreen() {
       "elementType": "labels.text.fill",
       "stylers": [
         {
-          "color": "#58758a"
+          "color": "#7c93a3"
         },
         {
           "lightness": "-10"
@@ -69,7 +71,7 @@ function MapScreen() {
       "elementType": "geometry.fill",
       "stylers": [
         {
-          "color": "#dde3e3"
+          "color": "#eff0f1"
         }
       ]
     },
@@ -78,19 +80,24 @@ function MapScreen() {
       "elementType": "geometry.stroke",
       "stylers": [
         {
-          "color": "#3f4a51"
+          "visibility": "on"
         },
         {
-          "weight": "0.30"
-        }
+          "color": "#62838e"
+        },
+
       ]
     },
+
     {
       "featureType": "poi",
       "elementType": "all",
       "stylers": [
         {
           "visibility": "simplified"
+        },
+        {
+          "hue": "-50"
         }
       ]
     },
@@ -100,6 +107,12 @@ function MapScreen() {
       "stylers": [
         {
           "visibility": "on"
+        },
+        {
+          "saturation": "-80"
+        },
+        {
+          "hue": "#62838e"
         }
       ]
     },
@@ -114,6 +127,15 @@ function MapScreen() {
     },
     {
       "featureType": "poi.government",
+      "elementType": "all",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.medical",
       "elementType": "all",
       "stylers": [
         {
@@ -153,7 +175,10 @@ function MapScreen() {
       "elementType": "all",
       "stylers": [
         {
-          "visibility": "off"
+          "visibility": "on"
+        },
+        {
+          "hue": "#750e15"
         }
       ]
     },
@@ -183,8 +208,9 @@ function MapScreen() {
       "elementType": "geometry.fill",
       "stylers": [
         {
-          "color": "#bbcacf"
+          "color": "#83a5b0"
         }
+        
       ]
     },
     {
@@ -195,7 +221,7 @@ function MapScreen() {
           "lightness": "0"
         },
         {
-          "color": "#bbcacf"
+          "color": "#83a5b0"
         },
         {
           "weight": "0.50"
@@ -225,7 +251,7 @@ function MapScreen() {
       "elementType": "geometry.fill",
       "stylers": [
         {
-          "color": "#ffffff"
+          "color": "#58758A"
         }
       ]
     },
@@ -276,19 +302,32 @@ function MapScreen() {
           "color": "#a3c7df"
         }
       ]
+    },
+    {
+      "featureType": "border",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        {
+          "color": "#8ca1a8"
+        }
+      ]
     }
+    
   ]
-
   
   return (     
-    <div>button
-    <br></br><br></br><br></br><br></br><br></br><br></br>
+    <div>
     <Bell/>
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
-      <GoogleMap center={center} zoom={15} mapContainerStyle={{width: '1000px', height: '500px'}} options={{styles:MapStyling}}>
+      <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+        <GoogleMap 
+          center={center} 
+          zoom={12} 
+          mapContainerStyle={{width: '76%', height: '600px', marginLeft: "12%", borderRadius:'2%', borderWidth:'50px', borderColor:'#0F5B7C'}}
+          options={{styles:MapStyling}}
+          >
           {renderMarkers()}
-      </GoogleMap>
-    </LoadScript>
+        </GoogleMap>
+      </LoadScript>
     <CardScreen/>
     </div>
   )
