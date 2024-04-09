@@ -201,6 +201,10 @@
 
 .card > .react-multi-carousel-list { margin: 0; height: 30vh; }
 
+.react-slideshow-container .default-nav {
+  display: none;
+}
+
 .highlighted-card{
   box-shadow: 4px 4px 8px 4px rgba(255, 170, 0, 0.4);
 }
