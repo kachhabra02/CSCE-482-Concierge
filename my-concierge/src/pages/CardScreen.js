@@ -13,19 +13,27 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
-      items: 5
+      items: 5,
+      slidesToSlide: 5,
+      arrows: true,
+      showDots: true
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 3
+      items: 3,
+      slidesToSlide: 3,
+      arrows: true,
+      showDots: true
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 2
+      items: 2,
+      slidesToSlide: 2
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1
+      items: 1,
+      slidesToSlide: 1
     }
   };
 
@@ -39,7 +47,6 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
   }, [highlighted])
 
   const checkSlideFocus = () => {
-    console.log(carouselRef)
     setHighlighted(carouselRef?.current.state.currentSlide)
   }
 
@@ -73,7 +80,7 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
         )}
       </div> */}
 
-      <h1>Restaurants:</h1>
+      {/*<h1>Restaurants:</h1>*/}
 
       {/* {restaurants.map((business, index) => (
         <button key={index} onClick={() => handleButtonClick(business.name)}>{business.name}</button>

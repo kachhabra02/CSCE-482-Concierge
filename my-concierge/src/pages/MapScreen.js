@@ -403,6 +403,8 @@ function MapScreen({city, UPV}) {
         </GoogleMap>
       </LoadScript>
 
+      <br/><br/>
+
       <CardScreen 
         restaurants={restaurants}
         favItems={favItems}
