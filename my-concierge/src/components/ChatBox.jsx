@@ -2,35 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import '../css/ChatBox.css'; // Import the CSS file
 import robotImage from '../img/robot.png';
+import axios from 'axios';
 
-const ChatBox = () => {
-  const [messages, setMessages] = useState([]);
+const API = axios.create({
+  baseURL: `${process.env.REACT_APP_API_URL}/api`,
+  timeout: 15000 // 15 second timeout
+});
+
+const cityList = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nashville']
+
+const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPreferenceArray, messages, setMessages}) => {
   const [userMessage, setUserMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [botMessage, setBotMessage] = useState('');
-  const [selectedCity, setSelectedCity] = useState(''); //user selected city
-  const [userPreferenceArray, setUserPreferenceArray ] = useState([]); //array of messages
 
   
   const handleSendMessage = async () => {
-    // Add the new message to the messages array
-    const newMessage = {text: userMessage, sender: 'user' };
-    setMessages([...messages, newMessage]);
-
     if(!selectedCity){
+        setUserMessage('');
       alert('Hello! To have the best user experience please select a city before continuing.')
       return;
     }
 
+    // Add the new message to the messages array
+    const newMessage = {text: userMessage, sender: 'user'};
+    messages.push(newMessage);
+
     //Generate response for user based on input
     setIsLoading(true);
-    const response = await updateUserPreferences(userMessage);
-    setUserPreferenceArray(response);
-
-    //Generate bot response
-    const botResponse = {text: response, sender: 'bot'}
-    setMessages([...messages, botResponse]);
-    
+    const botResponse = await updateUserPreferences(userMessage);
+    messages.push({text: botResponse, sender: 'bot'})
+    setMessages([...messages]);
+    setBotMessage((<div className='bot-message'> {botResponse} </div>));
     setIsLoading(false);
 
     // Clear the input field
@@ -38,20 +41,26 @@ const ChatBox = () => {
   };
 
   //Contact API response
-  const updateUserPreferences = async (message) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/prompt?prompt=${encodeURIComponent(message)}&user_preference_vector=${userPreferenceArray.join('-')}');
-      if(!response.ok){
-        throw new Error('Failed to update user preferences.');
-      }
-      const data = await response.json();
-      return data;
-    } catch(error) {
-      console.error('Error updating user preferences:', error);
-      return [];
-    }
+  const updateUserPreferences = (message) => {
+    return API.get(`/prompt?prompt=${encodeURIComponent(message)}&user_preference_vector=${userPreferenceArray.join('-')}`)
+      .then((res) => {
+        if (res.status < 300) { // Only set if restaurants are not yet set
+          setUserPreferenceArray(res.data["updated_user_preference_vector"]);
+          return res.data["response"];
+        }
+        else {
+          console.log(`Error: Status code ${res.status} when retrieving prompt analysis`);
+          return "I couldn't quite understand what you said. Could you please rephrase?";
+        }
+      })
+      .catch((error) => {
+        console.log("Error when retrieving prompt analysis:");
+        console.log(error);
+        return "I couldn't quite understand what you said. Could you please rephrase?";
+      });
   };
 
+  /*
   const generateBotResponse = async (message, city) => {
     if (!messages.length) { // Initial conversation
       return city;
@@ -59,6 +68,7 @@ const ChatBox = () => {
       return message;
     }
   };
+  */
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -67,23 +77,30 @@ const ChatBox = () => {
     }
   };
 
+  const onClickCityButton = (city) => {
+    setSelectedCity(city);
+    const botResponse = `I see you are looking for some restaurant recommendations in ${city}. What kind of restaurants are you looking for?`;
+    setMessages([...messages, {text: botResponse, sender: 'bot'}]);
+    setBotMessage((<div className='bot-message'> {botResponse} </div>));
+  }
+
   useEffect(() => {
     const greetingMessage = (
       <div className="greetings">
         Hi there! I am your virtual concierge here to help you find the best place to dine in.
         Please choose a city to get started:
         <br />
-        <button onClick={() => setSelectedCity('Philadelphia')}>Philadelphia</button>
-        <button onClick={() => setSelectedCity('Tuscon')}>Tucson</button>
-        <button onClick={() => setSelectedCity('Reno')}> Reno </button>
-        <button onClick={() => setSelectedCity('New Orleans')}>New Orleans</button>
-        <button onClick={() => setSelectedCity('Tampa')}> Tampa </button>
-        <button onClick={() => setSelectedCity('Nashville')}>Nashville</button>
+        {
+          cityList.map((city) => {
+            return <button key={`button-${city}`} onClick={() => onClickCityButton(city)}> {city} </button>
+          })
+        }
       </div>
     );
     setBotMessage(greetingMessage);
   }, []);
 
+  /*
   useEffect(() => {
     if (selectedCity && userMessage) {
       const promptMessage = (
@@ -94,6 +111,7 @@ const ChatBox = () => {
       setBotMessage(promptMessage);
     }
   }, [selectedCity, userMessage]);
+  */
 
   return (
     <Container className = "chatbox-container">
@@ -105,11 +123,11 @@ const ChatBox = () => {
           </div>
         </Col>
         <Col>
-        {botMessage}
+          {botMessage}
           <Col className='messages-container' >
             {/* Display messages*/}
-            {messages.slice().map((message) => (
-              <div key={message.id} className={"message-container ${message.sender}"}>
+            {messages?.map((message, index) => (
+              <div key={`message-${index}`} className={`message-${message.sender}`}>
                 {message.text}
               </div>
             ))}

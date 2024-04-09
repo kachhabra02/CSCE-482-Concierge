@@ -6,7 +6,7 @@ import StartScreen from '../pages/StartScreen';
 
 import {AnimatePresence} from "framer-motion";
 
-function AnimatedRoutes({city, setCity, UPV, setUPV}) {
+function AnimatedRoutes({city, setCity, UPV, setUPV, messages, setMessages}) {
 
   // send all the props to chatbot, mapscreen
   const location = useLocation();
@@ -14,7 +14,8 @@ function AnimatedRoutes({city, setCity, UPV, setUPV}) {
   return (
     <AnimatePresence>
         <Routes location={location} key={location.pathname}>
-            <Route path="/Chatbot" element={<Chatbot />} />
+            <Route path="/Chatbot" element={<Chatbot city={city} setCity={setCity} UPV={UPV} setUPV={setUPV} 
+                                                     messages={messages} setMessages={setMessages} />} />
             <Route path="/MapScreen" element={<MapScreen city={city} UPV={UPV} />} />
             <Route path="*" element={<StartScreen />} />
         </Routes>
