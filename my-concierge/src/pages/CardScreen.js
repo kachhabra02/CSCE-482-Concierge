@@ -30,15 +30,20 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
   };
 
   useEffect(() => {
-    if (highlighted == -1) {
+    if (highlighted === -1) {
       return;
     }
 
-    carouselRef?.current.goToSlide(highlighted);
+    carouselRef?.current.goToSlide(highlighted, true);
     forceUpdate();
   }, [highlighted])
 
+  const checkSlideFocus = () => {
+    console.log(carouselRef)
+    setHighlighted(carouselRef?.current.state.currentSlide)
+  }
 
+  /*
   const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
     <ul className="custom-dots">
       {Array.from({ length: totalItems }).map((_, index) => (
@@ -48,6 +53,7 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
       ))}
     </ul>
   );
+  */
 
 
   return (
@@ -76,8 +82,8 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
       <Carousel 
         ref={carouselRef} // Set the ref for the carousel
         responsive={responsive}
-        showDots={true} 
-        renderDotsOutside={renderButtonGroupOutside} 
+        focusOnSelect={true}
+        afterChange={checkSlideFocus}
         removeArrowOnDeviceType={["tablet", "mobile"]}
       >
         {restaurants.map((business, index) => (

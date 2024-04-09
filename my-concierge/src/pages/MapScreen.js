@@ -408,7 +408,7 @@ function MapScreen({city, UPV}) {
         favItems={favItems}
         setFavItems={setFavItems}
         highlighted={highlighted}
-        setHighlight={setHighlighted}
+        setHighlighted={setHighlighted}
         forceUpdate={forceUpdate}
       />
 
