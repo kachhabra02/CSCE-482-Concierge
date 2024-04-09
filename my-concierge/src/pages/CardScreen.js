@@ -5,36 +5,52 @@ import ShoppingCart from "../components/ShoppingCart";
 import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
-function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Business Data and FavItems, SetfavItems, Index of Scroll from MapScreen
-
-
-  //const [favItems, setFavItems] = useState([]);
-  //const [showShoppingCart, setShowShoppingCart] = useState(false);
+function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlighted, forceUpdate}) {
 
   const carouselRef = useRef(null); // Reference for the carousel component
+  
 
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
-      items: 5
+      items: 5,
+      slidesToSlide: 5,
+      arrows: true,
+      showDots: true
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 3
+      items: 3,
+      slidesToSlide: 3,
+      arrows: true,
+      showDots: true
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 2
+      items: 2,
+      slidesToSlide: 2
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1
+      items: 1,
+      slidesToSlide: 1
     }
   };
 
-  useEffect(() => scrollToSlide, [tempIndex])
+  useEffect(() => {
+    if (highlighted === -1) {
+      return;
+    }
 
+    carouselRef?.current.goToSlide(highlighted, true);
+    forceUpdate();
+  }, [highlighted])
 
+  const checkSlideFocus = () => {
+    setHighlighted(carouselRef?.current.state.currentSlide)
+  }
+
+  /*
   const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
     <ul className="custom-dots">
       {Array.from({ length: totalItems }).map((_, index) => (
@@ -44,12 +60,7 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
       ))}
     </ul>
   );
-
-  // Function to handle scrolling to a specific slide
-  const scrollToSlide = () => { // In CardScreen, get Index from MapScreen and Scroll here 
-      carouselRef?.current.goToSlide(tempIndex);
-  };
-
+  */
 
 
   return (
@@ -69,7 +80,7 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
         )}
       </div> */}
 
-      <h1>Items:</h1>
+      {/*<h1>Restaurants:</h1>*/}
 
       {/* {restaurants.map((business, index) => (
         <button key={index} onClick={() => handleButtonClick(business.name)}>{business.name}</button>
@@ -77,9 +88,9 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
         
       <Carousel 
         ref={carouselRef} // Set the ref for the carousel
-        responsive={responsive} 
-        showDots={true} 
-        renderDotsOutside={renderButtonGroupOutside} 
+        responsive={responsive}
+        focusOnSelect={true}
+        afterChange={checkSlideFocus}
         removeArrowOnDeviceType={["tablet", "mobile"]}
       >
         {restaurants.map((business, index) => (
