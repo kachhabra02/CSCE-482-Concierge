@@ -4,7 +4,6 @@ import RestCard from '../components/RestCard';
 import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
-//function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Business Data and FavItems, SetfavItems, Index of Scroll from MapScreen
 
 function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlighted, forceUpdate}) {
 

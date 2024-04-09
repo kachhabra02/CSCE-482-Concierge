@@ -5,11 +5,13 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaRegHeart, FaHeart, FaTaxi, FaBox ,FaWheelchair,FaPhone, FaYelp} from "react-icons/fa";
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
+//import Carousel from 'react-multi-carousel';
+//import 'react-multi-carousel/lib/styles.css';
 import Default from '../img/default.png'; 
 import 'react-slideshow-image/dist/styles.css';
 import {Fade, Zoom, Slide} from 'react-slideshow-image';
+import Carousel from 'react-bootstrap/Carousel';
+
 
 
 function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems, image, total_images, phone, yelp, rank, tempIndex}) {
@@ -28,7 +30,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
     // Toggle the favorite status
     setIsFavorite(!isFavorite);
 
-    const newItem = { name, cusines, address };
+    const newItem = { name, cusines, address,image,total_images };
     if (!isFavorite) {
       // Add item to favorites
       setFavItems([...favItems, newItem]);
@@ -63,9 +65,19 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
   };
 
   const formatHours = (hour) => {
-    if (hour.endsWith(':0')) {
-      return hour + '0';
-    }
+    let hour_list = hour.split('-');
+    if(hour_list !== null)
+    {
+      if (hour_list[0].charAt(hour_list[0].length - 2) === ":")
+      {
+        hour_list[0] = hour_list[0]+'0';
+      }
+      if (hour_list[1].charAt(hour_list[1].length - 2) === ":")
+      {
+        hour_list[1] = hour_list[1]+'0';
+      }
+      hour = hour_list[0]+'-'+hour_list[1]
+    } 
     return hour;
   };
 
@@ -96,13 +108,20 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
 
   return (
     <Card className={tempIndex === rank ? "highlighted-card" : ""} style={{ width: "23rem", marginBottom:"10px" }}>
-      <div className="slide-container">
+    <Carousel>
+      {carouselImages.map((image, index) => (
+        <Carousel.Item key={index}>
+          <img className="carousel-image" src={image} alt={`Image ${index}`} />
+        </Carousel.Item>
+      ))}
+    </Carousel>
+      {/* <div className="slide-container">
         <Fade>
         {carouselImages.map((image, index) => (
           <img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
         ))}
         </Fade>
-      </div>
+      </div> */}
       {/* <Carousel 
         responsive={responsive}
 
