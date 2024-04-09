@@ -1,4 +1,4 @@
-import { React, useState, useRef, useEffect } from 'react';
+import { React, useState, useRef, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import {GoogleMap, LoadScript, MarkerF, InfoBoxF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
@@ -15,6 +15,7 @@ const center = {lat: 39.8283, lng: -98.5795};
 
 function MapScreen({city, UPV}) {
 
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0); // Force re-render for card slide (From React Hooks FAQ)
   const [favItems, setFavItems] = useState([]);
   const [showShoppingCart, setShowShoppingCart] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
@@ -408,6 +409,7 @@ function MapScreen({city, UPV}) {
         setFavItems={setFavItems}
         highlighted={highlighted}
         setHighlight={setHighlighted}
+        forceUpdate={forceUpdate}
       />
 
 

@@ -5,7 +5,7 @@ import ShoppingCart from "../components/ShoppingCart";
 import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
-function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlighted}) {
+function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlighted, forceUpdate}) {
 
   const carouselRef = useRef(null); // Reference for the carousel component
   
@@ -29,7 +29,14 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
     }
   };
 
-  useEffect(() => scrollToSlide, [highlighted])
+  useEffect(() => {
+    if (highlighted == -1) {
+      return;
+    }
+
+    carouselRef?.current.goToSlide(highlighted);
+    forceUpdate();
+  }, [highlighted])
 
 
   const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
@@ -41,16 +48,6 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
       ))}
     </ul>
   );
-
-  // Function to handle scrolling to a specific slide
-  const scrollToSlide = () => { // In CardScreen, get Index from MapScreen and Scroll here
-    if (highlighted == -1) {
-      return;
-    }
-    
-    carouselRef?.current.goToSlide(highlighted);
-  };
-
 
 
   return (
