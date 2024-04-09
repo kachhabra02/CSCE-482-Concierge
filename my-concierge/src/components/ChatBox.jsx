@@ -9,12 +9,13 @@ const ChatBox = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [botMessage, setBotMessage] = useState('');
   const [selectedCity, setSelectedCity] = useState(''); //user selected city
-
+  const [userPreferenceArray, setUserPreferenceArray ] = useState([]); //array of messages
 
   
   const handleSendMessage = async () => {
     // Add the new message to the messages array
-    setMessages([...messages, { text: userMessage, sender: 'user' }]);
+    const newMessage = {text: userMessage, sender: 'user' };
+    setMessages([...messages, newMessage]);
 
     if(!selectedCity){
       alert('Hello! To have the best user experience please select a city before continuing.')
@@ -23,9 +24,13 @@ const ChatBox = () => {
 
     //Generate response for user based on input
     setIsLoading(true);
-    const response = await generateBotResponse(userMessage, selectedCity);
-    setBotMessage(response);
-    setMessages([...messages, {text: response, sender: 'bot'}]);
+    const response = await updateUserPreferences(userMessage);
+    setUserPreferenceArray(response);
+
+    //Generate bot response
+    const botResponse = {text: response, sender: 'bot'}
+    setMessages([...messages, botResponse]);
+    
     setIsLoading(false);
 
     // Clear the input field
@@ -33,13 +38,27 @@ const ChatBox = () => {
   };
 
   //Contact API response
-  const generateBotResponse = (message, city) => {
-    if(!messages){ // Initial conversation
+  const updateUserPreferences = async (message) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/prompt?prompt=${encodeURIComponent(message)}&user_preference_vector=${userPreferenceArray.join('-')}');
+      if(!response.ok){
+        throw new Error('Failed to update user preferences.');
+      }
+      const data = await response.json();
+      return data;
+    } catch(error) {
+      console.error('Error updating user preferences:', error);
+      return [];
+    }
+  };
+
+  const generateBotResponse = async (message, city) => {
+    if (!messages.length) { // Initial conversation
       return city;
-    } else{
+    } else {
       return message;
     }
-  }
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -65,6 +84,17 @@ const ChatBox = () => {
     setBotMessage(greetingMessage);
   }, []);
 
+  useEffect(() => {
+    if (selectedCity && userMessage) {
+      const promptMessage = (
+        <div className="user-prompt">
+          You want to eat: {userMessage}
+        </div>
+      );
+      setBotMessage(promptMessage);
+    }
+  }, [selectedCity, userMessage]);
+
   return (
     <Container className = "chatbox-container">
       <Row>
@@ -79,7 +109,7 @@ const ChatBox = () => {
           <Col className='messages-container' >
             {/* Display messages*/}
             {messages.slice().map((message) => (
-              <div key={message.id} className="message-container">
+              <div key={message.id} className={"message-container ${message.sender}"}>
                 {message.text}
               </div>
             ))}
