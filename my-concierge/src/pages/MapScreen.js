@@ -23,7 +23,7 @@ function MapScreen({city, UPV}) {
 
   // Fetch recommendations from back-end
   useEffect(() => {
-    API.get(`/recommendation?location=${encodeURIComponent(city)}&user_preference_vector=${UPV.join('-')}`)
+    API.get(`/recommendation?location=${encodeURIComponent(city ? city : 'Philadelphia')}&user_preference_vector=${UPV.join('-')}`)
         .then((res) => {
           if (res.status < 300 && restaurants.length === 0) { // Only set if restaurants are not yet set
             setRestaurants(res.data["recommended_restaurants"]);
