@@ -1,6 +1,6 @@
 import { React, useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import {GoogleMap, LoadScript, MarkerF, InfoWindowF, InfoBoxF } from '@react-google-maps/api';
+import {GoogleMap, LoadScript, MarkerF, InfoBoxF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
@@ -77,7 +77,7 @@ function MapScreen({city, UPV}) {
       bounds.extend({ lat: restaurant.latitude, lng: restaurant.longitude });
       return restaurant.rank
     });
-    mapRef.current.state.map.fitBounds(bounds);
+    mapRef?.current.state.map.fitBounds(bounds);
   }, [restaurants]); // Fit bounds on load and change of restaurants
 
   
@@ -403,10 +403,12 @@ function MapScreen({city, UPV}) {
       </LoadScript>
 
       <CardScreen 
-      restaurants={restaurants}
-      favItems={favItems}
-      setFavItems={setFavItems}
-      tempIndex = {highlighted}/>
+        restaurants={restaurants}
+        favItems={favItems}
+        setFavItems={setFavItems}
+        highlighted={highlighted}
+        setHighlight={setHighlighted}
+      />
 
 
     {showShoppingCart && (

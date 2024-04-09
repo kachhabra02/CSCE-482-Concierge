@@ -5,13 +5,10 @@ import ShoppingCart from "../components/ShoppingCart";
 import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
-function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Business Data and FavItems, SetfavItems, Index of Scroll from MapScreen
-
-
-  //const [favItems, setFavItems] = useState([]);
-  //const [showShoppingCart, setShowShoppingCart] = useState(false);
+function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlighted}) {
 
   const carouselRef = useRef(null); // Reference for the carousel component
+  
 
   const responsive = {
     superLargeDesktop: {
@@ -32,7 +29,7 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
     }
   };
 
-  useEffect(() => scrollToSlide, [tempIndex])
+  useEffect(() => scrollToSlide, [highlighted])
 
 
   const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
@@ -46,8 +43,12 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
   );
 
   // Function to handle scrolling to a specific slide
-  const scrollToSlide = () => { // In CardScreen, get Index from MapScreen and Scroll here 
-      carouselRef?.current.goToSlide(tempIndex);
+  const scrollToSlide = () => { // In CardScreen, get Index from MapScreen and Scroll here
+    if (highlighted == -1) {
+      return;
+    }
+    
+    carouselRef?.current.goToSlide(highlighted);
   };
 
 
@@ -69,7 +70,7 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
         )}
       </div> */}
 
-      <h1>Items:</h1>
+      <h1>Restaurants:</h1>
 
       {/* {restaurants.map((business, index) => (
         <button key={index} onClick={() => handleButtonClick(business.name)}>{business.name}</button>
@@ -77,7 +78,7 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
         
       <Carousel 
         ref={carouselRef} // Set the ref for the carousel
-        responsive={responsive} 
+        responsive={responsive}
         showDots={true} 
         renderDotsOutside={renderButtonGroupOutside} 
         removeArrowOnDeviceType={["tablet", "mobile"]}
