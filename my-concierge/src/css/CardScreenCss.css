@@ -194,11 +194,16 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-.card > .react-multi-carousel-list {
+.react-slideshow-fadezoom-wrapper  > .react-slideshow-fadezoom-images-wrap{
   margin: 0;
   height: 30vh;
 }
 
+.card > .react-multi-carousel-list { margin: 0; height: 30vh; }
+
+.highlighted-card{
+  box-shadow: 4px 4px 8px 4px rgba(255, 170, 0, 0.4);
+}
 
 
 .carousel-image {

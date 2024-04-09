@@ -1,15 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import Carousel from 'react-multi-carousel';
 import RestCard from '../components/RestCard';
-import ShoppingCart from "../components/ShoppingCart";
 import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
 function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Business Data and FavItems, SetfavItems, Index of Scroll from MapScreen
 
-
-  //const [favItems, setFavItems] = useState([]);
-  //const [showShoppingCart, setShowShoppingCart] = useState(false);
 
   const carouselRef = useRef(null); // Reference for the carousel component
 
@@ -32,7 +28,8 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
     }
   };
 
-  useEffect(() => scrollToSlide, [tempIndex])
+
+  useEffect(() => scrollToSlide(), [tempIndex])
 
 
   const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
@@ -45,44 +42,51 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
     </ul>
   );
 
+  const CustomDot = ({...rest }) => {
+    const {
+      index,
+      active,
+    } = rest;
+    console.log(index)
+    return (
+      <button
+        className={active ? "active" : "inactive"}
+      >
+        {React.Children(restaurants)[index]}
+      </button>
+    );
+  };
+  
+
   // Function to handle scrolling to a specific slide
   const scrollToSlide = () => { // In CardScreen, get Index from MapScreen and Scroll here 
-      carouselRef?.current.goToSlide(tempIndex);
+      if(carouselRef && carouselRef.current)
+      {
+        carouselRef.current.goToSlide(tempIndex);
+      }
+      
   };
 
 
 
   return (
+    
     <div>
-      {/* <div>
-        {favItems.length > 0 && (
-          <div className="button-container">
-            <div className="position-fixed" style={{zIndex: 99}}>
-              <button
-                className="button-effect"
-                onClick={() => setShowShoppingCart(true)}
-              >
-                <span>Shopping Cart - {favItems.length}</span>
-              </button>
-            </div>
-          </div>
-        )}
-      </div> */}
 
       <h1>Items:</h1>
 
       {/* {restaurants.map((business, index) => (
         <button key={index} onClick={() => handleButtonClick(business.name)}>{business.name}</button>
       ))} */}
-        
-      <Carousel 
-        ref={carouselRef} // Set the ref for the carousel
-        responsive={responsive} 
-        showDots={true} 
-        renderDotsOutside={renderButtonGroupOutside} 
-        removeArrowOnDeviceType={["tablet", "mobile"]}
+
+      <Carousel
+        ref={carouselRef}
+        responsive={responsive}
+        showDots={true}
+        //renderDotsOutside
       >
-        {restaurants.map((business, index) => (
+
+      {restaurants.map((business, index) => (
           <div key={index}>
             <RestCard
               name={business.name || "No Name"}
@@ -98,18 +102,15 @@ function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Busi
               total_images = {business.num_images}
               phone = {business.phone}
               yelp = {business.yelp_url}
+              rank ={business.rank}
+              tempIndex = {tempIndex}
             />
           </div>
         ))}
-      </Carousel>
 
-      {/* {showShoppingCart && (
-        <ShoppingCart
-          favItems={favItems}
-          setFavItems={setFavItems}
-          setShowModal={setShowShoppingCart}
-        />
-      )} */}
+      </Carousel>;
+
+
     </div>
   )
 }

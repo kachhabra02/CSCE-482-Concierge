@@ -8,13 +8,15 @@ import { FaRegHeart, FaHeart, FaTaxi, FaBox ,FaWheelchair,FaPhone, FaYelp} from 
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import Default from '../img/default.png'; 
+import 'react-slideshow-image/dist/styles.css';
+import {Fade, Zoom, Slide} from 'react-slideshow-image';
 
 
-
-function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems, image, total_images, phone, yelp}) {
+function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems, image, total_images, phone, yelp, rank, tempIndex}) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAllCuisines, setShowAllCuisines] = useState(false);
 
+  //console.log(rank ," and ", tempIndex)
 
   //useEffect 
   useEffect(() => {
@@ -93,17 +95,22 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
 
 
   return (
-    <Card style={{ width: "23rem", marginBottom:"10px" }}>
-      <Carousel 
-        showDots={true}
-        removeArrowOnDeviceType={["tablet", "mobile"]}
+    <Card className={tempIndex === rank ? "highlighted-card" : ""} style={{ width: "23rem", marginBottom:"10px" }}>
+      <div className="slide-container">
+        <Fade>
+        {carouselImages.map((image, index) => (
+          <img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
+        ))}
+        </Fade>
+      </div>
+      {/* <Carousel 
         responsive={responsive}
 
       >
       {carouselImages.map((image, index) => (
           <img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
         ))}
-      </Carousel>
+      </Carousel> */}
       <Card.Body style={{ paddingBottom: '0' }}>
         <div className="d-flex flex-row justify-content-between w-100">
           <Card.Title className="col-7">{name}</Card.Title>
