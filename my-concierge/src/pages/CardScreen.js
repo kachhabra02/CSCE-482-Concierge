@@ -6,7 +6,7 @@ import '../css/CardScreenCss.css';
 
 //function CardScreen({restaurants, favItems, setFavItems, tempIndex}) {//Get Business Data and FavItems, SetfavItems, Index of Scroll from MapScreen
 
-function CardScreen({restaurants, favItems, setFavItems,tempIndex, highlighted, setHighlighted, forceUpdate}) {
+function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlighted, forceUpdate}) {
 
   const carouselRef = useRef(null); // Reference for the carousel component
   
@@ -39,7 +39,7 @@ function CardScreen({restaurants, favItems, setFavItems,tempIndex, highlighted, 
   };
 
 
-  useEffect(() => scrollToSlide(), [tempIndex])
+  /* useEffect(() => scrollToSlide(), [tempIndex]) */
   useEffect(() => {
     if (highlighted === -1) {
       return;
@@ -81,6 +81,7 @@ function CardScreen({restaurants, favItems, setFavItems,tempIndex, highlighted, 
   */
 
   // Function to handle scrolling to a specific slide
+  /*
   const scrollToSlide = () => { // In CardScreen, get Index from MapScreen and Scroll here 
       if(carouselRef && carouselRef.current)
       {
@@ -88,7 +89,7 @@ function CardScreen({restaurants, favItems, setFavItems,tempIndex, highlighted, 
       }
       
   };
-
+  */
 
 
   return (
@@ -128,7 +129,7 @@ function CardScreen({restaurants, favItems, setFavItems,tempIndex, highlighted, 
               phone = {business.phone}
               yelp = {business.yelp_url}
               rank ={business.rank}
-              tempIndex = {tempIndex}
+              tempIndex = {highlighted}
             />
           </div>
         ))}

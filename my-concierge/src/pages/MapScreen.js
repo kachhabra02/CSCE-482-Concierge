@@ -20,7 +20,6 @@ function MapScreen({city, UPV}) {
   const [showShoppingCart, setShowShoppingCart] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
   const [highlighted, setHighlighted] = useState(-1);
-  const [tempIndex, setTempIndex] = useState(0);
 
   // Fetch recommendations from back-end
   useEffect(() => {
@@ -53,7 +52,6 @@ function MapScreen({city, UPV}) {
         if (highlighted !== restaurants[i].rank) {
           setHighlighted(restaurants[i].rank);
         }
-        setTempIndex(restaurants[i].rank)
       }}>
         {/*highlighted === restaurants[i].rank ? (
           <InfoBoxF onCloseClick={() => setHighlighted(-1)}>
@@ -411,7 +409,6 @@ function MapScreen({city, UPV}) {
         restaurants={restaurants}
         favItems={favItems}
         setFavItems={setFavItems}
-        tempIndex = {tempIndex}
         highlighted={highlighted}
         setHighlighted={setHighlighted}
         forceUpdate={forceUpdate}
