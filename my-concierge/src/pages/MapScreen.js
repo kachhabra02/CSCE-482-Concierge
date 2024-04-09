@@ -1,6 +1,6 @@
-import { React, useState, useRef, useEffect } from 'react';
+import { React, useState, useRef, useEffect, useReducer } from 'react';
 import axios from 'axios';
-import {GoogleMap, LoadScript, MarkerF } from '@react-google-maps/api';
+import {GoogleMap, LoadScript, MarkerF, InfoBoxF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
@@ -15,11 +15,12 @@ const center = {lat: 39.8283, lng: -98.5795};
 
 function MapScreen({city, UPV}) {
 
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0); // Force re-render for card slide (From React Hooks FAQ)
   const [favItems, setFavItems] = useState([]);
   const [showShoppingCart, setShowShoppingCart] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
+  const [highlighted, setHighlighted] = useState(-1);
   const [tempIndex, setTempIndex] = useState(0);
-
 
   // Fetch recommendations from back-end
   useEffect(() => {
@@ -46,8 +47,20 @@ function MapScreen({city, UPV}) {
     const markers = [];
 
     for (let i = 0; i < restaurants.length; ++i) {
-      const icon_obj = { url: (restaurants[i].rank === 0) ? "Images/goldPin.png" : "Images/orangePin.png", scaledSize: { width: 45, height: 50 }, }
-      markers.push(<MarkerF key={`restaurant-${restaurants[i].rank}`} position={ { lat: restaurants[i].latitude, lng: restaurants[i].longitude } } icon={icon_obj} onClick={()=>setTempIndex(restaurants[i].rank)}></MarkerF>);
+      const icon_obj = { url: (restaurants[i].rank === 0) ? "Images/goldPin.png" : "Images/orangePin.png",
+        scaledSize: { width: (restaurants[i].rank === highlighted) ? 54 : 45, height: (restaurants[i].rank === highlighted) ? 60 : 50 }, }
+      markers.push(<MarkerF key={`restaurant-${restaurants[i].rank}`} position={ { lat: restaurants[i].latitude, lng: restaurants[i].longitude } } icon={icon_obj} onClick={() => {
+        if (highlighted !== restaurants[i].rank) {
+          setHighlighted(restaurants[i].rank);
+        }
+        setTempIndex(restaurants[i].rank)
+      }}>
+        {/*highlighted === restaurants[i].rank ? (
+          <InfoBoxF onCloseClick={() => setHighlighted(-1)}>
+            <div>{restaurants[i].name}</div>
+          </InfoBoxF>
+        ) : null*/}
+      </MarkerF>);
     }
 
     return markers;
@@ -67,7 +80,7 @@ function MapScreen({city, UPV}) {
       bounds.extend({ lat: restaurant.latitude, lng: restaurant.longitude });
       return restaurant.rank
     });
-    mapRef.current.state.map.fitBounds(bounds);
+    mapRef?.current.state.map.fitBounds(bounds);
   }, [restaurants]); // Fit bounds on load and change of restaurants
 
   
@@ -386,16 +399,23 @@ function MapScreen({city, UPV}) {
           zoom={4} 
           mapContainerStyle={{width: '76%', height: '600px', marginLeft: "12%", borderRadius:'2%'}}
           options={{styles:MapStyling}}
+          onClick={() => { if (highlighted !== -1) { setHighlighted(-1); } }}
           >
           {renderMarkers()}
         </GoogleMap>
       </LoadScript>
 
+      <br/><br/>
+
       <CardScreen 
-      restaurants={restaurants}
-      favItems={favItems}
-      setFavItems={setFavItems}
-      tempIndex = {tempIndex}/>
+        restaurants={restaurants}
+        favItems={favItems}
+        setFavItems={setFavItems}
+        tempIndex = {tempIndex}
+        highlighted={highlighted}
+        setHighlighted={setHighlighted}
+        forceUpdate={forceUpdate}
+      />
 
 
     {showShoppingCart && (
