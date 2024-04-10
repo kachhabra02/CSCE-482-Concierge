@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 import '../css/ChatBox.css'; // Import the CSS file
 import robotImage from '../img/robot.png';
 import axios from 'axios';
@@ -15,6 +16,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
   const [userMessage, setUserMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [botMessage, setBotMessage] = useState('');
+  const [showResults, setShowResults] = useState(false);
 
   
   const handleSendMessage = async () => {
@@ -36,6 +38,11 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     setBotMessage((<div className='bot-message'> {botResponse} </div>));
     setIsLoading(false);
 
+    // Set showMapButton to true if there are any user messages
+    if (messages.some(message => message.sender === 'user')) {
+      setShowResults(true);
+    }
+
     // Clear the input field
     setUserMessage('');
   };
@@ -43,7 +50,8 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
   //Contact API response
   const updateUserPreferences = (message) => {
     return API.get(`/prompt?prompt=${encodeURIComponent(message)}&user_preference_vector=${userPreferenceArray.join('-')}`)
-      .then((res) => {
+    .then((res) => {
+        
         if (res.status < 300) { // Only set if restaurants are not yet set
           setUserPreferenceArray(res.data["updated_user_preference_vector"]);
           return res.data["response"];
@@ -60,15 +68,6 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
       });
   };
 
-  /*
-  const generateBotResponse = async (message, city) => {
-    if (!messages.length) { // Initial conversation
-      return city;
-    } else {
-      return message;
-    }
-  };
-  */
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -100,19 +99,6 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     setBotMessage(greetingMessage);
   }, []);
 
-  /*
-  useEffect(() => {
-    if (selectedCity && userMessage) {
-      const promptMessage = (
-        <div className="user-prompt">
-          You want to eat: {userMessage}
-        </div>
-      );
-      setBotMessage(promptMessage);
-    }
-  }, [selectedCity, userMessage]);
-  */
-
   return (
     <Container className = "chatbox-container">
       <Row>
@@ -131,6 +117,14 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
                 {message.text}
               </div>
             ))}
+            {showResults && (
+            <Col className="message-bot">
+              If you don't have any more inputs, you can view your results here!
+              <button>
+                <NavLink to="/MapScreen">Results</NavLink>
+              </button>
+            </Col>
+          )}
           </Col>
           <Col className = "input-container">
             {/* Input form */}

@@ -75,7 +75,15 @@
   width: calc(100% - 20px);
 }
 
-
+.message-bot button {
+  background-color: #e16632; /* Set button background color to #e16632 */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: fit-content;
+}
 /*****************Starting Message****************/
 .greetings {
   top: 5%;
