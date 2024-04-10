@@ -205,8 +205,20 @@
   display: none;
 }
 
-.highlighted-card{
-  box-shadow: 4px 4px 8px 4px rgba(255, 170, 0, 0.4);
+.normal-card {
+  border: 5px outset rgba(72, 132, 159, 0.8);
+}
+
+.normal-card:hover {
+  border: 5px outset rgba(72, 132, 159, 0.8); 
+}
+
+.highlighted-card {
+  border: 5px outset rgba(225, 102, 50, 0.8);
+}
+
+.highlighted-card:hover {
+  border: 5px outset rgba(225, 102, 50, 0.8);
 }
 
 

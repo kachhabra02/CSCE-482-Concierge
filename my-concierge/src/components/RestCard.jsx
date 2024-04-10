@@ -14,11 +14,12 @@ import Carousel from 'react-bootstrap/Carousel';
 
 
 
-function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems, image, total_images, phone, yelp, rank, tempIndex}) {
+function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems,
+                    image, total_images, phone, yelp, rank, highlighted, setHighlighted}) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAllCuisines, setShowAllCuisines] = useState(false);
 
-  //console.log(rank ," and ", tempIndex)
+  //console.log(rank ," and ", highlighted)
 
   //useEffect 
   useEffect(() => {
@@ -107,7 +108,8 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
 
 
   return (
-    <Card className={tempIndex === rank ? "highlighted-card" : ""} style={{ width: "23rem", marginBottom:"10px" }}>
+    <Card className={highlighted === rank ? "highlighted-card" : "normal-card"} style={{ width: "23rem", marginBottom:"10px" }}
+          onClick={ () => { if (highlighted !== rank) { setHighlighted(rank); } } }>
     <Carousel>
       {carouselImages.map((image, index) => (
         <Carousel.Item key={index}>
@@ -130,6 +132,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
           <img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
         ))}
       </Carousel> */}
+      <div> { /* To avoid border between card body and list group */ }
       <Card.Body style={{ paddingBottom: '0' }}>
         <div className="d-flex flex-row justify-content-between w-100">
           <Card.Title className="col-7">{name}</Card.Title>
@@ -165,14 +168,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
       </Card.Body>
       <ListGroup className="list-group-flush">
       <ListGroup.Item>
-        <a 
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            title="click her to see it on map"
-          >
             {"Address:" + " "+address}
-          </a>
       </ListGroup.Item>
         <Accordion alwaysOpen>
           <Accordion.Item eventKey="0">
@@ -232,6 +228,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
 
         </Accordion>
       </ListGroup>
+      </div>
     </Card>
   );
 }

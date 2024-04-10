@@ -38,18 +38,26 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
   };
 
 
-  /* useEffect(() => scrollToSlide(), [tempIndex]) */
   useEffect(() => {
+    // No card selected or pin deselected
     if (highlighted === -1) {
       return;
     }
+    else if (highlighted >= carouselRef?.current.state.currentSlide &&
+             highlighted < carouselRef?.current.state.currentSlide + carouselRef?.current.state.slidesToShow) {
+      return;
+    }
 
-    carouselRef?.current.goToSlide(highlighted, true);
+    carouselRef?.current.goToSlide(highlighted);
     forceUpdate();
   }, [highlighted])
 
+
+  // Sets highlighted card upon arrow click or pin click that is out of view
   const checkSlideFocus = () => {
-    setHighlighted(carouselRef?.current.state.currentSlide)
+    if (highlighted !== carouselRef?.current.state.currentSlide) {
+        setHighlighted(carouselRef?.current.state.currentSlide);
+    }
   }
 
   /*
@@ -104,7 +112,6 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
       <Carousel 
         ref={carouselRef} // Set the ref for the carousel
         responsive={responsive}
-        focusOnSelect={true}
         afterChange={checkSlideFocus}
         removeArrowOnDeviceType={["tablet", "mobile"]}
         renderDotsOutside
@@ -128,7 +135,8 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
               phone = {business.phone}
               yelp = {business.yelp_url}
               rank ={business.rank}
-              tempIndex = {highlighted}
+              highlighted = {highlighted}
+              setHighlighted = {setHighlighted}
             />
           </div>
         ))}
