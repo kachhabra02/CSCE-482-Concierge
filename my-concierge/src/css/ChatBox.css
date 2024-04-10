@@ -1,58 +1,122 @@
 .chatbox-container {
-  /* display: flex;
-  flex-direction: end;  */
-  height: 100vh; /* Set the height of the container to fill the viewport */
+  height: 100vh; /* Set to 100 viewport height */
   margin: 0 auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  background-color: #eff0f1; /* Set the background color to #eff0f1 */
+}
+
+.image-container {
+  position: relative;
+  top: 10%;
+  left: 5%;
+  height: 100%;
+  text-align: left;
+  max-width: 34%;
+  margin-right: 10px;
+  background-color: #eff0f1;
+}
+
+/* Message Column */
+.messages-container {
+  top: 5%;
+  flex: 1;
+  position: relative;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  right: 10%;
+}
+
+/* User Messages In Chat */
+.message-user {
+  /* text-align: right; */
+  margin-bottom: 10px;
+  background-color: #81adc8; /* Change message background color to #81adc8 */
+  padding: 10px;
+  border-radius: 10px;
+  color: #eff0f1;
+  max-width: 80%;
+  display: flex;
+  align-self: flex-end;
+}
+
+/* Bot Messages In Chat */
+.message-bot {
+  /* text-align: left; */
+  margin-bottom: 10px;
+  background-color: #c76137; /* Change message background color to #81adc8 */
+  padding: 10px;
+  border-radius: 10px;
+  color: #eff0f1;
+  max-width: 80%;
+  display: flex;
+  align-self: flex-start;
 }
 
 .input-container {
-  align-self: flex-end; /* Align the input container to the bottom */
-  margin-top: 10px; /* Add some spacing between the messages and the input */
-  width: 100%;
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-top: 1px solid white;
+  position: fixed;
+  bottom: 0;
+  padding-bottom: 20px;
+  right: 7%;
+  width: 50%;
+  background-color: #eff0f1; /* Change background color to white */
   z-index: 1000;
+  align-items: flex-end;
 }
-  
-  .message-container {
-    text-align: right;
-    margin-bottom: 10px;
-    background-color: #81adc8;
-    padding: 10px;
-    border-radius: 5px;
-    color: white;
-    max-width: fit-content;
-    align-self: flex-end;
-    align-content: end;
-  }
 
-  .messages-container {
-    flex: 0.5;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column; /* Reverse the column direction to start from the top */
-    margin: 0px auto; /*Center the messages container horizontally */
-    text-align: right;
-    align-items: end;
-    align-content: end;
-  }
+#formMessage {
+  background-color: #81adc8; /* Change input background color to #0f5b7c */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
+  width: calc(100% - 20px);
+}
 
-  .image-container {
-    text-align: left;
-    max-width: 34%;
+.message-bot button {
+  background-color: #e16632; /* Set button background color to #e16632 */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: fit-content;
+}
+/*****************Starting Message****************/
+.greetings {
+  top: 5%;
+  width: fit-content;
+  position: relative;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #81adc8;
+  left: 0;
+  text-align: left;
+  float: left;
+}
 
-  }
-  
-  .form-group {
-    margin-bottom: 2; /* Remove default margin for better alignment */
-  }
+/* Additional styling for button */
+.greetings button {
+  background-color: #e16632; /* Set button background color to #e16632 */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: fit-content;
+}
 
-  #formMessage {
-    background-color: #81adc8;
-    color: white;
+.greetings button:hover {
+  background-color: #d75e29; /* Lighter shade of orange on hover */
+}
 
-  }
-  
+.greetings button:active {
+  transform: translateY(2px); /* Move button down slightly when clicked */
+}
+
+/* Bot Message Above Chat */
+.bot-message {
+    background-color: #0f5b7c;
+}

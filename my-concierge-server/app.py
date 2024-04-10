@@ -1,9 +1,11 @@
 from flask import Flask, render_template, jsonify, request
+from flask_cors import CORS
 import database
 import nlp
 import recommender
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/api")
 def home():

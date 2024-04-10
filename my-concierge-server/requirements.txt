@@ -18,6 +18,7 @@ boto3
 requests
 openai
 python-dotenv
+flask-cors
 
 # other required dependencies
 setuptools >= 67.6.0
