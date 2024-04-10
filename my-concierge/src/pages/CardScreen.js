@@ -1,76 +1,58 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Carousel from 'react-multi-carousel';
 import RestCard from '../components/RestCard';
-import ShoppingCart from "../components/ShoppingCart";
 import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
-function CardScreen() {
 
-  const [favItems, setFavItems] = useState([]);
-  const [showShoppingCart, setShowShoppingCart] = useState(false);
+function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlighted, forceUpdate}) {
 
-  const businessData = {
-    "business_id": "tnhfDv5Il8EaGSXZGiuQGg",
-    "name": "Garaje",
-    "address": "475 3rd St",
-    "city": "San Francisco",
-    "state": "CA",
-    "postal_code": "94107",
-    "latitude": 37.7817529521,
-    "longitude": -122.39612197,
-    "stars": 4.5,
-    "review_count": 1198,
-    "is_open": 1,
-    "attributes": {
-      "RestaurantsTakeOut": true,
-      "BusinessParking": {
-        "garage": false,
-        "street": true,
-        "validated": false,
-        "lot": false,
-        "valet": false
-      }
-    },
-    "categories": [
-      "Mexican",
-      "Burgers",
-      "Gastropubs"
-    ],
-    "hours": {
-      "Monday": "10:00-21:00",
-      "Tuesday": "10:00-21:00",
-      "Friday": "10:00-21:00",
-      "Wednesday": "10:00-21:00",
-      "Thursday": "10:00-21:00",
-      "Sunday": "11:00-18:00",
-      "Saturday": "10:00-21:00"
-    }
-  };
+  const carouselRef = useRef(null); // Reference for the carousel component
+  
 
   const responsive = {
     superLargeDesktop: {
-      // the naming can be any, depends on you.
       breakpoint: { max: 4000, min: 3000 },
-      items: 5
+      items: 5,
+      slidesToSlide: 5,
+      arrows: true,
+      showDots: true
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 3
+      items: 3,
+      slidesToSlide: 3,
+      arrows: true,
+      showDots: true
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 2
+      items: 2,
+      slidesToSlide: 2
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1
+      items: 1,
+      slidesToSlide: 1
     }
   };
 
-  useEffect(() => console.log(favItems), [favItems])
-  const address = businessData.address + ", " + businessData.city + ", " + businessData.state + ", " + businessData.postal_code ;
 
+  /* useEffect(() => scrollToSlide(), [tempIndex]) */
+  useEffect(() => {
+    if (highlighted === -1) {
+      return;
+    }
+
+    carouselRef?.current.goToSlide(highlighted, true);
+    forceUpdate();
+  }, [highlighted])
+
+  const checkSlideFocus = () => {
+    setHighlighted(carouselRef?.current.state.currentSlide)
+  }
+
+  /*
   const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
     <ul className="custom-dots">
       {Array.from({ length: totalItems }).map((_, index) => (
@@ -81,41 +63,81 @@ function CardScreen() {
     </ul>
   );
 
+  const CustomDot = ({...rest }) => {
+    const {
+      index,
+      active,
+    } = rest;
+    console.log(index)
+    return (
+      <button
+        className={active ? "active" : "inactive"}
+      >
+        {React.Children(restaurants)[index]}
+      </button>
+    );
+  };
+  */
+
+  // Function to handle scrolling to a specific slide
+  /*
+  const scrollToSlide = () => { // In CardScreen, get Index from MapScreen and Scroll here 
+      if(carouselRef && carouselRef.current)
+      {
+        carouselRef.current.goToSlide(tempIndex);
+      }
+      
+  };
+  */
+
+
   return (
+    
     <div>
-      <div>
-        {favItems.length > 0 && (
-          <div className="button-container">
-            <div className="position-fixed" style={{zIndex: 99}}>
-              <button
-                className="button-effect"
-                onClick={() => setShowShoppingCart(true)}
-              >
-                <span>Shopping Cart - {favItems.length}</span>
-              </button>
-            </div>
+
+      {/*<h1>Restaurants:</h1>*/}
+
+      {/* {restaurants.map((business, index) => (
+        <button key={index} onClick={() => handleButtonClick(business.name)}>{business.name}</button>
+      ))} */}
+        
+      <Carousel 
+        ref={carouselRef} // Set the ref for the carousel
+        responsive={responsive}
+        focusOnSelect={true}
+        afterChange={checkSlideFocus}
+        removeArrowOnDeviceType={["tablet", "mobile"]}
+        renderDotsOutside
+        showDots
+      >
+
+      {restaurants.map((business, index) => (
+          <div key={index}>
+            <RestCard
+              name={business.name || "No Name"}
+              stars={business.stars || 0}
+              reviews={business.num_reviews >= 1000 ? "1k+" : (business.num_reviews || 0)}
+              cusines={business.categories || []}
+              address={business.address ? `${business.address}, ${business.city}, ${business.state} ${business.zip_code}` : "No Address"}
+              hours={business.hours || {}}
+              attributes={business.attributes || {}}
+              favItems={favItems || []}
+              setFavItems={setFavItems || (() => {})}
+              image = {business.base_image_url}
+              total_images = {business.num_images}
+              phone = {business.phone}
+              yelp = {business.yelp_url}
+              rank ={business.rank}
+              tempIndex = {highlighted}
+            />
           </div>
-        )}
-      </div>
+        ))}
 
-      <h1>Items:</h1>
-        <Carousel responsive={responsive} showDots={true} renderDotsOutside={renderButtonGroupOutside} removeArrowOnDeviceType={["tablet", "mobile"]}>
-          {/*Change the stars and reviews to json data*/}
-          <div><RestCard name={businessData.name} stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={businessData.categories} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
-          <div><RestCard name="exa" stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={businessData.categories} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
-          <div><RestCard name="ex3" stars={businessData.stars} reviews={businessData.review_count >= 1000 ? "1k+" : businessData.review_count} cusines={businessData.categories} address={address} favItems={favItems} setFavItems={setFavItems}/></div>
-          <div>Item 4</div>
-        </Carousel>
+      </Carousel>;
 
-        {showShoppingCart && (
-        <ShoppingCart
-          favItems={favItems}
-          setFavItems={setFavItems}
-          setShowModal={setShowShoppingCart}
-        />
-      )}
+
     </div>
   )
 }
 
-export default CardScreen
+export default CardScreen;

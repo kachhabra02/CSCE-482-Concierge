@@ -21,7 +21,7 @@ function ShoppingCart({ favItems, setFavItems, setShowModal }) {
   };
 
   const generateTextContent = () => {
-    return favItems.map((item) => `${item.name}, ${item.cusines}, ${item.address}`).join('\n');
+    return favItems.map((item) => `${item.name}, ${item.cusines.join(', ')}, ${item.address}`).join('\n');
   };
 
   const handleSendEmail = async () => {
@@ -71,8 +71,8 @@ function ShoppingCart({ favItems, setFavItems, setShowModal }) {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <div className='d-flex flex-row justify-content-between w-100'>
-          <Form.Group controlId="formBasicEmail" className="mb-0">
+        {/*<div className='d-flex flex-row justify-content-between w-100'>
+           <Form.Group controlId="formBasicEmail" className="mb-0">
             <Form.Control
               type="email"
               placeholder="Enter email"
@@ -85,11 +85,12 @@ function ShoppingCart({ favItems, setFavItems, setShowModal }) {
           </Form.Group>
           <Button variant="primary" onClick={handleSendEmail} disabled={sending}>
             {sending ? 'Sending...' : 'Send'}
-          </Button>
-          <Button variant="secondary" onClick={handleClose} disabled={sending}>
+          </Button> 
+
+        </div>*/}
+        <Button variant="secondary" onClick={handleClose} disabled={sending}>
             Close
-          </Button>
-        </div>
+        </Button>
         {error && <p className="text-danger">{error}</p>}
       </Modal.Footer>
     </Modal>
