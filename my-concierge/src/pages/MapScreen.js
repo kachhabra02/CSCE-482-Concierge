@@ -77,7 +77,7 @@ function MapScreen({city, UPV}) {
       bounds.extend({ lat: restaurant.latitude, lng: restaurant.longitude });
       return restaurant.rank
     });
-    mapRef?.current.state.map.fitBounds(bounds);
+    mapRef?.current?.state.map.fitBounds(bounds);
   }, [restaurants]); // Fit bounds on load and change of restaurants
 
   
