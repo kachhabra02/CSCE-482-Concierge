@@ -5,7 +5,7 @@ import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
 
-function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlighted, forceUpdate}) {
+function CardScreen({restaurants, highlighted, setHighlighted, forceUpdate}) {
 
   const carouselRef = useRef(null); // Reference for the carousel component
   
@@ -102,13 +102,6 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
   return (
     
     <div>
-
-      {/*<h1>Restaurants:</h1>*/}
-
-      {/* {restaurants.map((business, index) => (
-        <button key={index} onClick={() => handleButtonClick(business.name)}>{business.name}</button>
-      ))} */}
-        
       <Carousel 
         ref={carouselRef} // Set the ref for the carousel
         responsive={responsive}
@@ -128,8 +121,6 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
               address={business.address ? `${business.address}, ${business.city}, ${business.state} ${business.zip_code}` : "No Address"}
               hours={business.hours || {}}
               attributes={business.attributes || {}}
-              favItems={favItems || []}
-              setFavItems={setFavItems || (() => {})}
               image = {business.base_image_url}
               total_images = {business.num_images}
               phone = {business.phone}

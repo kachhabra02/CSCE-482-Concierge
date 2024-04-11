@@ -14,32 +14,13 @@ import Carousel from 'react-bootstrap/Carousel';
 
 
 
-function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems,
+function RestCard({ name, stars, reviews, cusines, address,hours,attributes,
                     image, total_images, phone, yelp, rank, highlighted, setHighlighted}) {
-  const [isFavorite, setIsFavorite] = useState(false);
   const [showAllCuisines, setShowAllCuisines] = useState(false);
+  const [showFullAddress, setShowFullAddress] = useState(false);
 
   //console.log(rank ," and ", highlighted)
-
-  //useEffect 
-  useEffect(() => {
-    setIsFavorite(favItems.find((fav) =>fav.name === name) !== undefined)
-  }, [favItems])
   
-
-  const onFavoriteClick = () => {
-    // Toggle the favorite status
-    setIsFavorite(!isFavorite);
-
-    const newItem = { name, cusines, address,image,total_images };
-    if (!isFavorite) {
-      // Add item to favorites
-      setFavItems([...favItems, newItem]);
-    } else {
-      // Remove item from favorites
-      setFavItems((favItems || []).filter(item => item.name !== name));
-    }
-  };
 
   const getCurrentDay = () => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -105,8 +86,6 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
   const images = Array.from({ length: total_images > 5 ? 5 : total_images }, (_, i) => `${image}${i > 0 ? `_${i}.jpg` : '.jpg'}`);
   const carouselImages = images.length > 0 ? images : [Default];
 
-
-
   return (
     <Card className={highlighted === rank ? "highlighted-card" : "normal-card"} style={{ width: "23rem", marginBottom:"10px" }}
           onClick={ () => { if (highlighted !== rank) { setHighlighted(rank); } } }>
@@ -135,7 +114,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
       <div> { /* To avoid border between card body and list group */ }
       <Card.Body style={{ paddingBottom: '0' }}>
         <div className="d-flex flex-row justify-content-between w-100">
-          <Card.Title className="col-7">{name}</Card.Title>
+          <Card.Title className="col-8">{name}</Card.Title>
           <Star stars={stars} reviews={reviews} />
         </div>
         <div className="d-flex flex-row justify-content-between w-100">
@@ -151,7 +130,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
                   {cusines.slice(2).map((cuisine, index) => 
                    <React.Fragment key={index}>
                     {cuisine}
-                    <br />
+                    <br/>
                     {index !== cusines.length - 3 && <hr style={{margin:'0'}}/>}
                   </React.Fragment>
                  )}
@@ -161,21 +140,21 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
 
             )}
           </Card.Text>
-          <button type="button" className="favorite-btn btn" onClick={onFavoriteClick}>
-            {isFavorite ? <FaHeart style={{ color: "#fb2323" }} /> : <FaRegHeart style={{ color: "#fb2323" }} />}
-          </button>
         </div>
       </Card.Body>
       <ListGroup className="list-group-flush">
       <ListGroup.Item>
-            {"Address:" + " "+address}
+        <div className="card-address" onClick={ () =>  setShowFullAddress(!showFullAddress) }>
+          <img src={(rank === 0) ? "Images/goldPin.png" : "Images/orangePin.png"} alt={"Address Pin"}/>
+          <p className={`card-address-text${showFullAddress ? "-full" : ""}`}>{` ${address}`}</p>
+        </div>
       </ListGroup.Item>
         <Accordion alwaysOpen>
           <Accordion.Item eventKey="0">
             <Accordion.Header>Opening Hours:</Accordion.Header>
             <Accordion.Body>              
               {parsedHours == null ? (
-                <div>No information available</div>
+                <span className="attribute-text">No information available</span>
               ) : (
                 <ul className="hours-list">
                 {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => (
@@ -191,7 +170,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
           <Accordion.Header>Extra:</Accordion.Header>
           <Accordion.Body>
             {Object.entries(attributes).length === 0 ? (
-              <div>No information available</div>
+              <span className="attribute-text">No information available</span>
             ) : (
               <ul className="attributes-list">
               {attributes.map((attribute, index) => (

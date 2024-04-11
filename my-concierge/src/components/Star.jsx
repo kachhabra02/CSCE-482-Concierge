@@ -17,8 +17,11 @@ const Star = ({stars,reviews}) => {
 
   return (
       <div className='icon-style'>
-        {ratingStar}
-        <p style={{ fontSize: '10px', marginLeft: '2px', color:'grey' }}>({reviews} reviews)</p>
+        <div>
+          {ratingStar}
+        </div>
+        
+        <p style={{ fontSize: '10px' }}>({reviews} reviews)</p>
       </div>
   )
 }
