@@ -91,7 +91,7 @@ function CardScreen({restaurants, highlighted, setHighlighted, forceUpdate}) {
               name={business.name || "No Name"}
               stars={business.stars || 0}
               reviews={business.num_reviews >= 1000 ? "1k+" : (business.num_reviews || 0)}
-              cusines={business.categories || []}
+              cuisines={business.categories || []}
               address={business.address ? `${business.address}, ${business.city}, ${business.state} ${business.zip_code}` : "No Address"}
               hours={business.hours || {}}
               attributes={business.attributes || {}}

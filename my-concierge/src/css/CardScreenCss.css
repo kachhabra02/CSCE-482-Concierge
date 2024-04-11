@@ -59,9 +59,43 @@ body{
   margin-top: 15px;
 }
 
-.button-effect:hover span {
-  color: white;
-  animation: scaleUp 0.3s ease-in-out;
+.categoryBox {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.categoryTag {
+    background-color: #0f5b7c;
+    border: none;
+    color: #eff0f1;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: default;
+    border-radius: 16px;
+}
+
+.categoryButton {
+    background-color: #0f5b7c;
+    border-color: #0f5b7c;
+    border-style: solid;
+    color: #eff0f1;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 16px;
+    transition: 0.3s;
+}
+
+.categoryButton:hover  {
+    color: #0f5b7c;
+    background-color: #eff0f1;
+    animation: scaleUp 0.3s ease-in-out;
 }
 
 @keyframes scaleUp {
@@ -76,16 +110,6 @@ body{
   100% {
       transform: scale(1);
   }
-}
-
-.button-inactive {
-  display: none;
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-  margin: 0 2% 5% 0;
 }
 
 .custom-cus .accordion-button{

@@ -14,13 +14,28 @@ import Carousel from 'react-bootstrap/Carousel';
 
 
 
-function RestCard({ name, stars, reviews, cusines, address,hours,attributes,
+function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
                     image, total_images, phone, yelp, rank, highlighted, setHighlighted}) {
   const [showAllCuisines, setShowAllCuisines] = useState(false);
   const [showFullAddress, setShowFullAddress] = useState(false);
 
-  //console.log(rank ," and ", highlighted)
-  
+  let priceRange = '';
+  cuisines = cuisines.filter((category) => {
+    if (category.startsWith("Price Range ")) {
+        priceRange = category.substring(12);
+        return false;
+    }
+    return true;
+  })
+  cuisines.sort((a, b) => { return a.length - b.length;  });
+
+  let numCuisinesCollapsed = (cuisines.length === 0) ? 0 : 1;
+  if (cuisines.length >= 2 && cuisines[0] + cuisines[1] <= 16) {
+    ++numCuisinesCollapsed;
+    if (cuisines.length >= 3 && cuisines[0] + cuisines[1] + cuisines[1] <= 14) {
+      ++numCuisinesCollapsed;
+    }
+  }
 
   const getCurrentDay = () => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -119,26 +134,32 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes,
         </div>
         <div className="d-flex flex-row justify-content-between w-100">
           <Card.Text className="col-8">
-            {cusines.slice(0, showAllCuisines ? cusines.length : 2).map((cuisine, index) => (
-              <button key={index} type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }}>{cuisine}</button>
-            ))}
-            {cusines.length > 2 && (
-              <Accordion alwaysOpen>
-              <Accordion.Item style={{ margin: '3% 0 0 2%' }} eventKey="0">
-                <Accordion.Header className="custom-cus">More ...</Accordion.Header>
-                <Accordion.Body style={{padding: '2%', backgroundColor: 'lightgray' }}>
-                  {cusines.slice(2).map((cuisine, index) => 
-                   <React.Fragment key={index}>
-                    {cuisine}
-                    <br/>
-                    {index !== cusines.length - 3 && <hr style={{margin:'0'}}/>}
-                  </React.Fragment>
-                 )}
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-
-            )}
+            {
+              showAllCuisines ?
+                <div className="categoryBox">
+                  {cuisines.map((cuisine, index) => (
+                    <div key={index} className="categoryTag" style={{ margin: '3px' }}>{cuisine}</div>
+                  ))}
+                  <button key={cuisines.length} className="categoryButton" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(false) }>
+                    Show Less...
+                  </button>
+                </div>
+              :
+                <div className="categoryBox">
+                  {cuisines.splice(0, numCuisinesCollapsed).map((cuisine, index) => (
+                      <div key={index} className="categoryTag" style={{ margin: '3px' }}>{cuisine}</div>
+                  ))}
+                  {
+                    cuisines.length > numCuisinesCollapsed ?
+                      <button key={cuisines.length} className="categoryButton" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(true) }>
+                        ...
+                      </button>
+                    : null
+                  }
+                </div>
+                
+            }
+            
           </Card.Text>
         </div>
       </Card.Body>
