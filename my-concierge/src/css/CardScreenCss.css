@@ -1,8 +1,27 @@
 body{
     font-style:#4a322a;
 }
+
 .react-multi-carousel-list  {
-  margin-left: 5%;
+    position:unset;
+
+    .react-multiple-carousel__arrow {
+        position:absolute;
+    }
+
+    .react-multiple-carousel__arrow--left {
+        left: calc(-4.7% + 1px)
+    }
+
+    .react-multiple-carousel__arrow--right {
+        right: calc(2% + 1px)
+    }
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 94%;
+    margin-left: 6%;
 }
 
 .icon-style {
@@ -16,34 +35,23 @@ body{
   color: #f9733a;
 }
 
-.custom-dots {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    bottom: -20px; /* Adjust the distance from the bottom */
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-  
-    li {
-      margin: 0 5px; /* Adjust the spacing between dots */
-      display: inline-block;
-    }
-  
-    button {
-      width: 10px; /* Adjust the dot size */
-      height: 10px;
-      border-radius: 50%;
-      background-color: #ccc; /* Adjust the color of inactive dots */
-      border: none;
-      cursor: pointer;
-  
-      &.active {
-        background-color: #0f5b7c; /* Adjust the color of the active dot */
-      }
-    }
+.custom-dot-inactive {
+    display: block;
+    width: 10px; /* Adjust the dot size */
+    height: 10px;
+    margin: 2px;
+    border-radius: 50%;
+    background-color: #0f5b7c; /* Adjust the color of inactive dots */
+    cursor: pointer;
+}
+
+.custom-dot-active {
+    display: block;
+    width: 10px; /* Adjust the dot size */
+    height: 10px;
+    border-radius: 50%;
+    margin: 2px;
+    background-color: #E16632; /* Adjust the color of the active dot */
 }
 
 .react-multi-carousel-dot-list {

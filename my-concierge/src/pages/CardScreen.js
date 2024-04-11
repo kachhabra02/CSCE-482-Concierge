@@ -60,55 +60,29 @@ function CardScreen({restaurants, highlighted, setHighlighted, forceUpdate}) {
     }
   }
 
-  /*
-  const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
-    <ul className="custom-dots">
-      {Array.from({ length: totalItems }).map((_, index) => (
-        <li key={index}>
-          <button className={index === currentSlide ? "active" : ""} {...props}></button>
-        </li>
-      ))}
-    </ul>
-  );
-
-  const CustomDot = ({...rest }) => {
-    const {
-      index,
-      active,
-    } = rest;
-    console.log(index)
+  const CustomDot = ({ onClick, active }) => {
     return (
-      <button
-        className={active ? "active" : "inactive"}
+      <li
+        onClick={ () => onClick() }
+        className={active ? "custom-dot-active" : "custom-dot-inactive"}
       >
-        {React.Children(restaurants)[index]}
-      </button>
+      </li>
     );
   };
-  */
-
-  // Function to handle scrolling to a specific slide
-  /*
-  const scrollToSlide = () => { // In CardScreen, get Index from MapScreen and Scroll here 
-      if(carouselRef && carouselRef.current)
-      {
-        carouselRef.current.goToSlide(tempIndex);
-      }
-      
-  };
-  */
 
 
   return (
     
-    <div>
+    <div className="carousel-wrapper">
       <Carousel 
         ref={carouselRef} // Set the ref for the carousel
         responsive={responsive}
         afterChange={checkSlideFocus}
         removeArrowOnDeviceType={["tablet", "mobile"]}
-        renderDotsOutside
+        renderDotsOutside={true}
         showDots
+        customDot={<CustomDot/>}
+        renderButtonGroupOutside={true}
       >
 
       {restaurants.map((business, index) => (
@@ -131,10 +105,7 @@ function CardScreen({restaurants, highlighted, setHighlighted, forceUpdate}) {
             />
           </div>
         ))}
-
       </Carousel>;
-
-
     </div>
   )
 }
