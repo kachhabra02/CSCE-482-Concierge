@@ -5,11 +5,8 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaRegHeart, FaHeart, FaTaxi, FaBox ,FaWheelchair,FaPhone, FaYelp} from "react-icons/fa";
-//import Carousel from 'react-multi-carousel';
-//import 'react-multi-carousel/lib/styles.css';
 import Default from '../img/default.png'; 
 import 'react-slideshow-image/dist/styles.css';
-import {Fade, Zoom, Slide} from 'react-slideshow-image';
 import Carousel from 'react-bootstrap/Carousel';
 
 
@@ -38,6 +35,22 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
       // Remove item from favorites
       setFavItems((favItems || []).filter(item => item.name !== name));
     }
+  };
+
+  const toggleCuisines = () => {
+    setShowAllCuisines(!showAllCuisines);
+  }
+
+  const extractPriceRange = (cusines) => {
+    let priceRange = '';
+    const updatedCusines = cusines.filter(cusine => {
+      if (cusine.startsWith('Price Range')) {
+        priceRange = cusine;
+        return false;
+      }
+      return true;
+    });
+    return { priceRange, updatedCusines };
   };
 
   const getCurrentDay = () => {
@@ -101,8 +114,10 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
       items: 1
     }
   };
+
   const images = Array.from({ length: total_images > 5 ? 5 : total_images }, (_, i) => `${image}${i > 0 ? `_${i}.jpg` : '.jpg'}`);
   const carouselImages = images.length > 0 ? images : [Default];
+  const { priceRange, updatedCusines } = extractPriceRange(cusines);
 
 
 
@@ -115,52 +130,51 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
         </Carousel.Item>
       ))}
     </Carousel>
-      {/* <div className="slide-container">
-        <Fade>
-        {carouselImages.map((image, index) => (
-          <img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
-        ))}
-        </Fade>
-      </div> */}
-      {/* <Carousel 
-        responsive={responsive}
-
-      >
-      {carouselImages.map((image, index) => (
-          <img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
-        ))}
-      </Carousel> */}
       <Card.Body style={{ paddingBottom: '0' }}>
         <div className="d-flex flex-row justify-content-between w-100">
           <Card.Title className="col-7">{name}</Card.Title>
           <Star stars={stars} reviews={reviews} />
         </div>
         <div className="d-flex flex-row justify-content-between w-100">
-          <Card.Text className="col-8">
-            {cusines.slice(0, showAllCuisines ? cusines.length : 2).map((cuisine, index) => (
-              <button key={index} type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }}>{cuisine}</button>
-            ))}
-            {cusines.length > 2 && (
-              <Accordion alwaysOpen>
-              <Accordion.Item style={{ margin: '3% 0 0 2%' }} eventKey="0">
-                <Accordion.Header className="custom-cus">More ...</Accordion.Header>
-                <Accordion.Body style={{padding: '2%', backgroundColor: 'lightgray' }}>
-                  {cusines.slice(2).map((cuisine, index) => 
-                   <React.Fragment key={index}>
-                    {cuisine}
-                    <br />
-                    {index !== cusines.length - 3 && <hr style={{margin:'0'}}/>}
-                  </React.Fragment>
-                 )}
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-
-            )}
-          </Card.Text>
+        {priceRange.length > 0 ? (
+            <Card.Text style={{display:'flex', marginBottom: '2%'}}>
+              {priceRange}
+            </Card.Text>
+          ) : (
+            <Card.Text style={{display:'flex', marginBottom: '2%'}}>
+              Price Range: None
+            </Card.Text>
+          )}
           <button type="button" className="favorite-btn btn" onClick={onFavoriteClick}>
             {isFavorite ? <FaHeart style={{ color: "#fb2323" }} /> : <FaRegHeart style={{ color: "#fb2323" }} />}
           </button>
+          </div>
+        <div className="mb-2">
+          <Card.Text className="col-11">
+              {updatedCusines.slice(0, showAllCuisines ? updatedCusines.length : 2).map((cuisine, index) => (
+                <button key={index} type="button"  
+                style={{
+                  margin: '3px',
+                  color: '#007bff', 
+                  backgroundColor: 'transparent', 
+                  borderColor: '#007bff',
+                  border: '1px solid', 
+                  borderRadius: '50px',
+                  padding: '5px 10px', 
+                  fontSize: '0.875rem', 
+                  lineHeight: '1.5', 
+                  textDecoration: 'none', 
+                  cursor: 'default' 
+                }}>{cuisine}</button>
+              ))}
+              {updatedCusines.length > 2 && !showAllCuisines && (
+                <button type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }} onClick={toggleCuisines}>...</button>
+              )}
+              {updatedCusines.length > 2 && showAllCuisines && (
+                <button type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }} onClick={toggleCuisines}>Close</button>
+              )}
+            </Card.Text>
+
         </div>
       </Card.Body>
       <ListGroup className="list-group-flush">
@@ -171,7 +185,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
             rel="noopener noreferrer"
             title="click her to see it on map"
           >
-            {"Address:" + " "+address}
+            {address}
           </a>
       </ListGroup.Item>
         <Accordion alwaysOpen>

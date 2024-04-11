@@ -133,9 +133,7 @@
   margin: 0 2% 5% 0;
 }
 
-.custom-cus .accordion-button{
-  padding: 3px;
-}
+
 
 .hours-list {
   list-style-type: none;
@@ -153,7 +151,7 @@
 }
 
 .gray-bg {
-  background-color: lightgray;
+  background-color: #d3d3d3;
   padding-left: 2%;
 }
 
@@ -194,19 +192,19 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-.react-slideshow-fadezoom-wrapper  > .react-slideshow-fadezoom-images-wrap{
-  margin: 0;
-  height: 30vh;
-}
 
 .card > .react-multi-carousel-list { margin: 0; height: 30vh; }
 
-.react-slideshow-container .default-nav {
-  display: none;
-}
 
 .highlighted-card{
   box-shadow: 4px 4px 8px 4px rgba(255, 170, 0, 0.4);
+}
+
+.carousel-control-prev{
+  display: none;
+}
+.carousel-control-next{
+  display: none;
 }
 
 
