@@ -24,17 +24,6 @@ body{
     margin-left: 6%;
 }
 
-.icon-style {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #4a322a;
-}
-
-.icon {    
-  color: #f9733a;
-}
-
 .custom-dot-inactive {
     display: block;
     width: 10px; /* Adjust the dot size */
@@ -59,12 +48,13 @@ body{
   margin-top: 15px;
 }
 
-.categoryBox {
+.category-box {
     display: flex;
     flex-flow: row wrap;
+    margin-top: 5px;
 }
 
-.categoryTag {
+.category-tag {
     background-color: #0f5b7c;
     border: none;
     color: #eff0f1;
@@ -77,7 +67,7 @@ body{
     border-radius: 16px;
 }
 
-.categoryButton {
+.category-btn {
     background-color: #0f5b7c;
     border-color: #0f5b7c;
     border-style: solid;
@@ -92,7 +82,7 @@ body{
     transition: 0.3s;
 }
 
-.categoryButton:hover  {
+.category-btn:hover  {
     color: #0f5b7c;
     background-color: #eff0f1;
     animation: scaleUp 0.3s ease-in-out;
@@ -112,9 +102,41 @@ body{
   }
 }
 
-.custom-cus .accordion-button{
-  padding: 3px;
+.star-price-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.icon-style {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #4a322a;
+}
+  
+.icon {    
+    color: #f9733a;
+}
+
+.dollar-box {
+    align-items: center;
+}
+
+.dollar-fill {
+    color: #0f5b7c;
+}
+
+.dollar {
+    color: #eff0f1;
+}
+
+.dollar-empty {
+    color: white;
+}
+
+.custom-cus .accordion-button{
+    padding: 3px;
 }
 
 .accordion-button {

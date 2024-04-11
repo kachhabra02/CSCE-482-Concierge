@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Star from "./Star";
+import Dollar from "./Dollar";
 import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -29,10 +30,10 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
   })
   cuisines.sort((a, b) => { return a.length - b.length;  });
 
-  let numCuisinesCollapsed = (cuisines.length === 0) ? 0 : 1;
-  if (cuisines.length >= 2 && cuisines[0] + cuisines[1] <= 16) {
+  let numCuisinesCollapsed = (cuisines.length < 2) ? cuisines.length : 2;
+  if (cuisines.length >= 3 && cuisines[0] + cuisines[1] + cuisines[2] <= 29) {
     ++numCuisinesCollapsed;
-    if (cuisines.length >= 3 && cuisines[0] + cuisines[1] + cuisines[1] <= 14) {
+    if (cuisines.length >= 4 && cuisines[0] + cuisines[1] + cuisines[2] + cuisines[3] <= 26) {
       ++numCuisinesCollapsed;
     }
   }
@@ -129,29 +130,32 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
       <div> { /* To avoid border between card body and list group */ }
       <Card.Body style={{ paddingBottom: '0' }}>
         <div className="d-flex flex-row justify-content-between w-100">
-          <Card.Title className="col-8">{name}</Card.Title>
-          <Star stars={stars} reviews={reviews} />
+          <Card.Title className="col-9">{name}</Card.Title>
+          <div className="star-price-box">
+            <Star stars={stars} reviews={reviews} />
+            <Dollar priceRange={priceRange} />
+          </div>
         </div>
         <div className="d-flex flex-row justify-content-between w-100">
-          <Card.Text className="col-8">
+          <Card.Text className="w-full">
             {
               showAllCuisines ?
-                <div className="categoryBox">
+                <div className="category-box">
                   {cuisines.map((cuisine, index) => (
-                    <div key={index} className="categoryTag" style={{ margin: '3px' }}>{cuisine}</div>
+                    <div key={index} className="category-tag" style={{ margin: '3px' }}>{cuisine}</div>
                   ))}
-                  <button key={cuisines.length} className="categoryButton" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(false) }>
+                  <button key={cuisines.length} className="category-btn" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(false) }>
                     Show Less...
                   </button>
                 </div>
               :
-                <div className="categoryBox">
-                  {cuisines.splice(0, numCuisinesCollapsed).map((cuisine, index) => (
-                      <div key={index} className="categoryTag" style={{ margin: '3px' }}>{cuisine}</div>
+                <div className="category-box">
+                  {cuisines.slice(0, numCuisinesCollapsed).map((cuisine, index) => (
+                      <div key={index} className="category-tag" style={{ margin: '3px' }}>{cuisine}</div>
                   ))}
                   {
                     cuisines.length > numCuisinesCollapsed ?
-                      <button key={cuisines.length} className="categoryButton" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(true) }>
+                      <button key={cuisines.length} className="category-btn" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(true) }>
                         ...
                       </button>
                     : null
