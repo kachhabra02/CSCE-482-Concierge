@@ -1,6 +1,6 @@
 import { React, useState, useRef, useEffect, useReducer } from 'react';
 import axios from 'axios';
-import {GoogleMap, LoadScript, MarkerF, InfoBoxF } from '@react-google-maps/api';
+import {GoogleMap, LoadScript, MarkerF, InfoBox } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
@@ -49,11 +49,17 @@ function MapScreen({city, UPV}) {
           setHighlighted(restaurants[i].rank);
         }
       }}>
-        {/*highlighted === restaurants[i].rank ? (
-          <InfoBoxF onCloseClick={() => setHighlighted(-1)}>
-            <div>{restaurants[i].name}</div>
-          </InfoBoxF>
-        ) : null*/}
+        {highlighted === restaurants[i].rank ? (
+          <InfoBox
+            onCloseClick={() => setHighlighted(-1)}
+            position={{ lat: restaurants[i].latitude, lng: restaurants[i].longitude }}
+            options={{ closeBoxURL: "", enableEventPropagation: true }}
+          >
+            <div style={{ backgroundColor: "#0f5b7c", padding: "10px", borderRadius: "5px", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", fontSize: "13px", color:"white" }}>
+              <b>{restaurants[i].name}</b>
+            </div>
+          </InfoBox>
+        ) : null}
       </MarkerF>);
     }
 

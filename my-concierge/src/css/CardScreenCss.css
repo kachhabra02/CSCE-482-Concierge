@@ -128,7 +128,7 @@ body{
 }
 
 .dollar {
-    color: #eff0f1;
+    color: #000000;
 }
 
 .dollar-empty {
@@ -180,6 +180,13 @@ body{
     margin-bottom: 0;
 }
 
+.carousel-control-prev{
+  display: none;
+}
+.carousel-control-next{
+  display: none;
+}
+
 .hours-list {
   list-style-type: none;
   padding: 0;
@@ -191,6 +198,7 @@ body{
 }
 
 .hours-list li:hover { 
+  transform: scale(1.05); 
   cursor: default;
 }
 
