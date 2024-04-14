@@ -19,8 +19,6 @@ const cityList = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nas
 const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPreferenceArray, messages, setMessages}) => {
   const [userMessage, setUserMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  //const [botMessage, setBotMessage] = useState('');
-  const [showResults, setShowResults] = useState(false);
   
   const handleSendMessage = async () => {
     if(!selectedCity){
@@ -38,13 +36,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     const botResponse = await updateUserPreferences(userMessage);
     messages.push({text: botResponse, sender: 'bot'})
     setMessages([...messages]);
-    //setBotMessage((<div className='bot-message'> {botResponse} </div>));
     setIsLoading(false);
-
-    // Set showMapButton to true if there are any user messages
-    if (messages.some(message => message.sender === 'user') && !messages[messages.length - 1].text.includes("sorry")) {
-      setShowResults(true);
-    }
 
     // Clear the input field
     setUserMessage('');
@@ -83,7 +75,6 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     setSelectedCity(city);
     const botResponse = `I see you are looking for some restaurant recommendations in ${city}. What kind of restaurants are you looking for?`;
     setMessages([...messages, {text: botResponse, sender: 'bot'}]);
-    //setBotMessage((<div className='bot-message'> {botResponse} </div>));
   }
 
   useEffect(() => {
@@ -105,7 +96,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
   }, []);
 
   useEffect(() => {
-    if (showResults) {
+    if (selectedCity) {
       const replyMessage = (
       <div style={{display:"flex"}}>
         <div>
@@ -119,9 +110,8 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
       </div>
       );
       setMessages([...messages, {text: replyMessage, sender: 'bot'}]);
-      setShowResults(false);
     }
-  }, [showResults]);
+  }, [selectedCity]);
   
 
   return (

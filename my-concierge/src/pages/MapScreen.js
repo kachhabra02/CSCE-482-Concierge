@@ -1,6 +1,6 @@
-import { React, useState, useRef, useEffect, useReducer } from 'react';
+import { React, useState, useRef, useEffect, useReducer, createElement } from 'react';
 import axios from 'axios';
-import {GoogleMap, LoadScript, MarkerF, InfoBox } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
@@ -10,9 +10,9 @@ const API = axios.create({
   timeout: 15000 // 15 second timeout
 });
 
-const center = {lat: 39.8283, lng: -98.5795};
+const center = { lat: 39.8283, lng: -98.5795 };
 
-function MapScreen({city, UPV}) {
+function MapScreen({ city, UPV }) {
 
   const [_, forceUpdate] = useReducer((x) => x + 1, 0); // Force re-render for card slide (From React Hooks FAQ)
   const [restaurants, setRestaurants] = useState([]);
@@ -21,18 +21,18 @@ function MapScreen({city, UPV}) {
   // Fetch recommendations from back-end
   useEffect(() => {
     API.get(`/recommendation?location=${encodeURIComponent(city ? city : 'Philadelphia')}&user_preference_vector=${UPV.join('-')}`)
-        .then((res) => {
-          if (res.status < 300 && restaurants.length === 0) { // Only set if restaurants are not yet set
-            setRestaurants(res.data["recommended_restaurants"]);
-          }
-          else {
-            console.log(`Error: Status code ${res.status} when retrieving restaurant recommendations`);
-          }
-        })
-        .catch((error) => {
-          console.log("Error when retrieving restaurant recommendations:");
-          console.log(error);
-        })
+      .then((res) => {
+        if (res.status < 300 && restaurants.length === 0) { // Only set if restaurants are not yet set
+          setRestaurants(res.data["recommended_restaurants"]);
+        }
+        else {
+          console.log(`Error: Status code ${res.status} when retrieving restaurant recommendations`);
+        }
+      })
+      .catch((error) => {
+        console.log("Error when retrieving restaurant recommendations:");
+        console.log(error);
+      })
   }, [])
 
 
@@ -42,30 +42,26 @@ function MapScreen({city, UPV}) {
     const markers = [];
 
     for (let i = 0; i < restaurants.length; ++i) {
-      const icon_obj = { url: (restaurants[i].rank === 0) ? "Images/goldPin.png" : "Images/orangePin.png",
-        scaledSize: { width: (restaurants[i].rank === highlighted) ? 54 : 45, height: (restaurants[i].rank === highlighted) ? 60 : 50 }, }
-      markers.push(<MarkerF key={`restaurant-${restaurants[i].rank}`} position={ { lat: restaurants[i].latitude, lng: restaurants[i].longitude } } icon={icon_obj} onClick={() => {
+      const icon_obj = {
+        url: (restaurants[i].rank === 0) ? (restaurants[i].rank === highlighted ? "Images/goldPinHighlighted.png" : "Images/goldPin.png")
+          : (restaurants[i].rank === highlighted ? "Images/orangePinHighlighted.png" : "Images/orangePin.png"),
+        scaledSize: { width: (restaurants[i].rank === highlighted) ? 54 : 45, height: (restaurants[i].rank === highlighted) ? 60 : 50 }
+      }
+      const options_obj = { opacity: (highlighted === -1 || restaurants[i].rank === highlighted) ? 1 : 0.7 }
+      markers.push(<MarkerF key={`restaurant-${restaurants[i].rank}`} position={{ lat: restaurants[i].latitude, lng: restaurants[i].longitude }} icon={icon_obj} options={options_obj} onClick={() => {
         if (highlighted !== restaurants[i].rank) {
           setHighlighted(restaurants[i].rank);
         }
       }}>
         {highlighted === restaurants[i].rank ? (
-          <InfoBox
+          <InfoWindowF
             onCloseClick={() => setHighlighted(-1)}
-            position={{ lat: restaurants[i].latitude, lng: restaurants[i].longitude }}
             options={{ closeBoxURL: "", enableEventPropagation: true }}
           >
-            <div style={{ backgroundColor: "white", padding: "10px", borderRadius: "5px", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", fontSize: "13px" }}>
-              <b>{restaurants[i].name}</b>
-              <br></br>
-              <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(restaurants[i].address)}`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              title="click her to see it on map"
-              >View in map</a>
+            <div style={{ fontSize: "13px", fontWeight: "bold", color: "#0f5b7c" }}>
+              {restaurants[i].name}
             </div>
-          </InfoBox>
+          </InfoWindowF>
         ) : null}
       </MarkerF>);
     }
@@ -79,7 +75,7 @@ function MapScreen({city, UPV}) {
 
   useEffect(() => {
     if (restaurants.length === 0) {
-        return;
+      return;
     }
 
     const bounds = new window.google.maps.LatLngBounds();
@@ -90,7 +86,7 @@ function MapScreen({city, UPV}) {
     mapRef?.current?.state.map.fitBounds(bounds);
   }, [restaurants]); // Fit bounds on load and change of restaurants
 
-  
+
   // Map styling - hella long
   const MapStyling = [
     {
@@ -276,7 +272,7 @@ function MapScreen({city, UPV}) {
         {
           "color": "#83a5b0"
         }
-        
+
       ]
     },
     {
@@ -371,27 +367,27 @@ function MapScreen({city, UPV}) {
     }
   ]
 
-  
+
   return (
-      
-    <div>   
-      <Bell/>
+
+    <div>
+      <Bell />
       <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
         <GoogleMap
           ref={mapRef}
-          center={center} 
-          zoom={4} 
-          mapContainerStyle={{width: '76%', height: '600px', marginLeft: "12%", borderRadius:'2%'}}
-          options={{styles:MapStyling}}
+          center={center}
+          zoom={4}
+          mapContainerStyle={{ width: '76%', height: '600px', marginLeft: "12%", borderRadius: '2%' }}
+          options={{ styles: MapStyling }}
           onClick={() => { if (highlighted !== -1) { setHighlighted(-1); } }}
-          >
+        >
           {renderMarkers()}
         </GoogleMap>
       </LoadScript>
 
-      <br/><br/>
+      <br /><br />
 
-      <CardScreen 
+      <CardScreen
         restaurants={restaurants}
         highlighted={highlighted}
         setHighlighted={setHighlighted}
