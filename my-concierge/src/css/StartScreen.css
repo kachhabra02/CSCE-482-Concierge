@@ -56,12 +56,12 @@
   .start-button {
     background-color: #E16632; /* Green color for the button */
     color: white; /* White text color */
-    padding: 15px 32px; /* Add padding for better button size */
-    text-align: center; /* Center button text */
-    display: inline-block; /* Allow for inline styling */
-    font-size: 16px; /* Adjust button font size */
-    border: none; /* Remove default button border */
-    cursor: pointer; /* Indicate clickable behavior */
+    padding: 15px 32px;
+    text-align: center; 
+    display: inline-block; 
+    font-size: 16px; 
+    border: none; 
+    cursor: pointer; 
     border-radius: 30px; 
     transition: background-color 0.3s ease, transform 0.3s ease; 
     font-weight: bold;

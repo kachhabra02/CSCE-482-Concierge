@@ -4,6 +4,10 @@ import { NavLink } from 'react-router-dom';
 import '../css/ChatBox.css'; // Import the CSS file
 import robotImage from '../img/robot.png';
 import axios from 'axios';
+import { FaRobot,FaAngleRight,FaAngleDoubleRight} from "react-icons/fa";
+import { motion } from "framer-motion";
+
+
 
 const API = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/api`,
@@ -15,9 +19,8 @@ const cityList = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nas
 const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPreferenceArray, messages, setMessages}) => {
   const [userMessage, setUserMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [botMessage, setBotMessage] = useState('');
+  //const [botMessage, setBotMessage] = useState('');
   const [showResults, setShowResults] = useState(false);
-
   
   const handleSendMessage = async () => {
     if(!selectedCity){
@@ -35,11 +38,11 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     const botResponse = await updateUserPreferences(userMessage);
     messages.push({text: botResponse, sender: 'bot'})
     setMessages([...messages]);
-    setBotMessage((<div className='bot-message'> {botResponse} </div>));
+    //setBotMessage((<div className='bot-message'> {botResponse} </div>));
     setIsLoading(false);
 
     // Set showMapButton to true if there are any user messages
-    if (messages.some(message => message.sender === 'user')) {
+    if (messages.some(message => message.sender === 'user') && !messages[messages.length - 1].text.includes("sorry")) {
       setShowResults(true);
     }
 
@@ -80,74 +83,146 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     setSelectedCity(city);
     const botResponse = `I see you are looking for some restaurant recommendations in ${city}. What kind of restaurants are you looking for?`;
     setMessages([...messages, {text: botResponse, sender: 'bot'}]);
-    setBotMessage((<div className='bot-message'> {botResponse} </div>));
+    //setBotMessage((<div className='bot-message'> {botResponse} </div>));
   }
 
   useEffect(() => {
-    const greetingMessage = (
-      <div className="greetings">
-        Hi there! I am your virtual concierge here to help you find the best place to dine in.
-        Please choose a city to get started:
-        <br />
-        {
-          cityList.map((city) => {
-            return <button key={`button-${city}`} onClick={() => onClickCityButton(city)}> {city} </button>
-          })
-        }
-      </div>
-    );
-    setBotMessage(greetingMessage);
+    if (!selectedCity) {
+      const greetingMessage = (
+        <div>
+          Hi there! I am your virtual concierge here to help you find the best place to dine in.
+          Please choose a city to get started:
+          <br />
+          {
+            cityList.map((city) => {
+              return <button className="greeting-buttons" key={`button-${city}`} onClick={() => onClickCityButton(city)}> {city} </button>
+            })
+          }
+        </div>
+      );
+      setMessages([...messages, {text: greetingMessage, sender: 'bot'}]);
+    }
   }, []);
 
-  return (
-    <Container className = "chatbox-container">
-      <Row>
-        <Col>
-          {/* Image div */}
-          <div className="image-container">
-            <img src={robotImage} alt="Robot" />
+  useEffect(() => {
+    if (showResults) {
+      const replyMessage = (
+      <div style={{display:"flex"}}>
+        <div>
+          If you don't have any more inputs, you can view your results here!
           </div>
-        </Col>
-        <Col>
-          {botMessage}
-          <Col className='messages-container' >
-            {/* Display messages*/}
-            {messages?.map((message, index) => (
-              <div key={`message-${index}`} className={`message-${message.sender}`}>
-                {message.text}
-              </div>
-            ))}
-            {showResults && (
-            <Col className="message-bot">
-              If you don't have any more inputs, you can view your results here!
-              <button>
-                <NavLink to="/MapScreen">Results</NavLink>
-              </button>
-            </Col>
-          )}
-          </Col>
-          <Col className = "input-container">
-            {/* Input form */}
-            {isLoading ? (
-              <div className="loading-container">
-                <span>thinking...</span>
-              </div>
-            ) : (
-              <Form.Group controlId="formMessage">
-                <Form.Control
-                  type="text"
-                  placeholder="Type your message..."
-                  value={userMessage}
-                  onChange={(e) => setUserMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                />
-              </Form.Group>
+          <NavLink to="/MapScreen">
+            <button className='circular-button'>
+              <FaAngleRight />
+            </button>
+          </NavLink>
+      </div>
+      );
+      setMessages([...messages, {text: replyMessage, sender: 'bot'}]);
+      setShowResults(false);
+    }
+  }, [showResults]);
+  
+
+  return (
+    <motion.div 
+      initial={{ x: '100vw' }} 
+      animate={{ x: 0 }} 
+      exit={{ x: '-100vw' }} 
+      transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+    >
+    <div className="container">
+      <div className="left-side">
+        <header><h2 style={{fontSize:"3em"}}>My Concierge</h2></header>
+        <img src={robotImage} alt="Robot" width="200" />
+        <br></br>
+        <div className="refresh-button-container">
+          <button className='refresh-button' onClick={() => window.location.reload()}>Start a new session</button>
+        </div>
+      </div>
+      <div className="right-side">
+      <div className="chat-box">
+        {messages?.map((message, index) => (
+          <div key={`message-${index}`} className={`${message.sender}`}>
+            {message.sender === 'bot' && (
+              <FaRobot className="icon" />
             )}
-          </Col>
-        </Col>
-      </Row>
-    </Container>
+            {message.text}
+          </div>
+        ))}
+      </div>
+        {isLoading ? (
+             <div style={{display:'flex'}}>
+               <div class="spinner-7"></div>
+             </div>
+           ) : (
+             <Form.Group controlId="formMessage" style={{padding:'10px', marginLeft:'5px'}}>
+               <Form.Control
+                 type="text"
+                 placeholder="Type your message..."
+                 value={userMessage}
+                 onChange={(e) => setUserMessage(e.target.value)}
+                 onKeyPress={handleKeyPress}
+               />
+             </Form.Group>
+           )}
+      </div>
+    </div>
+    </motion.div>
   );
+
+//   return (
+// <Container className="chatbox-container">
+//   <Row className="main-row">
+//     <Col>
+//       {/* Image div */}
+//       <div className="image-container">
+//         <img src={robotImage} alt="Robot" />
+//       </div>
+//     </Col>
+//     <Col className="overall-container">
+//       {botMessage}
+//       <div className='messages-input-container'>
+//         <Col className='messages-container'>
+//           {/* Display messages*/}
+          // {messages?.map((message, index) => (
+          //   <div key={`message-${index}`} className={`message-${message.sender}`}>
+          //     {message.text}
+          //   </div>
+          // ))}
+          // {showResults && (
+          //   <Col className="message-bot">
+          //     If you don't have any more inputs, you can view your results here!
+          //     <button>
+          //       <NavLink to="/MapScreen">Results</NavLink>
+          //     </button>
+          //   </Col>
+          // )}
+//         </Col>
+//         <Col className="input-container">
+//           {/* Input form */}
+//           {isLoading ? (
+//             <div className="loading-container">
+//               <span>thinking...</span>
+//             </div>
+//           ) : (
+//             <Form.Group controlId="formMessage">
+//               <Form.Control
+//                 type="text"
+//                 placeholder="Type your message..."
+//                 value={userMessage}
+//                 onChange={(e) => setUserMessage(e.target.value)}
+//                 onKeyPress={handleKeyPress}
+//               />
+//             </Form.Group>
+//           )}
+//         </Col>
+//       </div>
+//     </Col>
+//   </Row>
+// </Container>
+
+//   );
 };
 
 export default ChatBox;

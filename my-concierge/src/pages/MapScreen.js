@@ -55,8 +55,15 @@ function MapScreen({city, UPV}) {
             position={{ lat: restaurants[i].latitude, lng: restaurants[i].longitude }}
             options={{ closeBoxURL: "", enableEventPropagation: true }}
           >
-            <div style={{ backgroundColor: "#0f5b7c", padding: "10px", borderRadius: "5px", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", fontSize: "13px", color:"white" }}>
+            <div style={{ backgroundColor: "white", padding: "10px", borderRadius: "5px", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", fontSize: "13px" }}>
               <b>{restaurants[i].name}</b>
+              <br></br>
+              <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(restaurants[i].address)}`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              title="click her to see it on map"
+              >View in map</a>
             </div>
           </InfoBox>
         ) : null}
