@@ -1,14 +1,17 @@
 
 .bellbutton{
-    background-color: transparent;
-    border-color: transparent;
+    background-color: #b8cfd9;
+    border: 0;
+    border-radius: 0 101% 101% 0;
     width: 5%;
+    padding-top: 5px;
+    padding-left: 5px;
     padding: 0;
-    margin:1%;
+    z-index: 2;
 }
 
 .bellPic{
-    width: 110%;
+    width: 120%;
     align-items: center;
 }
 
@@ -17,22 +20,25 @@
     text-align: center;
     text-justify: center;
     align-items: center;
+    background-color: #b8cfd9;
 }
 
 .hidden-message {
-    display: none;
+    background-color: #E16632;
+    color: #EFF0F1;
+    padding: 10px;
+    padding-left: 2%;
+    border-radius: 0 10px 10px 0;
+    transition: 1s ease;
+    transform: translateX(-120%);
+    z-index: 1;
 }
 
 .bellbutton:hover + .hidden-message {
     display: flex;
-    background-color: #E16632;
-    color: #EFF0F1;
     font-weight: bold;
-    padding: 10px;
-    border-radius: 10px;
-    animation-duration: 0.5s; 
-    animation-name: textPop;
-    transition: transform 0.1s;
+    transition: 1s ease;
+    transform: translateX(-10px);
 }
 
 @keyframes textPop {

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Form } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
+import { Form } from 'react-bootstrap';
 import '../css/ChatBox.css'; // Import the CSS file
 import robotImage from '../img/robot.png';
 import axios from 'axios';
-import { FaRobot,FaAngleRight,FaAngleDoubleRight} from "react-icons/fa";
+import { FaRobot } from "react-icons/fa";
 import { motion } from "framer-motion";
 import ResultsButton from './ResultsButton';
 
@@ -104,7 +103,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
         </div>
       );
 
-      setMessages([...messages, { text: greetingMessage, sender: 'bot' }]);
+      setMessages([{ text: greetingMessage, sender: 'bot' }]);
     }
     else {
       let returnMessage = `Welcome back! Send me a message if you'd like to add more specification to your recommendations. `;
@@ -115,12 +114,6 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     }
     
   }, []);
-
-  useEffect(() => {
-    if (selectedCity) {
-      
-    }
-  }, [selectedCity]);
 
   document.body.style.overflowY = "hidden";
 
