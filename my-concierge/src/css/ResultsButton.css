@@ -4,11 +4,14 @@
     max-height: 100%;
     max-width: 100%;
     margin-top: -35%;
-    
-
+    transition: transform 0.3s ease; 
 }
 
-.resultPic{
+.ResultsButton:hover {
+    transform: translateY(-5px);
+}
+
+.resultPic {
     width: 100%;
     margin: 0;
 }

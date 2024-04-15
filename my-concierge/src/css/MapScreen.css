@@ -2,11 +2,5 @@ body{
     background-color: #b8cfd9;
     align-items: center;
     color: #775144;
-}
-
-.return-message {
-    display: flex;
-    text-align: center;
-    text-justify: center;
-    align-items: center;
+    overflow-y: scroll;
 }

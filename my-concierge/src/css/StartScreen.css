@@ -72,8 +72,6 @@
   .start-button:hover { /* Button hover effect */
     background-image: linear-gradient(to bottom right, #FFD700, #b87800);  /* Change background color on hover */
     box-shadow: 0 0 20px #f1eee8;
-    transform: translateY(-5px);
-
-    
+    transform: translateY(-5px);    
   }
 

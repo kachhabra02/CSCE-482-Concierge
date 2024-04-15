@@ -6,7 +6,40 @@
     padding: 0;
     margin:1%;
 }
+
 .bellPic{
     width: 110%;
     align-items: center;
+}
+
+.return-message {
+    display: flex;
+    text-align: center;
+    text-justify: center;
+    align-items: center;
+}
+
+.hidden-message {
+    display: none;
+}
+
+.bellbutton:hover + .hidden-message {
+    display: flex;
+    background-color: #E16632;
+    color: #EFF0F1;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+    animation-duration: 0.5s; 
+    animation-name: textPop;
+    transition: transform 0.1s;
+}
+
+@keyframes textPop {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
 }
