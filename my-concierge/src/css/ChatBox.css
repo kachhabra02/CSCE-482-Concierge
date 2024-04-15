@@ -57,19 +57,20 @@
 } 
 
 .greeting-buttons{
-  background-color:#81adc8;
+  background-color:#0f5b7c;
   color: white;
   border: none;
   border-radius: 20px;
-  padding: 2px 3px, 0, 3px;
+  padding: 5px;
   margin: 2px;
   width: fit-content;
 }
 
 .greeting-buttons:hover {
-  background-color:#0f5b7c; /* Lighter shade of orange on hover */
+  background-color: #81adc8;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
-
 
 .input-box {
   padding: 10px;
@@ -88,8 +89,8 @@
 .input-box button {
   padding: 8px 20px;
   margin-left: 10px;
-  background-color: #007bff;
-  color: #fff;
+  background-color: #0f5b7c;
+  color: #eff0f1;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -121,12 +122,10 @@
   animation-duration: 0.5s; 
   animation-name: textPop;
   transition: transform 0.3s;
-
 }
 
 .user:hover, .bot:hover {
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
-  transform: translateY(-2px); 
+  cursor: default;
 }
 
 @keyframes textPop {
@@ -137,8 +136,6 @@
     transform: scale(1);
   }
 }
-
-
 
 .refresh-button-container {
   margin-top: auto; /* Push the button to the bottom */
@@ -160,14 +157,14 @@
 }
 
 .refresh-button:hover { /* Button hover effect */
-  background-image: linear-gradient(to bottom right, #81adc8, #007bff);  /* Change background color on hover */
+  background-image: linear-gradient(to bottom right, #81adc8, #0f5b7c);  /* Change background color on hover */
   box-shadow: 0 0 20px #f1eee8;
   transform: translateY(-5px);
 }
 
 .circular-button {
   border-radius: 50%;
-  background-color: #007bff; 
+  background-color: #0f5b7c; 
   color: white; 
   border: none; 
   padding: 10px; 
@@ -180,7 +177,7 @@
 }
 
 .circular-button:hover {
-  background-color: #0056b3; /* Change background color on hover */
+  background-color: #81adc8; /* Change background color on hover */
 }
 
 .spinner-7 {
@@ -191,7 +188,7 @@
   position: relative;
   top: -70px;
   border-radius: 50%;
-  color: #25b09b;
+  color: #0f5b7c;
   box-shadow: 
     calc(1*var(--d))      calc(0*var(--d))     0 0,
     calc(0.707*var(--d))  calc(0.707*var(--d)) 0 1px,

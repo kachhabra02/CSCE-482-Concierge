@@ -22,20 +22,21 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
   
   const handleSendMessage = async () => {
     if(!selectedCity){
-        setUserMessage('');
+      setUserMessage('');
       alert('Hello! To have the best user experience please select a city before continuing.')
       return;
     }
 
-    // Add the new message to the messages array
+    // Add the new message to the messages array and remove the results button
     const newMessage = {text: userMessage, sender: 'user'};
+    let resultsMessage = messages.pop();
     messages.push(newMessage);
+    setMessages([...messages]);
 
     //Generate response for user based on input
     setIsLoading(true);
     const botResponse = await updateUserPreferences(userMessage);
-    messages.push({text: botResponse, sender: 'bot'})
-    setMessages([...messages]);
+    setMessages([...messages, { text: botResponse, sender: 'bot' }, resultsMessage]);
     setIsLoading(false);
 
     // Clear the input field
@@ -43,7 +44,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
   };
 
   //Contact API response
-  const updateUserPreferences = (message) => {
+  const updateUserPreferences = async (message) => {
     return API.get(`/prompt?prompt=${encodeURIComponent(message)}&user_preference_vector=${userPreferenceArray.join('-')}`)
     .then((res) => {
         
@@ -73,8 +74,23 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
 
   const onClickCityButton = (city) => {
     setSelectedCity(city);
-    const botResponse = `I see you are looking for some restaurant recommendations in ${city}. What kind of restaurants are you looking for?`;
-    setMessages([...messages, {text: botResponse, sender: 'bot'}]);
+    let botResponse = `I see you are looking for some restaurant recommendations in ${city}. What kind of restaurants are you looking for?`;
+    botResponse += 'If you would simply like me to select random restaurants throughout the city, please click the "Results" button below.';
+
+    const resultsMessage = (
+        <div style={{display:"flex"}}>
+          <div>
+            If you don't have any more inputs, you can view your results here!
+          </div>
+          <NavLink to="/MapScreen">
+            <button className='circular-button'>
+              <FaAngleRight />
+            </button>
+          </NavLink>
+        </div>
+      );
+
+    setMessages([{ text: botResponse, sender: 'bot' }, { text: resultsMessage, sender: 'bot' }]);
   }
 
   useEffect(() => {
@@ -91,25 +107,22 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
           }
         </div>
       );
-      setMessages([...messages, {text: greetingMessage, sender: 'bot'}]);
+
+      setMessages([...messages, { text: greetingMessage, sender: 'bot' }]);
     }
+    else {
+      let returnMessage = `Welcome back! Send me a message if you'd like to add more specification to your recommendations. `;
+      returnMessage += `If you'd like to start fresh with a new set of specifications, please start a new session.`;
+      let resultsMessage = messages.pop();
+
+      setMessages([...messages, { text: returnMessage, sender: 'bot' }, resultsMessage]);
+    }
+    
   }, []);
 
   useEffect(() => {
     if (selectedCity) {
-      const replyMessage = (
-      <div style={{display:"flex"}}>
-        <div>
-          If you don't have any more inputs, you can view your results here!
-          </div>
-          <NavLink to="/MapScreen">
-            <button className='circular-button'>
-              <FaAngleRight />
-            </button>
-          </NavLink>
-      </div>
-      );
-      setMessages([...messages, {text: replyMessage, sender: 'bot'}]);
+      
     }
   }, [selectedCity]);
   
@@ -127,7 +140,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
         <img src={robotImage} alt="Robot" width="200" />
         <br></br>
         <div className="refresh-button-container">
-          <button className='refresh-button' onClick={() => window.location.reload()}>Start a new session</button>
+          <button className='refresh-button' onClick={() => window.location.reload()}>Start a New Session</button>
         </div>
       </div>
       <div className="right-side">
@@ -135,7 +148,9 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
         {messages?.map((message, index) => (
           <div key={`message-${index}`} className={`${message.sender}`}>
             {message.sender === 'bot' && (
-              <FaRobot className="icon" />
+              <div>
+                <FaRobot className="icon" />{": "}
+              </div>              
             )}
             {message.text}
           </div>
@@ -143,7 +158,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
       </div>
         {isLoading ? (
              <div style={{display:'flex'}}>
-               <div class="spinner-7"></div>
+               <div className="spinner-7"></div>
              </div>
            ) : (
              <Form.Group controlId="formMessage" style={{padding:'10px', marginLeft:'5px'}}>
