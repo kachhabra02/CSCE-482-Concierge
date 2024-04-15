@@ -1,0 +1,14 @@
+.ResultsButton{
+    background-color: transparent;
+    border-color: transparent;
+    max-height: 100%;
+    max-width: 100%;
+    margin-top: -35%;
+    
+
+}
+
+.resultPic{
+    width: 100%;
+    margin: 0;
+}

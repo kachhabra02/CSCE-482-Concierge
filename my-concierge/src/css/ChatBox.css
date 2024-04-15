@@ -162,24 +162,6 @@
   transform: translateY(-5px);
 }
 
-.circular-button {
-  border-radius: 50%;
-  background-color: #0f5b7c; 
-  color: white; 
-  border: none; 
-  padding: 10px; 
-  cursor: pointer;
-  transition: background-color 0.3s ease; 
-  position: relative;
-  top: -10px;
-  left: 2px;
-
-}
-
-.circular-button:hover {
-  background-color: #81adc8; /* Change background color on hover */
-}
-
 .spinner-7 {
   --d:22px;
   width: 4px;

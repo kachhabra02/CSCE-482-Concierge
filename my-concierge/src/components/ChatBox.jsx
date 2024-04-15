@@ -6,7 +6,7 @@ import robotImage from '../img/robot.png';
 import axios from 'axios';
 import { FaRobot,FaAngleRight,FaAngleDoubleRight} from "react-icons/fa";
 import { motion } from "framer-motion";
-
+import ResultsButton from './ResultsButton';
 
 
 const API = axios.create({
@@ -78,15 +78,11 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     botResponse += 'If you would simply like me to select random restaurants throughout the city, please click the "Results" button below.';
 
     const resultsMessage = (
-        <div style={{display:"flex"}}>
-          <div>
+        <div style={{display:"grid", gridTemplateColumns: "82% 18%"}}>
+          <div style={{ width: "100%" }}>
             If you don't have any more inputs, you can view your results here!
           </div>
-          <NavLink to="/MapScreen">
-            <button className='circular-button'>
-              <FaAngleRight />
-            </button>
-          </NavLink>
+          <ResultsButton />
         </div>
       );
 
@@ -136,7 +132,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     >
     <div className="container">
       <div className="left-side">
-        <header><h2 style={{fontSize:"3em"}}>My Concierge</h2></header>
+        <header><h2 style={{fontSize:"3em", cursor: "default"}}>My Concierge</h2></header>
         <img src={robotImage} alt="Robot" width="200" />
         <br></br>
         <div className="refresh-button-container">
