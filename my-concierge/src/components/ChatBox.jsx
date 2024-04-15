@@ -41,6 +41,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     const botResponse = await updateUserPreferences(userMessage);
     setMessages([...messages, { text: botResponse, sender: 'bot' }, resultsMessage]);
     setIsLoading(false);
+    textBoxRef?.current?.focus();
   };
 
   //Contact API response
@@ -65,21 +66,21 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
   };
 
 
-  const handleKeyPress = async (e) => {
+  const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      await handleSendMessage();
-      textBoxRef?.current?.focus();
+      handleSendMessage();
     }
   };
 
   const onClickCityButton = (city) => {
     setSelectedCity(city);
+    
     let botResponse = `I see you are looking for some restaurant recommendations in ${city}. What kind of restaurants are you looking for?`;
     botResponse += 'If you would simply like me to select random restaurants throughout the city, please click the "Results" button below.';
 
     const resultsMessage = (
-        <div style={{display:"grid", gridTemplateColumns: "82% 18%"}}>
+        <div style={{display:"grid", gridTemplateColumns: "86% 14%"}}>
           <div style={{ width: "100%" }}>
             If you don't have any more inputs, you can view your results here! If you would like to speak with me again, you can always ring the bell to come back.
           </div>
@@ -117,6 +118,12 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     
   }, []);
 
+  useEffect(() => {
+    if (selectedCity && !isLoading) {
+        textBoxRef?.current?.focus();
+    }
+  }, [selectedCity, isLoading])
+
   document.body.style.overflowY = "hidden";
   document.body.style.overflowX = "hidden";
 
@@ -151,18 +158,17 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
             </div>
           ))}
         </div>
-          <Form.Group controlId="formMessage" style={{padding:'10px', marginLeft:'5px'}}>
-            <Form.Control
-                ref={textBoxRef}
-                type="text"
-                placeholder={isLoading ? "" : "Type your message..."}
-                value={userMessage}
-                disabled={isLoading}
-                onChange={(e) => setUserMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                onLoad={() => { if (selectedCity && !isLoading) { textBoxRef?.current?.focus(); } }}
-            />
-          </Form.Group>
+        <Form.Group controlId="formMessage" style={{padding:'10px', marginLeft:'5px'}}>
+          <Form.Control
+            ref={textBoxRef}
+            type="text"
+            placeholder={isLoading ? "" : "Type your message..."}
+            value={userMessage}
+            disabled={isLoading}
+            onChange={(e) => setUserMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+        </Form.Group>
       </div>
     </div>
     </motion.div>

@@ -3,7 +3,7 @@
     border-color: transparent;
     max-height: 100%;
     max-width: 100%;
-    margin-top: -20%;
+    margin-top: -30%;
     transition: transform 0.3s ease; 
 }
 
@@ -12,6 +12,6 @@
 }
 
 .resultPic {
-    width: 70%;
+    width: 80%;
     margin: 0;
 }
