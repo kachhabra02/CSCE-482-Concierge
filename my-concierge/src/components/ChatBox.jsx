@@ -140,7 +140,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
           <button className='refresh-button' onClick={() => window.location.reload()}>Start a New Session</button>
         </div>
         <br></br>
-        <img src="Images/robot.png" alt="Robot" />
+        <img src={/*isLoading ? "Images/robot-thinking.png" : "Images/robot.png"*/ "Images/robot.png"} alt="Robot" />
       </div>
       <div className="right-side">
         <div className="chat-box" onLoad={() => {
