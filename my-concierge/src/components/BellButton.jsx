@@ -17,11 +17,9 @@ const BellButton = () => {
     };
 
     return (
-        <div>
-            <button className="bellbutton" onClick={handleClick}>
-                <img className="bellPic" src={bellIcon} alt="Bell" />
-            </button>
-        </div>
+        <button className="bellbutton" onClick={handleClick}>
+            <img className="bellPic" src={bellIcon} alt="Bell" />
+        </button>
     );
 };
 

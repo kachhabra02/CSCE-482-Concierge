@@ -3,3 +3,10 @@ body{
     align-items: center;
     color: #775144;
 }
+
+.return-message {
+    display: flex;
+    text-align: center;
+    text-justify: center;
+    align-items: center;
+}

@@ -80,7 +80,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     const resultsMessage = (
         <div style={{display:"grid", gridTemplateColumns: "82% 18%"}}>
           <div style={{ width: "100%" }}>
-            If you don't have any more inputs, you can view your results here!
+            If you don't have any more inputs, you can view your results here! If you would like to speak with me again, you can always ring the bell to come back.
           </div>
           <ResultsButton />
         </div>

@@ -371,7 +371,10 @@ function MapScreen({ city, UPV }) {
   return (
 
     <div>
-      <Bell />
+      <div className='return-message'>
+        <Bell />
+        Ring to speak with the concierge!
+      </div>
       <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
         <GoogleMap
           ref={mapRef}
