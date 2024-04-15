@@ -1,5 +1,6 @@
 import database
 import numpy as np
+import random
 
 # Constants
 num_recommendations = 15
@@ -54,6 +55,18 @@ def getRecommendations(location, user_preference_vector):
         recommendation['attributes'] = [attributes[i] for i, digit in enumerate(bin(recommendation['attribute_sum'])[2:].zfill(num_att)) if digit == '1']
         print(recommendation['attributes'])
         del recommendation['attribute_sum']
+
+        # Add images if necessary
+        if recommendation['num_images'] == 0:
+            locations_with_images = []
+            for restaurant in restaurants:
+                if restaurant['name'] == recommendation['name'] and restaurant['num_images'] > 0:
+                    locations_with_images.append({'base_image_url': restaurant['base_image_url'], 'num_images': restaurant['num_images']})
+            
+            if len(locations_with_images) > 0:
+                rand_location = random.choice(locations_with_images)
+                recommendation['base_image_url'] = rand_location['base_image_url']
+                recommendation['num_images'] = rand_location['num_images']
 
         recommendations.append(recommendation)
 
