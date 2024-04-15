@@ -1,4 +1,4 @@
-import { React, useState, useRef, useEffect, useReducer, createElement } from 'react';
+import { React, useState, useRef, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/api';
 import CardScreen from './CardScreen.js';
@@ -368,6 +368,7 @@ function MapScreen({ city, UPV }) {
   ]
 
   document.body.style.overflowY = "scroll";
+  document.body.style.overflowX = "hidden";
 
   return (
 

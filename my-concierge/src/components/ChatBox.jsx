@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form } from 'react-bootstrap';
 import '../css/ChatBox.css'; // Import the CSS file
-import robotImage from '../img/robot.png';
+// import robotImage from 'Images/robot.png';
 import axios from 'axios';
 import { FaRobot } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -18,6 +18,7 @@ const cityList = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nas
 const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPreferenceArray, messages, setMessages}) => {
   const [userMessage, setUserMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const textBoxRef = useRef();
   
   const handleSendMessage = async () => {
     if(!selectedCity){
@@ -32,14 +33,14 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     messages.push(newMessage);
     setMessages([...messages]);
 
+    // Clear the input field
+    setUserMessage('');
+
     //Generate response for user based on input
     setIsLoading(true);
     const botResponse = await updateUserPreferences(userMessage);
     setMessages([...messages, { text: botResponse, sender: 'bot' }, resultsMessage]);
     setIsLoading(false);
-
-    // Clear the input field
-    setUserMessage('');
   };
 
   //Contact API response
@@ -64,10 +65,11 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
   };
 
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleSendMessage();
+      await handleSendMessage();
+      textBoxRef?.current?.focus();
     }
   };
 
@@ -116,6 +118,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
   }, []);
 
   document.body.style.overflowY = "hidden";
+  document.body.style.overflowX = "hidden";
 
   return (
     <motion.div 
@@ -124,43 +127,42 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
       exit={{ x: '-100vw' }} 
       transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
     >
-    <div className="container">
+    <div className="screen">
       <div className="left-side">
-        <header><h2 style={{fontSize:"3em", cursor: "default"}}>My Concierge</h2></header>
-        <img src={robotImage} alt="Robot" width="200" />
-        <br></br>
         <div className="refresh-button-container">
           <button className='refresh-button' onClick={() => window.location.reload()}>Start a New Session</button>
         </div>
+        <br></br>
+        <img src="Images/robot.png" alt="Robot" />
       </div>
       <div className="right-side">
-      <div className="chat-box">
-        {messages?.map((message, index) => (
-          <div key={`message-${index}`} className={`${message.sender}`}>
-            {message.sender === 'bot' && (
-              <div>
-                <FaRobot className="icon" />{": "}
-              </div>              
-            )}
-            {message.text}
-          </div>
-        ))}
-      </div>
-        {isLoading ? (
-             <div style={{display:'flex'}}>
-               <div className="spinner-7"></div>
-             </div>
-           ) : (
-             <Form.Group controlId="formMessage" style={{padding:'10px', marginLeft:'5px'}}>
-               <Form.Control
-                 type="text"
-                 placeholder="Type your message..."
-                 value={userMessage}
-                 onChange={(e) => setUserMessage(e.target.value)}
-                 onKeyPress={handleKeyPress}
-               />
-             </Form.Group>
-           )}
+        <div className="chat-box" onLoad={() => {
+          var chatDiv = document.getElementsByClassName('chat-box')[0];
+          chatDiv.scrollTop = chatDiv.scrollHeight;
+        }}>
+          {messages?.map((message, index) => (
+            <div key={`message-${index}`} className={`${message.sender}`}>
+              {message.sender === 'bot' && (
+                <div>
+                  <FaRobot className="icon" />{": "}
+                </div>              
+              )}
+              {message.text}
+            </div>
+          ))}
+        </div>
+          <Form.Group controlId="formMessage" style={{padding:'10px', marginLeft:'5px'}}>
+            <Form.Control
+                ref={textBoxRef}
+                type="text"
+                placeholder={isLoading ? "" : "Type your message..."}
+                value={userMessage}
+                disabled={isLoading}
+                onChange={(e) => setUserMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                onLoad={() => { if (selectedCity && !isLoading) { textBoxRef?.current?.focus(); } }}
+            />
+          </Form.Group>
       </div>
     </div>
     </motion.div>

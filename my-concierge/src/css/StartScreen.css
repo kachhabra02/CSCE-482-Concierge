@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Play:wght@400;700&display=swap');
 
 .start-screen {
+    cursor: default;
     display: flex; /* Make the container a flexbox for better layout control */
     flex-direction: column; /* Arrange elements vertically by default */
     align-items: center; /* Center elements horizontally within the container */
@@ -48,6 +49,7 @@
   }
 
   .bell-image:hover {
+    cursor: pointer;
     animation-name: button-hover;
     animation-duration: 0.75s;
     animation-timing-function: linear;
