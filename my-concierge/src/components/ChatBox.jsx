@@ -121,7 +121,8 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
       
     }
   }, [selectedCity]);
-  
+
+  document.body.style.overflowY = "hidden";
 
   return (
     <motion.div 

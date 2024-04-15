@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Play:wght@400;700&display=swap');
 
-
 .start-screen {
     display: flex; /* Make the container a flexbox for better layout control */
     flex-direction: column; /* Arrange elements vertically by default */
@@ -9,17 +8,12 @@
     min-height: 100vh; /* Set minimum height to fill the viewport */
     background-color: #0F5B7C/* Add background color if desired */;
   }
-  
-  .header {
-    margin-bottom: 50px; /* Add some space below the header */
-  }
 
   .header-text{
     font-family:Play;
     font-size: 8em; 
     font-weight: bold;
     color: #f1eee8;
-
   }
 
   .cursor {
@@ -46,32 +40,51 @@
     align-items: center; /* Center them horizontally */
   }
   
-  .robot-image {
-    width: 100%; 
-    height: auto; /* Maintain aspect ratio */
-    margin-bottom: 40px; /* Add space below the image */
-    box-shadow: 0 0 20px #f1eee8;
+  .bell-image {
+    height: 500px; 
+    width: auto; /* Maintain aspect ratio */
+    border-radius: 100%;
+    transform: perspective(1px) translateZ(0);
   }
-  
-  .start-button {
-    background-color: #E16632; /* Green color for the button */
-    color: white; /* White text color */
-    padding: 15px 32px;
-    text-align: center; 
-    display: inline-block; 
-    font-size: 16px; 
-    border: none; 
-    cursor: pointer; 
-    border-radius: 30px; 
-    transition: background-color 0.3s ease, transform 0.3s ease; 
-    font-weight: bold;
-    margin-bottom: 30px;
 
+  .bell-image:hover {
+    animation-name: button-hover;
+    animation-duration: 0.75s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
   }
-  
-  .start-button:hover { /* Button hover effect */
-    background-image: linear-gradient(to bottom right, #FFD700, #b87800);  /* Change background color on hover */
-    box-shadow: 0 0 20px #f1eee8;
-    transform: translateY(-5px);    
+
+  @keyframes button-hover {
+    10% {
+      transform: translateX(3px) rotate(2deg);
+    }
+    20% {
+      transform: translateX(-3px) rotate(-2deg);
+    }
+    30% {
+      transform: translateX(3px) rotate(2deg);
+    }
+    40% {
+      transform: translateX(-3px) rotate(-2deg);
+    }
+    50% {
+      transform: translateX(2px) rotate(1deg);
+    }
+    60% {
+      transform: translateX(-2px) rotate(-1deg);
+    }
+    70% {
+      transform: translateX(2px) rotate(1deg);
+    }
+    80% {
+      transform: translateX(-2px) rotate(-1deg);
+    }
+    90% {
+      transform: translateX(1px) rotate(0);
+    }
+    100% {
+      transform: translateX(-1px) rotate(0);
+    }
   }
+
 

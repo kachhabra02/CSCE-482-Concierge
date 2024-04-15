@@ -367,6 +367,7 @@ function MapScreen({ city, UPV }) {
     }
   ]
 
+  document.body.style.overflowY = "scroll";
 
   return (
 

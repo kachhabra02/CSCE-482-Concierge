@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Assuming you're using React Router for navigation
 import '../css/BellButton.css';
-import bellSound from '../img/bell.mp3';
+import bellSound from '../img/bell.wav';
 
 const BellButton = () => {
     const [bellIcon, setBellIcon] = useState("Images/bell-pic.png");
     const navigate = useNavigate();
+    const audio = new Audio(bellSound);
 
     const playBellSound = () => {
-        const audio = new Audio(bellSound);
-        audio.currentTime = 7.52; // Set the starting time of the audio
         audio.play(); // Play the audio
 
         setTimeout(() => {
-            audio.pause(); 
+            audio.pause();
+            audio.currentTime = 0;
         }, 3000);
     };
 
