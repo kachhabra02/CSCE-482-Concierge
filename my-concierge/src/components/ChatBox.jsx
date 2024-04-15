@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form } from 'react-bootstrap';
 import '../css/ChatBox.css'; // Import the CSS file
-// import robotImage from 'Images/robot.png';
+import robotImage from '../img/robot.png';
+// import robotThinkImage from '../img/robot-thinking.gif';
 import axios from 'axios';
 import { FaRobot } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -140,7 +141,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
           <button className='refresh-button' onClick={() => window.location.reload()}>Start a New Session</button>
         </div>
         <br></br>
-        <img src={/*isLoading ? "Images/robot-thinking.png" : "Images/robot.png"*/ "Images/robot.png"} alt="Robot" />
+        <img src={/*isLoading ? robotThinkImage : robotImage*/ robotImage} alt="Robot" />
       </div>
       <div className="right-side">
         <div className="chat-box" onLoad={() => {

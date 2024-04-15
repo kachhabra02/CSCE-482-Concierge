@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import '../css/StartScreen.css';
 import { motion } from "framer-motion";
 import bellSound from '../img/bell.wav';
-
+import bellPic from '../img/bell-pic.png';
+import bellRingPic from '../img/bell-ringing-orange.gif';
 
 function StartScreen() {
   const [typedText, setTypedText] = useState('');
-  const [bellIcon, setBellIcon] = useState('Images/bell-pic.png');
+  const [bellIcon, setBellIcon] = useState(bellPic);
   const navigate = useNavigate();
   const headerText = 'My Concierge'; // Original text to be typed out
   const audio = new Audio(bellSound);
@@ -36,7 +37,7 @@ function StartScreen() {
   };
 
   const handleClick = () => {
-    setBellIcon("Images/bell-ringing-orange.gif");
+    setBellIcon(bellRingPic);
     playBellSound();
 
     // You can use setTimeout to simulate the GIF animation duration

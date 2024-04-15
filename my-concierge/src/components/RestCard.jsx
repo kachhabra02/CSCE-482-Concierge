@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Star from "./Star";
 import Dollar from "./Dollar";
 import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaRegHeart, FaHeart, FaTaxi, FaBox ,FaWheelchair,FaPhone, FaYelp} from "react-icons/fa";
+import {FaTaxi, FaBox, FaWheelchair, FaPhone, FaYelp} from "react-icons/fa";
 //import Carousel from 'react-multi-carousel';
 //import 'react-multi-carousel/lib/styles.css';
 import Default from '../img/default.png'; 
 import 'react-slideshow-image/dist/styles.css';
-import {Fade, Zoom, Slide} from 'react-slideshow-image';
 import Carousel from 'react-bootstrap/Carousel';
-
+import goldPin from '../img/goldPin.png';
+import orangePin from '../img/orangePin.png';
 
 
 function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
@@ -170,7 +170,7 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
       <ListGroup className="list-group-flush">
       <ListGroup.Item>
         <div className="card-address" onClick={ () =>  setShowFullAddress(!showFullAddress) }>
-          <img src={(rank === 0) ? "Images/goldPin.png" : "Images/orangePin.png"} alt={"Address Pin"}/>
+          <img src={(rank === 0) ? goldPin : orangePin} alt={"Address Pin"}/>
           <p className={`card-address-text${showFullAddress ? "-full" : ""}`}>{` ${address}`}</p>
         </div>
       </ListGroup.Item>

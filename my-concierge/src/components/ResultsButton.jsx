@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Assuming you're using React Router for navigation
 import '../css/ResultsButton.css';
+import resultsButton from '../img/resultsButton.png'
+import resultsButtonClick from '../img/resultsButtonClick.gif'
 
 const ResultsButton = () => {
-    const [resultIcon, setResultIcon] = useState("Images/resultsButton.png");
+    const [resultIcon, setResultIcon] = useState(resultsButton);
     const navigate = useNavigate();
 
     const handleClick = () => {
-        setResultIcon("Images/resultsButtonClick.gif");
+        setResultIcon(resultsButtonClick);
 
         // You can use setTimeout to simulate the GIF animation duration
         setTimeout(() => {

@@ -4,6 +4,10 @@ import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/
 import CardScreen from './CardScreen.js';
 import Bell from '../components/BellButton.jsx';
 import '../css/MapScreen.css';
+import goldPin from '../img/goldPin.png';
+import orangePin from '../img/orangePin.png';
+import goldPinHighlighted from '../img/goldPinHighlighted.png';
+import orangePinHighlighted from '../img/orangePinHighlighted.png';
 
 const API = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/api`,
@@ -43,8 +47,8 @@ function MapScreen({ city, UPV }) {
 
     for (let i = 0; i < restaurants.length; ++i) {
       const icon_obj = {
-        url: (restaurants[i].rank === 0) ? (restaurants[i].rank === highlighted ? "Images/goldPinHighlighted.png" : "Images/goldPin.png")
-          : (restaurants[i].rank === highlighted ? "Images/orangePinHighlighted.png" : "Images/orangePin.png"),
+        url: (restaurants[i].rank === 0) ? (restaurants[i].rank === highlighted ? goldPinHighlighted : goldPin)
+          : (restaurants[i].rank === highlighted ? orangePinHighlighted : orangePin),
         scaledSize: { width: (restaurants[i].rank === highlighted) ? 54 : 45, height: (restaurants[i].rank === highlighted) ? 60 : 50 }
       }
       const options_obj = { opacity: (highlighted === -1 || restaurants[i].rank === highlighted) ? 1 : 0.7 }
