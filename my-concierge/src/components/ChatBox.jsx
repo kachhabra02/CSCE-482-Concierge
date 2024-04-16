@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import '../css/ChatBox.css'; // Import the CSS file
 import robotImage from '../img/robot.png';
 import axios from 'axios';
-import { FaRobot,FaAngleRight,FaAngleDoubleRight} from "react-icons/fa";
+import { FaRobot,FaAngleRight,FaRegThumbsUp,FaRegThumbsDown,FaThumbsUp,FaThumbsDown} from "react-icons/fa";
 import { motion } from "framer-motion";
 
 
@@ -21,6 +21,19 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
   const [isLoading, setIsLoading] = useState(false);
   //const [botMessage, setBotMessage] = useState('');
   const [showResults, setShowResults] = useState(false);
+
+  const [thumbsUpClicked, setThumbsUpClicked] = useState(false);
+  const [thumbsDownClicked, setThumbsDownClicked] = useState(false);
+
+  const handleThumbsUpClick = () => {
+    setThumbsUpClicked(!thumbsUpClicked);
+    if (thumbsDownClicked) setThumbsDownClicked(false);
+  };
+
+  const handleThumbsDownClick = () => {
+    setThumbsDownClicked(!thumbsDownClicked);
+    if (thumbsUpClicked) setThumbsUpClicked(false);
+  };
   
   const handleSendMessage = async () => {
     if(!selectedCity){
@@ -136,6 +149,24 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
         <header><h2 style={{fontSize:"3em"}}>My Concierge</h2></header>
         <img src={robotImage} alt="Robot" width="200" />
         <br></br>
+        <div>
+            {/* Question asking for feedback */}
+            <div className="feedback-question" onMouseEnter={() => { }}>
+              <p style={{color:"white", marginBottom:'0px'}}>How did I do?</p>
+              <div className="feedback-icons">
+                {thumbsUpClicked ? (
+                  <FaThumbsUp className="thumbs-up" onClick={handleThumbsUpClick} />
+                ) : (
+                  <FaRegThumbsUp className="thumbs-up" onClick={handleThumbsUpClick} />
+                )}
+                {thumbsDownClicked ? (
+                  <FaThumbsDown className="thumbs-down" onClick={handleThumbsDownClick} />
+                ) : (
+                  <FaRegThumbsDown className="thumbs-down" onClick={handleThumbsDownClick} />
+                )}
+              </div>
+            </div>
+          </div>
         <div className="refresh-button-container">
           <button className='refresh-button' onClick={() => window.location.reload()}>Start a new session</button>
         </div>

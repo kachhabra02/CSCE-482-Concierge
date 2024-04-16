@@ -36,6 +36,47 @@
   flex-direction: column;
 }
 
+.feedback-question {
+  position: relative;
+  cursor: pointer;
+  top:-30px;
+  background:#007bff;
+  border-radius: 5px;
+  padding: 8px;
+  text-align: center; 
+  display: inline-block; 
+  font-size: 16px; 
+  border: none; 
+  cursor: pointer; 
+  border-radius: 30px; 
+  transition: background-color 0.3s ease, transform 0.3s ease; 
+
+}
+
+.feedback-icons {
+  position: absolute;
+  top: -30px;
+  left: 20px;
+  width: 80px;
+  display: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  z-index: 1;
+}
+
+.feedback-question:hover .feedback-icons {
+  display: block;
+}
+
+/* Style for thumbs up and thumbs down icons */
+.thumbs-up,
+.thumbs-down {
+  margin: 5px;
+  cursor: pointer;
+}
+
 .chat-box {
   flex: 1;
   padding: 20px;
@@ -212,35 +253,6 @@
 /*********************************/
 
 
-
-/* User Messages In Chat */
-.message-user {
-  /* text-align: right; */
-  margin-bottom: 10px;
-  background-color: #81adc8; /* Change message background color to #81adc8 */
-  padding: 10px;
-  border-radius: 10px;
-  color: #eff0f1;
-  max-width: 80%;
-  display: flex;
-  align-self: flex-end;
-}
-
-/* Bot Messages In Chat */
-.message-bot {
-  /* text-align: left; */
-  margin-bottom: 10px;
-  background-color: #c76137; /* Change message background color to #81adc8 */
-  padding: 10px;
-  border-radius: 10px;
-  color: #eff0f1;
-  max-width: 80%;
-  max-height: 15%;
-  display: flex;
-  align-self: flex-start;
-}
-
-
 #formMessage {
   background-color: #81adc8; /* Change input background color to #0f5b7c */
   color: white;
@@ -250,13 +262,4 @@
   width: calc(100% - 5px);
 }
 
-.message-bot button {
-  background-color: #e16632; /* Set button background color to #e16632 */
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding-left: 10px;
-  padding-right: 10px;
-  width: fit-content;
-}
-/*****************Starting Message****************/
+
