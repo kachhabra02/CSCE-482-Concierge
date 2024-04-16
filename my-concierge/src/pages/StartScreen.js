@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../css/StartScreen.css';
-import ConciergeBot from '../img/ConciergeBot.webp';
 import { motion } from "framer-motion";
-import bellSound from '../img/bell.mp3';
-
+import bellSound from '../img/bell.wav';
+import bellPic from '../img/bell-pic.png';
+import bellRingPic from '../img/bell-ringing-orange.gif';
 
 function StartScreen() {
   const [typedText, setTypedText] = useState('');
+  const [bellIcon, setBellIcon] = useState(bellPic);
+  const navigate = useNavigate();
   const headerText = 'My Concierge'; // Original text to be typed out
+  const audio = new Audio(bellSound);
 
   useEffect(() => {
     let index = 0;
@@ -25,13 +28,27 @@ function StartScreen() {
   }, []);
 
   const playBellSound = () => {
-    const audio = new Audio(bellSound);
-    audio.currentTime = 7.52; // Set the starting time of the audio
     audio.play(); // Play the audio
+
     setTimeout(() => {
-      audio.pause(); 
+      audio.pause();
+      audio.currentTime = 0;
     }, 3000);
   };
+
+  const handleClick = () => {
+    setBellIcon(bellRingPic);
+    playBellSound();
+
+    // You can use setTimeout to simulate the GIF animation duration
+    setTimeout(() => {
+        // Navigate the user to the next page after the GIF animation
+        navigate("/Chatbot");
+    }, 700); // Adjust the time according to your GIF animation duration
+  };
+
+  document.body.style.overflowY = "hidden";
+  document.body.style.overflowX = "hidden";
 
   return (
     <motion.div 
@@ -41,26 +58,14 @@ function StartScreen() {
       exit={{ y: -1000 }} 
       transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="header">
-        <h1 className='header-text'>
-          {typedText} {/* Display typed text */}
-          <span className="cursor"></span> {/* Blinking cursor */}
-        </h1>
+      <div className="header-text">
+          {typedText}
+          <span className="cursor"></span>
       </div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 1, ease: [0.22, 1, 0.36, 1] }}> 
         <div className="content">
-          <img src={ConciergeBot} alt="Robot sitting at a desk" className="robot-image" />
-        </div>
-      </motion.div>
-      
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 1, ease: [0.22, 1, 0.36, 1] }}> 
-        <div className="content">
-          <Link to="/Chatbot">
-            <button className="start-button" onClick={playBellSound}>
-              <span>Click Here to Speak with a Concierge</span>
-            </button>
-          </Link>
+          <img src={bellIcon} alt="Bell to call concierge" className="bell-image" onClick={handleClick} />
         </div>
       </motion.div>
     </motion.div>

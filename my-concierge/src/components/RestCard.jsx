@@ -1,44 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Star from "./Star";
+import Dollar from "./Dollar";
 import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaRegHeart, FaHeart, FaTaxi, FaBox ,FaWheelchair,FaPhone, FaYelp} from "react-icons/fa";
+import {FaTaxi, FaBox, FaWheelchair, FaPhone, FaYelp} from "react-icons/fa";
 //import Carousel from 'react-multi-carousel';
 //import 'react-multi-carousel/lib/styles.css';
 import Default from '../img/default.png'; 
 import 'react-slideshow-image/dist/styles.css';
-import {Fade, Zoom, Slide} from 'react-slideshow-image';
 import Carousel from 'react-bootstrap/Carousel';
+import goldPin from '../img/goldPin.png';
+import orangePin from '../img/orangePin.png';
 
 
-
-function RestCard({ name, stars, reviews, cusines, address,hours,attributes, favItems, setFavItems, image, total_images, phone, yelp, rank, tempIndex}) {
-  const [isFavorite, setIsFavorite] = useState(false);
+function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
+                    image, total_images, phone, yelp, rank, highlighted, setHighlighted}) {
   const [showAllCuisines, setShowAllCuisines] = useState(false);
+  const [showFullAddress, setShowFullAddress] = useState(false);
 
-  //console.log(rank ," and ", tempIndex)
-
-  //useEffect 
-  useEffect(() => {
-    setIsFavorite(favItems.find((fav) =>fav.name === name) !== undefined)
-  }, [favItems])
-  
-
-  const onFavoriteClick = () => {
-    // Toggle the favorite status
-    setIsFavorite(!isFavorite);
-
-    const newItem = { name, cusines, address,image,total_images };
-    if (!isFavorite) {
-      // Add item to favorites
-      setFavItems([...favItems, newItem]);
-    } else {
-      // Remove item from favorites
-      setFavItems((favItems || []).filter(item => item.name !== name));
+  let priceRange = '';
+  cuisines = cuisines.filter((category) => {
+    if (category.startsWith("Price Range ")) {
+        priceRange = category.substring(12);
+        return false;
     }
-  };
+    return true;
+  })
+  cuisines.sort((a, b) => { return a.length - b.length;  });
+
+  let numCuisinesCollapsed = (cuisines.length < 2) ? cuisines.length : 2;
+  if (cuisines.length >= 3 && cuisines[0] + cuisines[1] + cuisines[2] <= 29) {
+    ++numCuisinesCollapsed;
+    if (cuisines.length >= 4 && cuisines[0] + cuisines[1] + cuisines[2] + cuisines[3] <= 26) {
+      ++numCuisinesCollapsed;
+    }
+  }
 
   const getCurrentDay = () => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -104,10 +102,9 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
   const images = Array.from({ length: total_images > 5 ? 5 : total_images }, (_, i) => `${image}${i > 0 ? `_${i}.jpg` : '.jpg'}`);
   const carouselImages = images.length > 0 ? images : [Default];
 
-
-
   return (
-    <Card className={tempIndex === rank ? "highlighted-card" : ""} style={{ width: "23rem", marginBottom:"10px" }}>
+    <Card className={highlighted === rank ? "highlighted-card" : "normal-card"} style={{ width: "23rem", marginBottom:"10px" }}
+          onClick={ () => { if (highlighted !== rank) { setHighlighted(rank); } } }>
     <Carousel>
       {carouselImages.map((image, index) => (
         <Carousel.Item key={index}>
@@ -130,56 +127,59 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
           <img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
         ))}
       </Carousel> */}
+      <div> { /* To avoid border between card body and list group */ }
       <Card.Body style={{ paddingBottom: '0' }}>
         <div className="d-flex flex-row justify-content-between w-100">
-          <Card.Title className="col-7">{name}</Card.Title>
-          <Star stars={stars} reviews={reviews} />
+          <Card.Title className="col-9">{name}</Card.Title>
+          <div className="star-price-box">
+            <Star stars={stars} reviews={reviews} />
+            <Dollar priceRange={priceRange} />
+          </div>
         </div>
         <div className="d-flex flex-row justify-content-between w-100">
-          <Card.Text className="col-8">
-            {cusines.slice(0, showAllCuisines ? cusines.length : 2).map((cuisine, index) => (
-              <button key={index} type="button" className="btn btn-outline-primary rounded-pill btn-sm mr-2" style={{ margin: '3px' }}>{cuisine}</button>
-            ))}
-            {cusines.length > 2 && (
-              <Accordion alwaysOpen>
-              <Accordion.Item style={{ margin: '3% 0 0 2%' }} eventKey="0">
-                <Accordion.Header className="custom-cus">More ...</Accordion.Header>
-                <Accordion.Body style={{padding: '2%', backgroundColor: 'lightgray' }}>
-                  {cusines.slice(2).map((cuisine, index) => 
-                   <React.Fragment key={index}>
-                    {cuisine}
-                    <br />
-                    {index !== cusines.length - 3 && <hr style={{margin:'0'}}/>}
-                  </React.Fragment>
-                 )}
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-
-            )}
+          <Card.Text className="w-full">
+            {
+              showAllCuisines ?
+                <div className="category-box">
+                  {cuisines.map((cuisine, index) => (
+                    <div key={index} className="category-tag" style={{ margin: '3px' }}>{cuisine}</div>
+                  ))}
+                  <button key={cuisines.length} className="category-btn" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(false) }>
+                    Show Less...
+                  </button>
+                </div>
+              :
+                <div className="category-box">
+                  {cuisines.slice(0, numCuisinesCollapsed).map((cuisine, index) => (
+                      <div key={index} className="category-tag" style={{ margin: '3px' }}>{cuisine}</div>
+                  ))}
+                  {
+                    cuisines.length > numCuisinesCollapsed ?
+                      <button key={cuisines.length} className="category-btn" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(true) }>
+                        ...
+                      </button>
+                    : null
+                  }
+                </div>
+                
+            }
+            
           </Card.Text>
-          <button type="button" className="favorite-btn btn" onClick={onFavoriteClick}>
-            {isFavorite ? <FaHeart style={{ color: "#fb2323" }} /> : <FaRegHeart style={{ color: "#fb2323" }} />}
-          </button>
         </div>
       </Card.Body>
       <ListGroup className="list-group-flush">
       <ListGroup.Item>
-        <a 
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            title="click her to see it on map"
-          >
-            {"Address:" + " "+address}
-          </a>
+        <div className="card-address" onClick={ () =>  setShowFullAddress(!showFullAddress) }>
+          <img src={(rank === 0) ? goldPin : orangePin} alt={"Address Pin"}/>
+          <p className={`card-address-text${showFullAddress ? "-full" : ""}`}>{` ${address}`}</p>
+        </div>
       </ListGroup.Item>
         <Accordion alwaysOpen>
           <Accordion.Item eventKey="0">
             <Accordion.Header>Opening Hours:</Accordion.Header>
             <Accordion.Body>              
               {parsedHours == null ? (
-                <div>No information available</div>
+                <span className="attribute-text">No information available</span>
               ) : (
                 <ul className="hours-list">
                 {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => (
@@ -195,7 +195,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
           <Accordion.Header>Extra:</Accordion.Header>
           <Accordion.Body>
             {Object.entries(attributes).length === 0 ? (
-              <div>No information available</div>
+              <span className="attribute-text">No information available</span>
             ) : (
               <ul className="attributes-list">
               {attributes.map((attribute, index) => (
@@ -232,6 +232,7 @@ function RestCard({ name, stars, reviews, cusines, address,hours,attributes, fav
 
         </Accordion>
       </ListGroup>
+      </div>
     </Card>
   );
 }

@@ -35,11 +35,19 @@ def getChatResponse(vector_int_scores):
 
 def getUserPreferenceVector(user_prompt, prev_vector):
     time_before_call = time.perf_counter()
+    expanded = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You provide a maximum of two sentences as a response that expands upon the prompt to provide more insight into the desired cuisine. Provide details on the origin of the cuisine and other similar cuisines if possible."},
+            {"role": "user", "content": user_prompt}
+        ]
+    )
+    print(expanded.choices[0].message.content)
     completion = client.chat.completions.create(
       model="gpt-3.5-turbo",
       messages=[
             {"role": "system", "content": "You analyze text provided by a group of people to populate a json object which will indicate how much the group wants the different items in the json object. Each entry in the json object will have a score for that particular item; the integers will only range from 0 to 5 (0 is the default). When assigning these scores take into account how many people like something; the more people that like it, the higher the score should be. Also use the wording to adjust the score; for example, 'I love Korean food' should get a higher score than 'I like Korean food'. You should also update similar cuisines/items. For example, if the group likes Japanese and Korean you should also increase the Asian score since it is related. However, you should only update things that are very similar. The json object shows how much the group likes each cuisine/item. Here is the json object that should populate by replacing the <score> tags with your score: " + example_json + ". Keep in mind that South Asian includes Indian food. For the Price Level, 0 is if you did not find price info, 1 is really cheap, 2 is cheap, 3 is moderate, and 4-5 is expensive. The 'Good for Groups' should be a 0 or a 1; 0 means that you think the number of people is less than 4, and a 1 if you think there are more than 4. The 'Good for Kids' should also be a 0 or a 1. You shouldn't always associate fast food with American cuisine, rather you should score fast food based on desired speed; for example, if they mention 'sit-down', 'sit down', 'slow', etc. the fast food score should be 0. I want you to return the json object after modifying the values. You should strictly follow the json format provided and populate every field with at least a 0."},
-        {"role": "user", "content": user_prompt}
+        {"role": "user", "content": user_prompt + '.' + expanded.choices[0].message.content}
       ]
     )
     time_after_call = time.perf_counter()
@@ -74,8 +82,8 @@ if __name__ == "__main__":
     while(True):
         user_text = input('Enter prompt: ')
 
-        user_vector = getUserPreferenceVector(user_text, user_vector) 
-        print(user_vector)
+        vec = getUserPreferenceVector(user_text, user_vector) 
+        print(vec)
 
     
 

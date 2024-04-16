@@ -1,13 +1,51 @@
 
 .bellbutton{
-    background-color: transparent;
-    border-color: transparent;
+    background-color: #b8cfd9;
+    border: 0;
+    border-radius: 0 101% 101% 0;
     width: 5%;
-    display:block;
+    padding-top: 5px;
+    padding-left: 5px;
     padding: 0;
+    z-index: 2;
 }
+
 .bellPic{
-    width: 110%;
-    padding-right: 10px;
+    width: 120%;
     align-items: center;
+}
+
+.return-message {
+    display: flex;
+    text-align: center;
+    text-justify: center;
+    align-items: center;
+    background-color: #b8cfd9;
+}
+
+.hidden-message {
+    background-color: #E16632;
+    color: #EFF0F1;
+    padding: 10px;
+    padding-left: 2%;
+    border-radius: 0 10px 10px 0;
+    transition: 1s ease;
+    transform: translateX(-120%);
+    z-index: 1;
+}
+
+.bellbutton:hover + .hidden-message {
+    display: flex;
+    font-weight: bold;
+    transition: 1s ease;
+    transform: translateX(-10px);
+}
+
+@keyframes textPop {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
 }
