@@ -5,7 +5,7 @@ import 'react-multi-carousel/lib/styles.css';
 import '../css/CardScreenCss.css';
 
 
-function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlighted, forceUpdate}) {
+function CardScreen({restaurants, highlighted, setHighlighted, forceUpdate}) {
 
   const carouselRef = useRef(null); // Reference for the carousel component
   
@@ -38,77 +38,51 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
   };
 
 
-  /* useEffect(() => scrollToSlide(), [tempIndex]) */
   useEffect(() => {
+    // No card selected or pin deselected
     if (highlighted === -1) {
       return;
     }
+    else if (highlighted >= carouselRef?.current.state.currentSlide &&
+             highlighted < carouselRef?.current.state.currentSlide + carouselRef?.current.state.slidesToShow) {
+      return;
+    }
 
-    carouselRef?.current.goToSlide(highlighted, true);
+    carouselRef?.current.goToSlide(highlighted);
     forceUpdate();
   }, [highlighted])
 
+
+  // Sets highlighted card upon arrow click or pin click that is out of view
   const checkSlideFocus = () => {
-    setHighlighted(carouselRef?.current.state.currentSlide)
+    if (highlighted !== carouselRef?.current.state.currentSlide) {
+        setHighlighted(carouselRef?.current.state.currentSlide);
+    }
   }
 
-  /*
-  const renderButtonGroupOutside = ({ totalItems, currentSlide, ...props }) => (
-    <ul className="custom-dots">
-      {Array.from({ length: totalItems }).map((_, index) => (
-        <li key={index}>
-          <button className={index === currentSlide ? "active" : ""} {...props}></button>
-        </li>
-      ))}
-    </ul>
-  );
-
-  const CustomDot = ({...rest }) => {
-    const {
-      index,
-      active,
-    } = rest;
-    console.log(index)
+  const CustomDot = ({ onClick, active }) => {
     return (
-      <button
-        className={active ? "active" : "inactive"}
+      <li
+        onClick={ () => onClick() }
+        className={active ? "custom-dot-active" : "custom-dot-inactive"}
       >
-        {React.Children(restaurants)[index]}
-      </button>
+      </li>
     );
   };
-  */
-
-  // Function to handle scrolling to a specific slide
-  /*
-  const scrollToSlide = () => { // In CardScreen, get Index from MapScreen and Scroll here 
-      if(carouselRef && carouselRef.current)
-      {
-        carouselRef.current.goToSlide(tempIndex);
-      }
-      
-  };
-  */
 
 
   return (
     
-    <div>
-
-      {/*<h1>Restaurants:</h1>*/}
-
-      {/* {restaurants.map((business, index) => (
-        <button key={index} onClick={() => handleButtonClick(business.name)}>{business.name}</button>
-      ))} */}
-        
+    <div className="carousel-wrapper">
       <Carousel 
         ref={carouselRef} // Set the ref for the carousel
         responsive={responsive}
-        focusOnSelect={true}
         afterChange={checkSlideFocus}
         removeArrowOnDeviceType={["tablet", "mobile"]}
-        renderDotsOutside
+        renderDotsOutside={true}
         showDots
+        customDot={<CustomDot/>}
+        renderButtonGroupOutside={true}
       >
 
       {restaurants.map((business, index) => (
@@ -117,25 +91,21 @@ function CardScreen({restaurants, favItems, setFavItems, highlighted, setHighlig
               name={business.name || "No Name"}
               stars={business.stars || 0}
               reviews={business.num_reviews >= 1000 ? "1k+" : (business.num_reviews || 0)}
-              cusines={business.categories || []}
+              cuisines={business.categories || []}
               address={business.address ? `${business.address}, ${business.city}, ${business.state} ${business.zip_code}` : "No Address"}
               hours={business.hours || {}}
               attributes={business.attributes || {}}
-              favItems={favItems || []}
-              setFavItems={setFavItems || (() => {})}
               image = {business.base_image_url}
               total_images = {business.num_images}
               phone = {business.phone}
               yelp = {business.yelp_url}
               rank ={business.rank}
-              tempIndex = {highlighted}
+              highlighted = {highlighted}
+              setHighlighted = {setHighlighted}
             />
           </div>
         ))}
-
       </Carousel>;
-
-
     </div>
   )
 }

@@ -9,7 +9,7 @@ const Star = ({stars,reviews}) => {
     let number = index+0.5
     
       return (
-        <span key={index}>
+        <span key={`star-${index}`}>
             {stars >= index+1 ? <FaStar className="icon" />: stars >= number ? <FaStarHalfAlt className="icon" />:<AiOutlineStar/>}
         </span>
       )
@@ -17,8 +17,11 @@ const Star = ({stars,reviews}) => {
 
   return (
       <div className='icon-style'>
-        {ratingStar}
-        <p style={{ fontSize: '10px', marginLeft: '2px', color:'grey' }}>({reviews} reviews)</p>
+        <div>
+          {ratingStar}
+        </div>
+        
+        <p style={{ fontSize: '10px' }}>({reviews} reviews)</p>
       </div>
   )
 }

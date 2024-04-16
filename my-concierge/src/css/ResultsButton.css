@@ -1,0 +1,17 @@
+.ResultsButton{
+    background-color: transparent;
+    border-color: transparent;
+    max-height: 100%;
+    max-width: 100%;
+    margin-top: -30%;
+    transition: transform 0.3s ease; 
+}
+
+.ResultsButton:hover {
+    transform: translateY(-5px);
+}
+
+.resultPic {
+    width: 80%;
+    margin: 0;
+}
