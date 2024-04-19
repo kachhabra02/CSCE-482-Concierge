@@ -105,7 +105,7 @@ function CardScreen({restaurants, highlighted, setHighlighted, forceUpdate}) {
             />
           </div>
         ))}
-      </Carousel>;
+      </Carousel>
     </div>
   )
 }
