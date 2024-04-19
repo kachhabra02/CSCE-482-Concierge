@@ -5,7 +5,7 @@ import AnimatedRoutes from './components/AnimatedRoutes';
 
 
 function App() {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState(null);
   const [UPV, setUPV] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
   const [messages, setMessages] = useState([]);
 
