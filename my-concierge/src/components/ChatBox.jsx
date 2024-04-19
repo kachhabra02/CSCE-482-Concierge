@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Form } from 'react-bootstrap';
 import '../css/ChatBox.css'; // Import the CSS file
 import robotImage from '../img/robot.png';
-// import robotThinkImage from '../img/robot-thinking.gif';
+import robotThinkImage from '../img/robot-thinking.gif';
 import axios from 'axios';
 import { FaRobot } from "react-icons/fa";
 import { motion } from "framer-motion";
 import ResultsButton from './ResultsButton';
+import Select from "react-select";
 
 
 const API = axios.create({
@@ -14,7 +15,38 @@ const API = axios.create({
   timeout: 15000 // 15 second timeout
 });
 
-const cityList = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nashville']
+const fullySupportedCities = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nashville']
+const semiSupportedCities = ['College Station', 'Austin', 'Houston', 'Dallas', 'Boston', 'New York City', 'Los Angeles']
+const groupedOptions = [
+    {
+      label: "Fully-Supported Cities",
+      options: fullySupportedCities.map((city, ind) => ({value: city, label: city, color: (ind % 2 == 0) ? "#EFF0F1" : "#B8CFD9"}))
+    },
+    {
+      label: "Semi-Supported Cities",
+      options: semiSupportedCities.map((city, ind) => ({value: city, label: city, color: (ind % 2 == 0) ? "#EFF0F1" : "#B8CFD9"}))
+    }
+];
+const selectStyles = {
+    control: (baseStyles, state) => ({
+        ...baseStyles,
+        borderColor: state.isFocused ? "#0F5B7C" : "#81ADC1",
+        color: "#775144",
+        boxShadow: '0 !important',
+        "&:hover": {
+            borderColor: "#0F5B7C"
+        }
+    }),
+    option: (baseStyles, state) => {console.log(state); return({
+        ...baseStyles,
+        backgroundColor: state.isFocused ? "#0F5B7C" : state.data.color,
+        color: state.isFocused ? "#EFF0F1" : "#775144",
+        "&:active": {
+            backgroundColor: "#E16632"
+        }
+    })
+    }
+}
 
 const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPreferenceArray, messages, setMessages}) => {
   const [userMessage, setUserMessage] = useState('');
@@ -74,7 +106,8 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     }
   };
 
-  const onClickCityButton = (city) => {
+  const onCitySelect = (cityObj) => {
+    const city = cityObj.value
     setSelectedCity(city);
     
     let botResponse = `I see you are looking for some restaurant recommendations in ${city}. What kind of restaurants are you looking for?`;
@@ -99,11 +132,15 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
           Hi there! I am your virtual concierge here to help you find the best place to dine in.
           Please choose a city to get started:
           <br />
-          {
-            cityList.map((city) => {
-              return <button className="greeting-buttons" key={`button-${city}`} onClick={() => onClickCityButton(city)}> {city} </button>
-            })
-          }
+          <br />
+          <Select
+            placeholder="Please select a city..."
+            value={selectedCity}
+            onChange={onCitySelect}
+            options={groupedOptions}
+            styles={selectStyles}
+            isSearchable={true}
+          />
         </div>
       );
 
@@ -141,7 +178,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
           <button className='refresh-button' onClick={() => window.location.reload()}>Start a New Session</button>
         </div>
         <br></br>
-        <img src={/*isLoading ? robotThinkImage : robotImage*/ robotImage} alt="Robot" />
+        <img src={isLoading ? robotThinkImage : robotImage} alt="Robot" />
       </div>
       <div className="right-side">
         <div className="chat-box" onLoad={() => {

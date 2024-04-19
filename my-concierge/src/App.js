@@ -5,7 +5,7 @@ import AnimatedRoutes from './components/AnimatedRoutes';
 
 
 function App() {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState(null);
   const [UPV, setUPV] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
   const [messages, setMessages] = useState([]);
 
@@ -35,7 +35,7 @@ function App() {
     await Promise.all(promises);
   }
 
-  const animation_gifs = ['./img/bell-ringing.gif', './img/bell-ringing-orange.gif', './img/resultsButtonClick.gif'];
+  const animation_gifs = ['./img/bell-ringing.gif', './img/bell-ringing-orange.gif', './img/resultsButtonClick.gif', './img/robot-thinking.gif'];
   cacheGIFs(animation_gifs);
 
   const audio_files = ['./img/bell.wav'];
