@@ -14,7 +14,8 @@ const API = axios.create({
   timeout: 15000 // 15 second timeout
 });
 
-const cityList = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nashville']
+const fullySupportedCities = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nashville']
+const semiSupportedCities = ['College Station', 'Austin', 'Houston', 'Dallas', 'Boston', 'New York City', 'Los Angeles']
 
 const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPreferenceArray, messages, setMessages}) => {
   const [userMessage, setUserMessage] = useState('');
@@ -100,7 +101,13 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
           Please choose a city to get started:
           <br />
           {
-            cityList.map((city) => {
+            fullySupportedCities.map((city) => {
+              return <button className="greeting-buttons" key={`button-${city}`} onClick={() => onClickCityButton(city)}> {city} </button>
+            })
+          }
+          <br/>
+          {
+            semiSupportedCities.map((city) => {
               return <button className="greeting-buttons" key={`button-${city}`} onClick={() => onClickCityButton(city)}> {city} </button>
             })
           }

@@ -108,7 +108,10 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
     <Carousel>
       {carouselImages.map((image, index) => (
         <Carousel.Item key={index}>
-          <img className="carousel-image" src={image} alt={`Image ${index}`} />
+          <img className="carousel-image" src={image} alt={`Image ${index}`} onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src=Default;
+          }} />
         </Carousel.Item>
       ))}
     </Carousel>
@@ -139,6 +142,10 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
         <div className="d-flex flex-row justify-content-between w-100">
           <Card.Text className="w-full">
             {
+                cuisines.length === 0 ? <div key={0} className="category-tag" style={{ margin: '3px' }}>No Category/Cuisine Information</div>
+                                      : null
+            }
+            {
               showAllCuisines ?
                 <div className="category-box">
                   {cuisines.map((cuisine, index) => (
@@ -161,7 +168,6 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
                     : null
                   }
                 </div>
-                
             }
             
           </Card.Text>
@@ -216,7 +222,7 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
                 </li>
               </>
             )}
-            {yelp && (
+            {/*yelp && (
               <>
                 <hr /> 
                 <li className="attribute-item">
@@ -226,7 +232,7 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
                   </span>
                 </li>
               </>
-            )}
+            )*/}
           </Accordion.Body>
         </Accordion.Item>
 
