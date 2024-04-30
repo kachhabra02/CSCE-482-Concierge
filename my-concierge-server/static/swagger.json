@@ -1,0 +1,91 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "The MyConcierge API powers the MyConcierge web application by enabling the application to understand user desires and retrieve appropriate restaurant recommendations.",
+        "version": "1.0.0",
+        "title": "MyConcierge API"
+    },
+    "tags": [
+        {
+            "name": "NLP API",
+            "description": "Enpoints to Analyze User Queries"
+        },
+        {
+            "name": "Recommendation API",
+            "description": "Endpoints to Retrieve Restaurant Recommendations"
+        }
+    ],
+    "servers": [
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/prompt": {
+            "get": {
+                "tags": [
+                    "NLP API"
+                ],
+                "summary": "Analyze User Queries",
+                "description": "Uses OpenAI's GPT to analyze user queries, updating the user preference vector with this information and determining the appropriate response for the chatbot to give to the user.",
+                "parameters": [
+                    {
+                        "name": "prompt",
+                        "in": "query",
+                        "description": "User Query to be Analyzed",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_preference_vector",
+                        "in": "query",
+                        "description": "Underscore-Separated User Preference Vector",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                }
+            }
+        },
+        "/recommendation":{
+            "get" :{
+                "tags": [
+                    "Recommendation API"
+                ],
+                "summary": "Retrieve Restaurant Recommendations",
+                "description": "Retrieves recommendations for restaurants in the given city based on the provided user preferences.",
+                "parameters": [
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "City to Find Recommendation In",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_preference_vector",
+                        "in": "query",
+                        "description": "Underscore-Separated User Preference Vector",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                }
+            }      
+        }
+    }
+}
