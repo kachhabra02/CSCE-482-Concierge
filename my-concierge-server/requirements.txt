@@ -19,6 +19,7 @@ requests
 openai
 python-dotenv
 flask-cors
+flask-swagger-ui
 
 # other required dependencies
 setuptools >= 67.6.0

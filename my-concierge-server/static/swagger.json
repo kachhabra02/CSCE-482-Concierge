@@ -1,0 +1,639 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "The MyConcierge API powers the MyConcierge web application by enabling the application to understand user desires and retrieve appropriate restaurant recommendations.",
+        "version": "1.0.0",
+        "title": "MyConcierge API"
+    },
+    "tags": [
+        {
+            "name": "NLP API",
+            "description": "Enpoints to Analyze User Queries"
+        },
+        {
+            "name": "Recommendation API",
+            "description": "Endpoints to Retrieve Restaurant Recommendations"
+        }
+    ],
+    "servers": [
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/prompt": {
+            "get": {
+                "tags": [
+                    "NLP API"
+                ],
+                "summary": "Analyze User Queries",
+                "description": "Uses OpenAI's GPT to analyze user queries, updating the user preference vector with this information and determining the appropriate response for the chatbot to give to the user.",
+                "parameters": [
+                    {
+                        "name": "prompt",
+                        "in": "query",
+                        "description": "User Query to be Analyzed",
+                        "required": true,
+                        "type": "string",
+                        "example": "I would like some American food."
+                    },
+                    {
+                        "name": "user_preference_vector",
+                        "in": "query",
+                        "description": "Underscore-Separated User Preference Vector",
+                        "required": true,
+                        "type": "string",
+                        "example": "0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "response": {
+                                            "type": "string",
+                                            "description": "Chatbot Response to User Query",
+                                            "example": "Classic American fare! You can't go wrong with burgers and fries. What else can I assist you with?"
+                                        },
+                                        "updated_user_preference_vector": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer"
+                                            },
+                                            "description": "Underscore-Separated User Preference Vector Updated Based on User Query",
+                                            "example": [5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                }
+            }
+        },
+        "/recommendation":{
+            "get" :{
+                "tags": [
+                    "Recommendation API"
+                ],
+                "summary": "Retrieve Restaurant Recommendations",
+                "description": "Retrieves recommendations for restaurants in the given city based on the provided user preferences.",
+                "parameters": [
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "City to Find Recommendation In",
+                        "required": true,
+                        "type": "string",
+                        "example": "Philadelphia"
+                    },
+                    {
+                        "name": "user_preference_vector",
+                        "in": "query",
+                        "description": "Underscore-Separated User Preference Vector",
+                        "required": true,
+                        "type": "string",
+                        "example": "5_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "recommended_restaurants": {
+                                            "type": "array",
+                                            "description": "Chatbot Response to User Query",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "address": {
+                                                        "type": "string",
+                                                        "description": "Street address of restaurant"
+                                                    },
+                                                    "attributes": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "description": "Additional attributes of restaurant"
+                                                    },
+                                                    "base_image_url": {
+                                                        "type": "string",
+                                                        "description": "URL that images (if any) are hosted at"
+                                                    },
+                                                    "categories": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "description": "Categories used in recommendation algorithm (cuisine, price range, etc)"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "description": "Specific city/suburb that restaurant is in"
+                                                    },
+                                                    "hours": {
+                                                        "type": "string",
+                                                        "description": "JSON string of restaurant hours"
+                                                    },
+                                                    "latitude": {
+                                                        "type": "number",
+                                                        "format": "double",
+                                                        "description": "Latitude of restaurant"
+                                                    },
+                                                    "longitude": {
+                                                        "type": "number",
+                                                        "format": "double",
+                                                        "description": "Longitude of restaurant"
+                                                    },
+                                                    "metro_area": {
+                                                        "type": "string",
+                                                        "description": "Metropolitan-area that restaurant is in (one of the 'supported cities')"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "Name of restaurant"
+                                                    },
+                                                    "num_images": {
+                                                        "type": "integer",
+                                                        "description": "Number of images available for restaurant"
+                                                    },
+                                                    "num_reviews": {
+                                                        "type": "integer",
+                                                        "description": "Number of reviews on Yelp"
+                                                    },
+                                                    "phone": {
+                                                        "type": "string",
+                                                        "description": "Phone number of restaurant (if known)"
+                                                    },
+                                                    "rank": {
+                                                        "type": "integer",
+                                                        "description": ""
+                                                    },
+                                                    "stars": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "description": "Star rating on Yelp"
+                                                    },
+                                                    "state": {
+                                                        "type": "string",
+                                                        "description": "State that restaurant is in"
+                                                    },
+                                                    "yelp_url": {
+                                                        "type": "string",
+                                                        "description": "URL of restaurant Yelp page (if known)"
+                                                    },
+                                                    "zip_code": {
+                                                        "type": "string",
+                                                        "description": "Zip code of restaurant"
+                                                    }
+                                                }
+                                            },
+                                            "example": [
+                                                  {
+                                                    "address": "226 Baltimore Pike",
+                                                    "attributes": [
+                                                      "Wheelchair Accessible",
+                                                      "Delivery",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/i8-a2AE0kdjC6X2ZGl6p2g",
+                                                    "categories": [
+                                                      "Good For Kids",
+                                                      "Good For Groups",
+                                                      "Price Range $$",
+                                                      "Dessert",
+                                                      "Italian",
+                                                      "American"
+                                                    ],
+                                                    "city": "Springfield",
+                                                    "hours": "{\"Friday\": \"10:0-20:0\", \"Tuesday\": \"10:0-18:0\", \"Saturday\": \"10:0-20:0\", \"Thursday\": \"10:0-20:0\", \"Wednesday\": \"10:0-18:0\"}",
+                                                    "latitude": 39.9229026,
+                                                    "longitude": -75.3177699,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Johnny Paisano's",
+                                                    "num_images": 1,
+                                                    "num_reviews": 60,
+                                                    "phone": null,
+                                                    "rank": 0,
+                                                    "stars": 4.5,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19064"
+                                                  },
+                                                  {
+                                                    "address": "329 Kennett Pike",
+                                                    "attributes": [
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/Y92Nc9GhuXWvIABqNtSWGA",
+                                                    "categories": [
+                                                      "Breakfast & Brunch",
+                                                      "American"
+                                                    ],
+                                                    "city": "Mendenhall",
+                                                    "hours": "{\"Friday\": \"11:0-22:0\", \"Monday\": \"11:0-21:0\", \"Sunday\": \"11:0-21:0\", \"Tuesday\": \"11:0-21:0\", \"Saturday\": \"11:0-22:0\", \"Thursday\": \"11:0-21:0\", \"Wednesday\": \"11:0-21:0\"}",
+                                                    "latitude": 39.8534028,
+                                                    "longitude": -75.6407886,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Tavern 52",
+                                                    "num_images": 0,
+                                                    "num_reviews": 21,
+                                                    "phone": null,
+                                                    "rank": 1,
+                                                    "stars": 3.5,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19357"
+                                                  },
+                                                  {
+                                                    "address": "3901 Chestnut St",
+                                                    "attributes": [
+                                                      "Delivery",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/VCTI7doVpU094lugVBP_DA",
+                                                    "categories": [
+                                                      "Good For Kids",
+                                                      "Good For Groups",
+                                                      "Price Range $",
+                                                      "American"
+                                                    ],
+                                                    "city": "Philadelphia",
+                                                    "hours": "{\"Friday\": \"11:0-23:0\", \"Monday\": \"11:0-23:0\", \"Sunday\": \"11:0-22:0\", \"Tuesday\": \"11:0-23:0\", \"Saturday\": \"11:0-23:0\", \"Thursday\": \"11:0-23:0\", \"Wednesday\": \"11:0-23:0\"}",
+                                                    "latitude": 39.9556727,
+                                                    "longitude": -75.2002489,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Boston Market",
+                                                    "num_images": 1,
+                                                    "num_reviews": 36,
+                                                    "phone": null,
+                                                    "rank": 2,
+                                                    "stars": 2.5,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19104"
+                                                  },
+                                                  {
+                                                    "address": "1086 E Lancaster Ave",
+                                                    "attributes": [],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/95XHgaPRGCEF68WHBPZUdg",
+                                                    "categories": [
+                                                      "Healthy Eating",
+                                                      "American"
+                                                    ],
+                                                    "city": "Downingtown",
+                                                    "hours": "{\"Friday\": \"10:0-20:0\", \"Monday\": \"10:0-20:0\", \"Sunday\": \"11:0-18:0\", \"Tuesday\": \"10:0-20:0\", \"Saturday\": \"10:0-20:0\", \"Thursday\": \"10:0-20:0\", \"Wednesday\": \"10:0-20:0\"}",
+                                                    "latitude": 40.0180901,
+                                                    "longitude": -75.677054,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Capriotti's Sandwich Shop",
+                                                    "num_images": 1,
+                                                    "num_reviews": 6,
+                                                    "phone": null,
+                                                    "rank": 3,
+                                                    "stars": 4,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19335"
+                                                  },
+                                                  {
+                                                    "address": "501 Easton Rd",
+                                                    "attributes": [
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/JkVsdDLxVUvM2T2W5S1qUA",
+                                                    "categories": [
+                                                      "Good For Kids",
+                                                      "Good For Groups",
+                                                      "Price Range $",
+                                                      "American"
+                                                    ],
+                                                    "city": "Wyncote",
+                                                    "hours": "{\"Friday\": \"7:0-21:0\", \"Monday\": \"7:0-21:0\", \"Sunday\": \"7:0-21:0\", \"Tuesday\": \"7:0-21:0\", \"Saturday\": \"7:0-21:0\", \"Thursday\": \"7:0-21:0\", \"Wednesday\": \"7:0-21:0\"}",
+                                                    "latitude": 40.0923043,
+                                                    "longitude": -75.1614468,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Michaels",
+                                                    "num_images": 0,
+                                                    "num_reviews": 110,
+                                                    "phone": null,
+                                                    "rank": 4,
+                                                    "stars": 3,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19038"
+                                                  },
+                                                  {
+                                                    "address": "455 2nd St Pike",
+                                                    "attributes": [
+                                                      "Wheelchair Accessible",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/BFGaIlSqn-F-dtkSThC3Cg",
+                                                    "categories": [
+                                                      "Good For Groups",
+                                                      "Price Range $$",
+                                                      "American"
+                                                    ],
+                                                    "city": "Southampton",
+                                                    "hours": "{\"Friday\": \"10:0-2:0\", \"Monday\": \"10:0-2:0\", \"Sunday\": \"10:0-2:0\", \"Tuesday\": \"10:0-2:0\", \"Saturday\": \"10:0-2:0\", \"Thursday\": \"10:0-2:0\", \"Wednesday\": \"10:0-2:0\"}",
+                                                    "latitude": 40.1676185,
+                                                    "longitude": -75.0448808,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Pike's Pub",
+                                                    "num_images": 0,
+                                                    "num_reviews": 5,
+                                                    "phone": null,
+                                                    "rank": 5,
+                                                    "stars": 4,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "18966"
+                                                  },
+                                                  {
+                                                    "address": "210 S 13th St",
+                                                    "attributes": [
+                                                      "Wheelchair Accessible",
+                                                      "Delivery",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/eubQohkn22b4IytlVNz20g",
+                                                    "categories": [
+                                                      "Good For Kids",
+                                                      "Good For Groups",
+                                                      "Price Range $$",
+                                                      "Fast Food",
+                                                      "American"
+                                                    ],
+                                                    "city": "Philadelphia",
+                                                    "hours": "{\"Friday\": \"11:0-22:0\", \"Monday\": \"11:0-22:0\", \"Sunday\": \"11:0-22:0\", \"Tuesday\": \"11:0-22:0\", \"Saturday\": \"11:0-22:0\", \"Thursday\": \"11:0-22:0\", \"Wednesday\": \"11:0-22:0\"}",
+                                                    "latitude": 39.9484184,
+                                                    "longitude": -75.1623776,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Wishbone",
+                                                    "num_images": 8,
+                                                    "num_reviews": 191,
+                                                    "phone": null,
+                                                    "rank": 6,
+                                                    "stars": 3.5,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19107"
+                                                  },
+                                                  {
+                                                    "address": "2461 Grant Ave",
+                                                    "attributes": [
+                                                      "Wheelchair Accessible",
+                                                      "Delivery",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/ngg445E-3otfqSqznafmxQ",
+                                                    "categories": [
+                                                      "Good For Groups",
+                                                      "Price Range $$",
+                                                      "Japanese",
+                                                      "Asian",
+                                                      "Seafood",
+                                                      "American"
+                                                    ],
+                                                    "city": "Philadelphia",
+                                                    "hours": "{\"Friday\": \"11:0-22:30\", \"Monday\": \"11:0-21:30\", \"Sunday\": \"12:0-21:30\", \"Tuesday\": \"11:0-21:30\", \"Saturday\": \"11:0-22:30\", \"Thursday\": \"11:0-21:30\", \"Wednesday\": \"11:0-21:30\"}",
+                                                    "latitude": 40.0801467,
+                                                    "longitude": -75.0258658,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Crack Crab",
+                                                    "num_images": 3,
+                                                    "num_reviews": 86,
+                                                    "phone": null,
+                                                    "rank": 7,
+                                                    "stars": 4.5,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19114"
+                                                  },
+                                                  {
+                                                    "address": "1600 Calcon Hook Rd",
+                                                    "attributes": [
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/ns0RYfhXBADuEeuEQmTl7A",
+                                                    "categories": [
+                                                      "Good For Kids",
+                                                      "Good For Groups",
+                                                      "Price Range $",
+                                                      "Cafe",
+                                                      "Breakfast & Brunch",
+                                                      "American"
+                                                    ],
+                                                    "city": "Glenolden",
+                                                    "hours": "{\"Friday\": \"6:0-14:0\", \"Monday\": \"6:0-14:0\", \"Sunday\": \"6:0-14:0\", \"Tuesday\": \"6:0-14:0\", \"Saturday\": \"6:0-14:0\", \"Thursday\": \"6:0-14:0\", \"Wednesday\": \"6:0-14:0\"}",
+                                                    "latitude": 39.8910757,
+                                                    "longitude": -75.2660443,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Sparky's Cafe",
+                                                    "num_images": 0,
+                                                    "num_reviews": 22,
+                                                    "phone": null,
+                                                    "rank": 8,
+                                                    "stars": 4.5,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19036"
+                                                  },
+                                                  {
+                                                    "address": "590 South Trooper Road",
+                                                    "attributes": [
+                                                      "Delivery",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/lJj8PCFTYIsYwSoy3G57HA",
+                                                    "categories": [
+                                                      "Good For Kids",
+                                                      "Price Range $",
+                                                      "Fast Food",
+                                                      "American"
+                                                    ],
+                                                    "city": "Norristown",
+                                                    "hours": "{\"Friday\": \"10:0-1:0\", \"Monday\": \"10:0-1:0\", \"Sunday\": \"10:0-1:0\", \"Tuesday\": \"10:0-1:0\", \"Saturday\": \"10:0-1:0\", \"Thursday\": \"10:0-1:0\", \"Wednesday\": \"10:0-1:0\"}",
+                                                    "latitude": 40.1289446,
+                                                    "longitude": -75.4026187,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Wendy's",
+                                                    "num_images": 1,
+                                                    "num_reviews": 25,
+                                                    "phone": null,
+                                                    "rank": 9,
+                                                    "stars": 2,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19403"
+                                                  },
+                                                  {
+                                                    "address": "1110 Town Square Rd",
+                                                    "attributes": [
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/wct4ruIxzr4JTpMZc0cWbA",
+                                                    "categories": [
+                                                      "Good For Kids",
+                                                      "Good For Groups",
+                                                      "Price Range $$",
+                                                      "American"
+                                                    ],
+                                                    "city": "Pottstown",
+                                                    "hours": "{\"Friday\": \"11:0-22:0\", \"Monday\": \"11:0-22:0\", \"Sunday\": \"11:0-22:0\", \"Tuesday\": \"11:0-22:0\", \"Saturday\": \"11:0-22:0\", \"Thursday\": \"11:0-22:0\", \"Wednesday\": \"11:0-22:0\"}",
+                                                    "latitude": 40.227258,
+                                                    "longitude": -75.6603573,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "LongHorn Steakhouse",
+                                                    "num_images": 5,
+                                                    "num_reviews": 38,
+                                                    "phone": null,
+                                                    "rank": 10,
+                                                    "stars": 3,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19465"
+                                                  },
+                                                  {
+                                                    "address": "10 Davisville Rd",
+                                                    "attributes": [
+                                                      "Delivery",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/bjft5Kd54h16JtuoFoPdhQ",
+                                                    "categories": [
+                                                      "Price Range $",
+                                                      "Cafe",
+                                                      "American"
+                                                    ],
+                                                    "city": "Warminster",
+                                                    "hours": "{\"Friday\": \"0:0-0:0\", \"Monday\": \"0:0-0:0\", \"Sunday\": \"0:0-0:0\", \"Tuesday\": \"0:0-0:0\", \"Saturday\": \"0:0-0:0\", \"Thursday\": \"0:0-0:0\", \"Wednesday\": \"0:0-0:0\"}",
+                                                    "latitude": 40.1716181,
+                                                    "longitude": -75.0711986,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Wawa",
+                                                    "num_images": 1,
+                                                    "num_reviews": 5,
+                                                    "phone": null,
+                                                    "rank": 11,
+                                                    "stars": 3,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "18974"
+                                                  },
+                                                  {
+                                                    "address": "126 Chestnut St",
+                                                    "attributes": [
+                                                      "Wheelchair Accessible",
+                                                      "Delivery",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/Qm8pSLYuVS7eIyOx5YsWBw",
+                                                    "categories": [
+                                                      "Good For Groups",
+                                                      "Price Range $$",
+                                                      "Local Flavor",
+                                                      "American"
+                                                    ],
+                                                    "city": "Philadelphia",
+                                                    "hours": "{\"Friday\": \"12:0-2:0\", \"Monday\": \"15:0-2:0\", \"Sunday\": \"12:0-2:0\", \"Tuesday\": \"16:0-2:0\", \"Saturday\": \"12:0-2:0\", \"Thursday\": \"12:0-2:0\", \"Wednesday\": \"16:0-2:0\"}",
+                                                    "latitude": 39.9481792,
+                                                    "longitude": -75.1435446,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Glory Beer Bar & Kitchen",
+                                                    "num_images": 10,
+                                                    "num_reviews": 203,
+                                                    "phone": null,
+                                                    "rank": 12,
+                                                    "stars": 4.5,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19106"
+                                                  },
+                                                  {
+                                                    "address": "2550 Welsh Rd",
+                                                    "attributes": [
+                                                      "Delivery",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/kwsjuXKb6oLv8PbEWumhJQ",
+                                                    "categories": [
+                                                      "Good For Kids",
+                                                      "Good For Groups",
+                                                      "Price Range $",
+                                                      "Fast Food",
+                                                      "American"
+                                                    ],
+                                                    "city": "Philadelphia",
+                                                    "hours": "{\"Friday\": \"10:30-21:0\", \"Monday\": \"10:30-21:0\", \"Sunday\": \"10:30-21:0\", \"Tuesday\": \"10:30-21:0\", \"Saturday\": \"10:30-21:0\", \"Thursday\": \"10:30-21:0\", \"Wednesday\": \"10:30-21:0\"}",
+                                                    "latitude": 40.0721626,
+                                                    "longitude": -75.0335884,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Burger King",
+                                                    "num_images": 1,
+                                                    "num_reviews": 11,
+                                                    "phone": null,
+                                                    "rank": 13,
+                                                    "stars": 2.5,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19152"
+                                                  },
+                                                  {
+                                                    "address": "95 E Germantown Pike",
+                                                    "attributes": [
+                                                      "Delivery",
+                                                      "Take Out"
+                                                    ],
+                                                    "base_image_url": "https://my-concierge-bucket.s3.amazonaws.com/Qvcb4fEnlbTgjRJQexE9Sg",
+                                                    "categories": [
+                                                      "Good For Kids",
+                                                      "Good For Groups",
+                                                      "Price Range $$",
+                                                      "Vegetarian & Vegan",
+                                                      "Healthy Eating",
+                                                      "American"
+                                                    ],
+                                                    "city": "East Norriton",
+                                                    "hours": "{\"Friday\": \"11:0-21:0\", \"Sunday\": \"11:0-16:0\", \"Tuesday\": \"11:0-21:0\", \"Saturday\": \"11:0-21:0\", \"Thursday\": \"11:0-21:0\", \"Wednesday\": \"11:0-21:0\"}",
+                                                    "latitude": 40.1390406,
+                                                    "longitude": -75.3080925,
+                                                    "metro_area": "Philadelphia",
+                                                    "name": "Saladworks",
+                                                    "num_images": 3,
+                                                    "num_reviews": 21,
+                                                    "phone": null,
+                                                    "rank": 14,
+                                                    "stars": 3,
+                                                    "state": "PA",
+                                                    "yelp_url": null,
+                                                    "zip_code": "19401"
+                                                  }
+                                                ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "NOT FOUND"
+                    }
+                }
+            }      
+        }
+    }
+}

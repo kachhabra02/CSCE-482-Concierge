@@ -79,7 +79,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
 
   //Contact API response
   const updateUserPreferences = async (message) => {
-    return API.get(`/prompt?prompt=${encodeURIComponent(message)}&user_preference_vector=${userPreferenceArray.join('-')}`)
+    return API.get(`/prompt?prompt=${encodeURIComponent(message)}&user_preference_vector=${userPreferenceArray.join('_')}`)
     .then((res) => {
         
         if (res.status < 300) { // Only set if restaurants are not yet set
