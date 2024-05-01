@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: RestCard.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: RestCard.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+import Card from "react-bootstrap/Card";
+import Star from "./Star";
+import Dollar from "./Dollar";
+import ListGroup from "react-bootstrap/ListGroup";
+import Accordion from "react-bootstrap/Accordion";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {FaTaxi, FaBox, FaWheelchair, FaPhone, FaYelp} from "react-icons/fa";
+//import Carousel from 'react-multi-carousel';
+//import 'react-multi-carousel/lib/styles.css';
+import Default from '../img/default.png'; 
+import 'react-slideshow-image/dist/styles.css';
+import Carousel from 'react-bootstrap/Carousel';
+import goldPin from '../img/goldPin.png';
+import orangePin from '../img/orangePin.png';
+
+/**
+ * Restaurant Card Component
+ * @description Displays detailed information about a restaurant
+ * @param {Object} props - Component props
+ * @param {string} props.name - Restaurant name
+ * @param {number} props.stars - Star rating
+ * @param {number} props.reviews - Number of reviews
+ * @param {string[]} props.cuisines - Array of cuisines
+ * @param {string} props.address - Restaurant address
+ * @param {string} props.hours - Opening hours JSON string
+ * @param {string[]} props.attributes - Additional attributes
+ * @param {string} props.image - Image URL
+ * @param {number} props.total_images - Total number of images
+ * @param {string} props.phone - Phone number
+ * @param {string} props.yelp - Yelp URL
+ * @param {number} props.rank - Restaurant rank
+ * @param {number} props.highlighted - Highlighted restaurant rank
+ * @param {function} props.setHighlighted - Function to set highlighted rank
+ */
+function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
+                    image, total_images, phone, yelp, rank, highlighted, setHighlighted}) {
+  const [showAllCuisines, setShowAllCuisines] = useState(false);
+  const [showFullAddress, setShowFullAddress] = useState(false);
+
+  let priceRange = '';
+  cuisines = cuisines.filter((category) => {
+    if (category.startsWith("Price Range ")) {
+        priceRange = category.substring(12);
+        return false;
+    }
+    return true;
+  })
+  cuisines.sort((a, b) => { return a.length - b.length;  });
+
+  let numCuisinesCollapsed = (cuisines.length &lt; 2) ? cuisines.length : 2;
+  if (cuisines.length >= 3 &amp;&amp; cuisines[0] + cuisines[1] + cuisines[2] &lt;= 29) {
+    ++numCuisinesCollapsed;
+    if (cuisines.length >= 4 &amp;&amp; cuisines[0] + cuisines[1] + cuisines[2] + cuisines[3] &lt;= 26) {
+      ++numCuisinesCollapsed;
+    }
+  }
+
+  const getCurrentDay = () => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const date = new Date();
+    return days[date.getDay()];
+  };
+
+  const boldCurrentDay = (day) => {
+    const currentDay = getCurrentDay();
+    return day === currentDay ? &lt;strong>{day}&lt;/strong> : day;
+  };
+
+  const renderIcon = (attribute) => {
+    switch (attribute) {
+      case 'Take Out':
+        return &lt;FaBox />;
+      case 'Delivery':
+        return &lt;FaTaxi />;
+      case "Wheelchair Accessible":
+        return &lt;FaWheelchair />;
+      default:
+        return null;
+    }
+  };
+
+  const formatHours = (hour) => {
+    let hour_list = hour.split('-');
+    if(hour_list !== null)
+    {
+      if (hour_list[0].charAt(hour_list[0].length - 2) === ":")
+      {
+        hour_list[0] = hour_list[0]+'0';
+      }
+      if (hour_list[1].charAt(hour_list[1].length - 2) === ":")
+      {
+        hour_list[1] = hour_list[1]+'0';
+      }
+      hour = hour_list[0]+'-'+hour_list[1]
+    } 
+    return hour;
+  };
+
+  const parsedHours = hours ? JSON.parse(hours) : {};
+
+  // Carousel responsive settings
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 1
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 1
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 1
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1
+    }
+  };
+  // Generating image URLs for carousel
+  const images = Array.from({ length: total_images > 5 ? 5 : total_images }, (_, i) => `${image}${i > 0 ? `_${i}.jpg` : '.jpg'}`);
+  const carouselImages = images.length > 0 ? images : [Default];
+
+  return (
+    &lt;Card className={highlighted === rank ? "highlighted-card" : "normal-card"} style={{ width: "23rem", marginBottom:"10px" }}
+          onClick={ () => { if (highlighted !== rank) { setHighlighted(rank); } } }>
+    &lt;Carousel>
+      {carouselImages.map((image, index) => (
+        &lt;Carousel.Item key={index}>
+          &lt;img className="carousel-image" src={image} alt={`Image ${index}`} onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src=Default;
+          }} />
+        &lt;/Carousel.Item>
+      ))}
+    &lt;/Carousel>
+      {/* &lt;div className="slide-container">
+        &lt;Fade>
+        {carouselImages.map((image, index) => (
+          &lt;img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
+        ))}
+        &lt;/Fade>
+      &lt;/div> */}
+      {/* &lt;Carousel 
+        responsive={responsive}
+
+      >
+      {carouselImages.map((image, index) => (
+          &lt;img className="carousel-image" key={index} src={image} alt={`Image ${index}`} />
+        ))}
+      &lt;/Carousel> */}
+      &lt;div> { /* To avoid border between card body and list group */ }
+      &lt;Card.Body style={{ paddingBottom: '0' }}>
+        &lt;div className="d-flex flex-row justify-content-between w-100">
+          &lt;Card.Title className="col-9">{name}&lt;/Card.Title>
+          &lt;div className="star-price-box">
+            &lt;Star stars={stars} reviews={reviews} />
+            &lt;Dollar priceRange={priceRange} />
+          &lt;/div>
+        &lt;/div>
+        &lt;div className="d-flex flex-row justify-content-between w-100">
+          &lt;Card.Text className="w-full">
+            {
+                cuisines.length === 0 ? &lt;div key={0} className="category-tag" style={{ margin: '3px' }}>No Category/Cuisine Information&lt;/div>
+                                      : null
+            }
+            {
+              showAllCuisines ?
+                &lt;div className="category-box">
+                  {cuisines.map((cuisine, index) => (
+                    &lt;div key={index} className="category-tag" style={{ margin: '3px' }}>{cuisine}&lt;/div>
+                  ))}
+                  &lt;button key={cuisines.length} className="category-btn" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(false) }>
+                    Show Less...
+                  &lt;/button>
+                &lt;/div>
+              :
+                &lt;div className="category-box">
+                  {cuisines.slice(0, numCuisinesCollapsed).map((cuisine, index) => (
+                      &lt;div key={index} className="category-tag" style={{ margin: '3px' }}>{cuisine}&lt;/div>
+                  ))}
+                  {
+                    cuisines.length > numCuisinesCollapsed ?
+                      &lt;button key={cuisines.length} className="category-btn" style={{ margin: '3px' }} onClick={ () => setShowAllCuisines(true) }>
+                        ...
+                      &lt;/button>
+                    : null
+                  }
+                &lt;/div>
+            }
+            
+          &lt;/Card.Text>
+        &lt;/div>
+      &lt;/Card.Body>
+      &lt;ListGroup className="list-group-flush">
+      &lt;ListGroup.Item>
+        &lt;div className="card-address" onClick={ () =>  setShowFullAddress(!showFullAddress) }>
+          &lt;img src={(rank === 0) ? goldPin : orangePin} alt={"Address Pin"}/>
+          &lt;p className={`card-address-text${showFullAddress ? "-full" : ""}`}>{` ${address}`}&lt;/p>
+        &lt;/div>
+      &lt;/ListGroup.Item>
+        &lt;Accordion alwaysOpen>
+          &lt;Accordion.Item eventKey="0">
+            &lt;Accordion.Header>Opening Hours:&lt;/Accordion.Header>
+            &lt;Accordion.Body>              
+              {parsedHours == null ? (
+                &lt;span className="attribute-text">No information available&lt;/span>
+              ) : (
+                &lt;ul className="hours-list">
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => (
+                  &lt;li key={day} className={index % 2 === 0 ? "gray-bg" : "white-bg"}>
+                    {boldCurrentDay(day)}: {parsedHours[day] ? formatHours(parsedHours[day]) : "No information available"}
+                  &lt;/li>
+                ))}
+              &lt;/ul>
+              )}
+            &lt;/Accordion.Body>
+          &lt;/Accordion.Item>
+          &lt;Accordion.Item eventKey="1">
+          &lt;Accordion.Header>Extra:&lt;/Accordion.Header>
+          &lt;Accordion.Body>
+            {Object.entries(attributes).length === 0 ? (
+              &lt;span className="attribute-text">No information available&lt;/span>
+            ) : (
+              &lt;ul className="attributes-list">
+              {attributes.map((attribute, index) => (
+                &lt;li key={index} className="attribute-item">
+                  {/* Use attribute directly instead of [attribute] */}
+                  {renderIcon(attribute)}
+                  &lt;span className="attribute-text">{attribute.replace(/([A-Z])/g, ' $1').trim()}&lt;/span>
+                &lt;/li>
+              ))}
+            &lt;/ul>
+            )}
+            {phone &amp;&amp; (
+              &lt;>
+                &lt;hr /> 
+                &lt;li className="attribute-item">
+                  &lt;FaPhone />
+                  &lt;span className="attribute-text">Phone: {phone}&lt;/span>
+                &lt;/li>
+              &lt;/>
+            )}
+            {/*yelp &amp;&amp; (
+              &lt;>
+                &lt;hr /> 
+                &lt;li className="attribute-item">
+                  &lt;FaYelp />
+                  &lt;span className="attribute-text">
+                    Yelp: &lt;a href={yelp} target="_blank" rel="noopener noreferrer">Visit Yelp&lt;/a>
+                  &lt;/span>
+                &lt;/li>
+              &lt;/>
+            )*/}
+          &lt;/Accordion.Body>
+        &lt;/Accordion.Item>
+
+        &lt;/Accordion>
+      &lt;/ListGroup>
+      &lt;/div>
+    &lt;/Card>
+  );
+}
+
+
+
+export default RestCard;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#BellButton">BellButton</a></li><li><a href="global.html#ChatBox">ChatBox</a></li><li><a href="global.html#Dollar">Dollar</a></li><li><a href="global.html#RestCard">RestCard</a></li><li><a href="global.html#ResultsButton">ResultsButton</a></li><li><a href="global.html#ShoppingCart">ShoppingCart</a></li><li><a href="global.html#ShoppingCartElement">ShoppingCartElement</a></li><li><a href="global.html#Star">Star</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 30 2024 22:47:20 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
