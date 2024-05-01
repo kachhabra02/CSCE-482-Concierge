@@ -4,6 +4,10 @@ import '../css/ResultsButton.css';
 import resultsButton from '../img/resultsButton.png'
 import resultsButtonClick from '../img/resultsButtonClick.gif'
 
+/**
+ * Results Button Component
+ * @description Button component to navigate to the map screen
+ */
 const ResultsButton = () => {
     const [resultIcon, setResultIcon] = useState(resultsButton);
     const navigate = useNavigate();

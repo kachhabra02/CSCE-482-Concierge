@@ -14,7 +14,25 @@ import Carousel from 'react-bootstrap/Carousel';
 import goldPin from '../img/goldPin.png';
 import orangePin from '../img/orangePin.png';
 
-
+/**
+ * Restaurant Card Component
+ * @description Displays detailed information about a restaurant
+ * @param {Object} props - Component props
+ * @param {string} props.name - Restaurant name
+ * @param {number} props.stars - Star rating
+ * @param {number} props.reviews - Number of reviews
+ * @param {string[]} props.cuisines - Array of cuisines
+ * @param {string} props.address - Restaurant address
+ * @param {string} props.hours - Opening hours JSON string
+ * @param {string[]} props.attributes - Additional attributes
+ * @param {string} props.image - Image URL
+ * @param {number} props.total_images - Total number of images
+ * @param {string} props.phone - Phone number
+ * @param {string} props.yelp - Yelp URL
+ * @param {number} props.rank - Restaurant rank
+ * @param {number} props.highlighted - Highlighted restaurant rank
+ * @param {function} props.setHighlighted - Function to set highlighted rank
+ */
 function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
                     image, total_images, phone, yelp, rank, highlighted, setHighlighted}) {
   const [showAllCuisines, setShowAllCuisines] = useState(false);
@@ -81,6 +99,7 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
 
   const parsedHours = hours ? JSON.parse(hours) : {};
 
+  // Carousel responsive settings
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -99,6 +118,7 @@ function RestCard({ name, stars, reviews, cuisines, address,hours,attributes,
       items: 1
     }
   };
+  // Generating image URLs for carousel
   const images = Array.from({ length: total_images > 5 ? 5 : total_images }, (_, i) => `${image}${i > 0 ? `_${i}.jpg` : '.jpg'}`);
   const carouselImages = images.length > 0 ? images : [Default];
 

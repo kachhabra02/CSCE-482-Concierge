@@ -9,12 +9,13 @@ import { motion } from "framer-motion";
 import ResultsButton from './ResultsButton';
 import Select from "react-select";
 
-
+// Create an instance of Axios for API requests
 const API = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/api`,
   timeout: 15000 // 15 second timeout
 });
 
+// Define city options for the Select component
 const fullySupportedCities = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nashville']
 const semiSupportedCities = ['College Station', 'Austin', 'Houston', 'Dallas', 'Boston', 'New York City', 'Los Angeles']
 const groupedOptions = [
@@ -48,11 +49,18 @@ const selectStyles = {
     }
 }
 
+/**
+ * ChatBox Component
+ * @description Displays a chat interface with a virtual concierge for restaurant recommendations
+ */
 const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPreferenceArray, messages, setMessages}) => {
   const [userMessage, setUserMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const textBoxRef = useRef();
   
+  /**
+   * Handles sending user message and updating chat messages
+   */
   const handleSendMessage = async () => {
     if(!selectedCity){
       setUserMessage('');
@@ -77,7 +85,11 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     textBoxRef?.current?.focus();
   };
 
-  //Contact API response
+  /**
+   * Contact API to update user preferences and get bot response
+   * @param {string} message - User input message
+   * @returns {Promise<string>} - Bot response message
+   */
   const updateUserPreferences = async (message) => {
     return API.get(`/prompt?prompt=${encodeURIComponent(message)}&user_preference_vector=${userPreferenceArray.join('_')}`)
     .then((res) => {
@@ -98,7 +110,10 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
       });
   };
 
-
+  /**
+   * Handles key press events, specifically for sending messages on 'Enter'
+   * @param {Object} e - Key press event object
+   */
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -106,13 +121,19 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     }
   };
 
+  /**
+   * Handles city selection from the dropdown menu
+   * @param {Object} cityObj - Selected city object from the dropdown menu
+   */
   const onCitySelect = (cityObj) => {
     const city = cityObj.value
     setSelectedCity(city);
     
+    // Generate bot response based on selected city
     let botResponse = `I see you are looking for some restaurant recommendations in ${city}. What kind of restaurants are you looking for?`;
     botResponse += 'If you would simply like me to select random restaurants throughout the city, please click the "Results" button below.';
 
+    // Prepare results message with the ResultsButton component
     const resultsMessage = (
         <div style={{display:"grid", gridTemplateColumns: "86% 14%"}}>
           <div style={{ width: "100%" }}>
@@ -125,6 +146,7 @@ const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPre
     setMessages([{ text: botResponse, sender: 'bot' }, { text: resultsMessage, sender: 'bot' }]);
   }
 
+  // Effect for initializing chat messages based on selected city
   useEffect(() => {
     if (!selectedCity) {
       const greetingMessage = (

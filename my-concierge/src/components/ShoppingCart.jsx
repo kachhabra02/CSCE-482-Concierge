@@ -4,26 +4,38 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
+/**
+ * Shopping Cart Component
+ * @description Modal component for displaying and managing favorite items in the shopping cart
+ * @param {Array} favItems - Array of favorite items
+ * @param {Function} setFavItems - Function to set the favorite items
+ * @param {Function} setShowModal - Function to set the visibility of the modal
+ */
 function ShoppingCart({ favItems, setFavItems, setShowModal }) {
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
 
+  // Function to remove an item from the favorites list
   const removeItem = (index) => {
     const filteredList = favItems.filter((_, i) => i !== index);
     setFavItems(filteredList);
   };
 
+  // Function to handle modal close
   const handleClose = () => setShowModal(false);
 
+  // Function to handle email input change
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
+  // Function to generate text content for the email
   const generateTextContent = () => {
     return favItems.map((item) => `${item.name}, ${item.cusines.join(', ')}, ${item.address}`).join('\n');
   };
 
+  // Function to handle sending the email
   const handleSendEmail = async () => {
     setSending(true);
     try {
