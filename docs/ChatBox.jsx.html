@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ChatBox.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ChatBox.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect, useRef } from 'react';
+import { Form } from 'react-bootstrap';
+import '../css/ChatBox.css'; // Import the CSS file
+import robotImage from '../img/robot.png';
+import robotThinkImage from '../img/robot-thinking.gif';
+import axios from 'axios';
+import { FaRobot } from "react-icons/fa";
+import { motion } from "framer-motion";
+import ResultsButton from './ResultsButton';
+import Select from "react-select";
+
+// Create an instance of Axios for API requests
+const API = axios.create({
+  baseURL: `${process.env.REACT_APP_API_URL}/api`,
+  timeout: 15000 // 15 second timeout
+});
+
+// Define city options for the Select component
+const fullySupportedCities = ['Philadelphia', 'Tuscon', 'Reno', 'New Orleans', 'Tampa', 'Nashville']
+const semiSupportedCities = ['College Station', 'Austin', 'Houston', 'Dallas', 'Boston', 'New York City', 'Los Angeles']
+const groupedOptions = [
+    {
+      label: "Fully-Supported Cities",
+      options: fullySupportedCities.map((city, ind) => ({value: city, label: city, color: (ind % 2 == 0) ? "#EFF0F1" : "#B8CFD9"}))
+    },
+    {
+      label: "Semi-Supported Cities",
+      options: semiSupportedCities.map((city, ind) => ({value: city, label: city, color: (ind % 2 == 0) ? "#EFF0F1" : "#B8CFD9"}))
+    }
+];
+const selectStyles = {
+    control: (baseStyles, state) => ({
+        ...baseStyles,
+        borderColor: state.isFocused ? "#0F5B7C" : "#81ADC1",
+        color: "#775144",
+        boxShadow: '0 !important',
+        "&amp;:hover": {
+            borderColor: "#0F5B7C"
+        }
+    }),
+    option: (baseStyles, state) => {console.log(state); return({
+        ...baseStyles,
+        backgroundColor: state.isFocused ? "#0F5B7C" : state.data.color,
+        color: state.isFocused ? "#EFF0F1" : "#775144",
+        "&amp;:active": {
+            backgroundColor: "#E16632"
+        }
+    })
+    }
+}
+
+/**
+ * ChatBox Component
+ * @description Displays a chat interface with a virtual concierge for restaurant recommendations
+ */
+const ChatBox = ({selectedCity, setSelectedCity, userPreferenceArray, setUserPreferenceArray, messages, setMessages}) => {
+  const [userMessage, setUserMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const textBoxRef = useRef();
+  
+  /**
+   * Handles sending user message and updating chat messages
+   */
+  const handleSendMessage = async () => {
+    if(!selectedCity){
+      setUserMessage('');
+      alert('Hello! To have the best user experience please select a city before continuing.')
+      return;
+    }
+
+    // Add the new message to the messages array and remove the results button
+    const newMessage = {text: userMessage, sender: 'user'};
+    let resultsMessage = messages.pop();
+    messages.push(newMessage);
+    setMessages([...messages]);
+
+    // Clear the input field
+    setUserMessage('');
+
+    //Generate response for user based on input
+    setIsLoading(true);
+    const botResponse = await updateUserPreferences(userMessage);
+    setMessages([...messages, { text: botResponse, sender: 'bot' }, resultsMessage]);
+    setIsLoading(false);
+    textBoxRef?.current?.focus();
+  };
+
+  /**
+   * Contact API to update user preferences and get bot response
+   * @param {string} message - User input message
+   * @returns {Promise&lt;string>} - Bot response message
+   */
+  const updateUserPreferences = async (message) => {
+    return API.get(`/prompt?prompt=${encodeURIComponent(message)}&amp;user_preference_vector=${userPreferenceArray.join('_')}`)
+    .then((res) => {
+        
+        if (res.status &lt; 300) { // Only set if restaurants are not yet set
+          setUserPreferenceArray(res.data["updated_user_preference_vector"]);
+          return res.data["response"];
+        }
+        else {
+          console.log(`Error: Status code ${res.status} when retrieving prompt analysis`);
+          return "I couldn't quite understand what you said. Could you please rephrase?";
+        }
+      })
+      .catch((error) => {
+        console.log("Error when retrieving prompt analysis:");
+        console.log(error);
+        return "I couldn't quite understand what you said. Could you please rephrase?";
+      });
+  };
+
+  /**
+   * Handles key press events, specifically for sending messages on 'Enter'
+   * @param {Object} e - Key press event object
+   */
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  /**
+   * Handles city selection from the dropdown menu
+   * @param {Object} cityObj - Selected city object from the dropdown menu
+   */
+  const onCitySelect = (cityObj) => {
+    const city = cityObj.value
+    setSelectedCity(city);
+    
+    // Generate bot response based on selected city
+    let botResponse = `I see you are looking for some restaurant recommendations in ${city}. What kind of restaurants are you looking for?`;
+    botResponse += 'If you would simply like me to select random restaurants throughout the city, please click the "Results" button below.';
+
+    // Prepare results message with the ResultsButton component
+    const resultsMessage = (
+        &lt;div style={{display:"grid", gridTemplateColumns: "86% 14%"}}>
+          &lt;div style={{ width: "100%" }}>
+            If you don't have any more inputs, you can view your results here! If you would like to speak with me again, you can always ring the bell to come back.
+          &lt;/div>
+          &lt;ResultsButton />
+        &lt;/div>
+      );
+
+    setMessages([{ text: botResponse, sender: 'bot' }, { text: resultsMessage, sender: 'bot' }]);
+  }
+
+  // Effect for initializing chat messages based on selected city
+  useEffect(() => {
+    if (!selectedCity) {
+      const greetingMessage = (
+        &lt;div>
+          Hi there! I am your virtual concierge here to help you find the best place to dine in.
+          Please choose a city to get started:
+          &lt;br />
+          &lt;br />
+          &lt;Select
+            placeholder="Please select a city..."
+            value={selectedCity}
+            onChange={onCitySelect}
+            options={groupedOptions}
+            styles={selectStyles}
+            isSearchable={true}
+          />
+        &lt;/div>
+      );
+
+      setMessages([{ text: greetingMessage, sender: 'bot' }]);
+    }
+    else {
+      let returnMessage = `Welcome back! Send me a message if you'd like to add more specification to your recommendations. `;
+      returnMessage += `If you'd like to start fresh with a new set of specifications, please start a new session.`;
+      let resultsMessage = messages.pop();
+
+      setMessages([...messages, { text: returnMessage, sender: 'bot' }, resultsMessage]);
+    }
+    
+  }, []);
+
+  useEffect(() => {
+    if (selectedCity &amp;&amp; !isLoading) {
+        textBoxRef?.current?.focus();
+    }
+  }, [selectedCity, isLoading])
+
+  document.body.style.overflowY = "hidden";
+  document.body.style.overflowX = "hidden";
+
+  return (
+    &lt;motion.div 
+      initial={{ x: '100vw' }} 
+      animate={{ x: 0 }} 
+      exit={{ x: '-100vw' }} 
+      transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+    >
+    &lt;div className="screen">
+      &lt;div className="left-side">
+        &lt;div className="refresh-button-container">
+          &lt;button className='refresh-button' onClick={() => window.location.reload()}>Start a New Session&lt;/button>
+        &lt;/div>
+        &lt;br>&lt;/br>
+        &lt;img src={isLoading ? robotThinkImage : robotImage} alt="Robot" />
+      &lt;/div>
+      &lt;div className="right-side">
+        &lt;div className="chat-box" onLoad={() => {
+          var chatDiv = document.getElementsByClassName('chat-box')[0];
+          chatDiv.scrollTop = chatDiv.scrollHeight;
+        }}>
+          {messages?.map((message, index) => (
+            &lt;div key={`message-${index}`} className={`${message.sender}`}>
+              {message.sender === 'bot' &amp;&amp; (
+                &lt;div>
+                  &lt;FaRobot className="icon" />{": "}
+                &lt;/div>              
+              )}
+              {message.text}
+            &lt;/div>
+          ))}
+        &lt;/div>
+        &lt;Form.Group controlId="formMessage" style={{padding:'10px', marginLeft:'5px'}}>
+          &lt;Form.Control
+            ref={textBoxRef}
+            type="text"
+            placeholder={isLoading ? "" : "Type your message..."}
+            value={userMessage}
+            disabled={isLoading}
+            onChange={(e) => setUserMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+        &lt;/Form.Group>
+      &lt;/div>
+    &lt;/div>
+    &lt;/motion.div>
+  );
+
+//   return (
+// &lt;Container className="chatbox-container">
+//   &lt;Row className="main-row">
+//     &lt;Col>
+//       {/* Image div */}
+//       &lt;div className="image-container">
+//         &lt;img src={robotImage} alt="Robot" />
+//       &lt;/div>
+//     &lt;/Col>
+//     &lt;Col className="overall-container">
+//       {botMessage}
+//       &lt;div className='messages-input-container'>
+//         &lt;Col className='messages-container'>
+//           {/* Display messages*/}
+          // {messages?.map((message, index) => (
+          //   &lt;div key={`message-${index}`} className={`message-${message.sender}`}>
+          //     {message.text}
+          //   &lt;/div>
+          // ))}
+          // {showResults &amp;&amp; (
+          //   &lt;Col className="message-bot">
+          //     If you don't have any more inputs, you can view your results here!
+          //     &lt;button>
+          //       &lt;NavLink to="/MapScreen">Results&lt;/NavLink>
+          //     &lt;/button>
+          //   &lt;/Col>
+          // )}
+//         &lt;/Col>
+//         &lt;Col className="input-container">
+//           {/* Input form */}
+//           {isLoading ? (
+//             &lt;div className="loading-container">
+//               &lt;span>thinking...&lt;/span>
+//             &lt;/div>
+//           ) : (
+//             &lt;Form.Group controlId="formMessage">
+//               &lt;Form.Control
+//                 type="text"
+//                 placeholder="Type your message..."
+//                 value={userMessage}
+//                 onChange={(e) => setUserMessage(e.target.value)}
+//                 onKeyPress={handleKeyPress}
+//               />
+//             &lt;/Form.Group>
+//           )}
+//         &lt;/Col>
+//       &lt;/div>
+//     &lt;/Col>
+//   &lt;/Row>
+// &lt;/Container>
+
+//   );
+};
+
+export default ChatBox;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#BellButton">BellButton</a></li><li><a href="global.html#ChatBox">ChatBox</a></li><li><a href="global.html#Dollar">Dollar</a></li><li><a href="global.html#RestCard">RestCard</a></li><li><a href="global.html#ResultsButton">ResultsButton</a></li><li><a href="global.html#ShoppingCart">ShoppingCart</a></li><li><a href="global.html#ShoppingCartElement">ShoppingCartElement</a></li><li><a href="global.html#Star">Star</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 30 2024 22:47:20 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ShoppingCart.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ShoppingCart.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react';
+import ShoppingCartElement from './ShoppingCartElement';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+
+/**
+ * Shopping Cart Component
+ * @description Modal component for displaying and managing favorite items in the shopping cart
+ * @param {Array} favItems - Array of favorite items
+ * @param {Function} setFavItems - Function to set the favorite items
+ * @param {Function} setShowModal - Function to set the visibility of the modal
+ */
+function ShoppingCart({ favItems, setFavItems, setShowModal }) {
+  const [email, setEmail] = useState('');
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Function to remove an item from the favorites list
+  const removeItem = (index) => {
+    const filteredList = favItems.filter((_, i) => i !== index);
+    setFavItems(filteredList);
+  };
+
+  // Function to handle modal close
+  const handleClose = () => setShowModal(false);
+
+  // Function to handle email input change
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  // Function to generate text content for the email
+  const generateTextContent = () => {
+    return favItems.map((item) => `${item.name}, ${item.cusines.join(', ')}, ${item.address}`).join('\n');
+  };
+
+  // Function to handle sending the email
+  const handleSendEmail = async () => {
+    setSending(true);
+    try {
+      const textContent = generateTextContent();
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          content: textContent,
+        }),
+      });
+      if (response.ok) {
+        console.log('Email sent successfully');
+        setEmail('');
+        setError(null);
+      } else {
+        throw new Error('Failed to send email');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error.message);
+      setError('Failed to send email');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    &lt;Modal centered show onHide={handleClose}>
+      &lt;Modal.Header closeButton>
+        &lt;Modal.Title>Favorites:&lt;/Modal.Title>
+      &lt;/Modal.Header>
+      &lt;Modal.Body className="shopping-cart-body">
+        &lt;div>
+          {(favItems || []).map((item, index) => (
+            &lt;ShoppingCartElement
+              key={index}
+              favItem={item}
+              index={index}
+              removeItem={removeItem}
+            />
+          ))}
+        &lt;/div>
+      &lt;/Modal.Body>
+      &lt;Modal.Footer>
+        {/*&lt;div className='d-flex flex-row justify-content-between w-100'>
+           &lt;Form.Group controlId="formBasicEmail" className="mb-0">
+            &lt;Form.Control
+              type="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+            &lt;Form.Text className="text-muted">
+              To send this list to your email, please input your email.
+            &lt;/Form.Text>
+          &lt;/Form.Group>
+          &lt;Button variant="primary" onClick={handleSendEmail} disabled={sending}>
+            {sending ? 'Sending...' : 'Send'}
+          &lt;/Button> 
+
+        &lt;/div>*/}
+        &lt;Button variant="secondary" onClick={handleClose} disabled={sending}>
+            Close
+        &lt;/Button>
+        {error &amp;&amp; &lt;p className="text-danger">{error}&lt;/p>}
+      &lt;/Modal.Footer>
+    &lt;/Modal>
+  );
+}
+
+export default ShoppingCart;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#BellButton">BellButton</a></li><li><a href="global.html#ChatBox">ChatBox</a></li><li><a href="global.html#Dollar">Dollar</a></li><li><a href="global.html#RestCard">RestCard</a></li><li><a href="global.html#ResultsButton">ResultsButton</a></li><li><a href="global.html#ShoppingCart">ShoppingCart</a></li><li><a href="global.html#ShoppingCartElement">ShoppingCartElement</a></li><li><a href="global.html#Star">Star</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 30 2024 22:47:20 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
