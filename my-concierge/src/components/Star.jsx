@@ -2,9 +2,15 @@ import React from 'react'
 import {FaStar, FaStarHalfAlt} from "react-icons/fa";
 import {AiOutlineStar} from "react-icons/ai";
 
-
+/**
+ * Star Component
+ * @description Represents a star rating component with optional half-star and review count
+ * @param {number} stars - The star rating value (e.g., 4.5)
+ * @param {number} reviews - The number of reviews
+ */
 const Star = ({stars,reviews}) => {
 
+ // Generate star icons based on the star rating
  const ratingStar = Array.from({length:5}, (elem, index) => {
     let number = index+0.5
     
